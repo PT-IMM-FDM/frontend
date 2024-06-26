@@ -17,7 +17,7 @@ export function Component() {
       </div>
         <Sidebar.Items className="flex flex-col justify-between">
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="#" icon={LuLayoutDashboard} className="normal text-sm">
+            <Sidebar.Item href="#" icon={LuLayoutDashboard} className="normal text-sm hover:text-purple-800 hover:bg-gray-100">
               Dashboard
             </Sidebar.Item>
             <Sidebar.Item
