@@ -16,13 +16,14 @@ const DateRangePicker = () => {
   const pickerStyles = {
     display: "flex",
     flexDirection: "column",
-    width: "30rem",
+    width: "35rem",
     fontSize: "11px",
-    padding: ""
+    borderRadius: "10px",
   };
+  
 
   return (
-    <div className="mx-auto py-2">
+    <div className="mx-auto bg-white rounded-[10px] shadow-md">
       <DateRange
         editableDateInputs={true}
         style={pickerStyles}
