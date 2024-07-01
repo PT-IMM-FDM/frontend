@@ -4,7 +4,7 @@ import { Component as Footer } from "../component/Footer";
 
 const Layout = ({ children }) => {
   return (
-    <div className="flex max-w-[1920px] bg-red-200 min-h-screen ">
+    <div className="flex max-w-fit bg-red-200 min-h-screen ">
       <div>
         <Sidebar />
       </div>
