@@ -1,6 +1,6 @@
 import { Navigate, BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Dashboard from './admin/pages/Dashboard'
-import LoginAdmin from './admin/pages/LoginAdmin'
+import Dashboard from './admin/pages/dashboard'
+import LoginAdmin from './admin/pages/login-admin'
 
 function App() {
 
