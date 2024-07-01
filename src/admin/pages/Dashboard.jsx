@@ -10,18 +10,20 @@ import LineChart from "../component/DashboardMenu/ChartLine";
 const Dashboard = () => {
   return (
     <Layout>
-      <MenuHeader />
-      <div className="flex gap-2">
-        <div className="">
-          <CardHero />
-          <CardJumlahStats />
+      <div>
+        <MenuHeader />
+        <div className="flex gap-4">
+          <div className="flex flex-col">
+            <CardHero />
+            <CardJumlahStats />
+          </div>
+          <DateRangePicker />
         </div>
-        <DateRangePicker />
-      </div>
-      <div className="flex gap-4">
-        <DoughnutChart />
-        <DoughnutChart />
-        <LineChart/>
+        <div className="flex gap-4">
+          <DoughnutChart />
+          <DoughnutChart />
+          <LineChart />
+        </div>
       </div>
     </Layout>
   );
