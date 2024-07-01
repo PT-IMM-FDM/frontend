@@ -35,7 +35,7 @@ export function Component() {
             </Sidebar.Item>
           </Sidebar.ItemGroup>
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="#" icon={HiOutlineLogout} className="normal text-sm text-red-500">
+            <Sidebar.Item href="/login-admin" icon={HiOutlineLogout} className="normal text-sm text-red-500">
               Logout
             </Sidebar.Item>
           </Sidebar.ItemGroup>
