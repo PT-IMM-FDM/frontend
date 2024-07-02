@@ -41,6 +41,7 @@ const LineChart = () => {
       legend: {
         display: true,
         position: 'bottom',
+        
       },
       tooltip : {
         enabled: true,
@@ -49,7 +50,7 @@ const LineChart = () => {
   };
 
   return (
-    <div className="w-[37rem] h-[26rem] bg-white p-6 mt-4 rounded-[10px] shadow-md">
+    <div className="w-[27rem] h-[17.5rem] bg-white p-6 mt-4 rounded-[10px] shadow-md">
       <h1 className="bold text-left">Line Chart</h1>
       <div className="flex items-center justify-center min-h-full">
         <Line data={data} options={options}/>
