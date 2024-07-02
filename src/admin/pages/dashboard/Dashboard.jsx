@@ -10,7 +10,7 @@ import LineChart from "../../component/DashboardMenu/ChartLine";
 const Dashboard = () => {
   return (
     <Layout>
-      <MenuHeader />
+      <MenuHeader title={"Dashboard FDM"}/>
       <div className="flex flex-col items-center justify-center">
         <div className="flex gap-4 w-full">
           <div className="flex flex-col w-[52vw]">
