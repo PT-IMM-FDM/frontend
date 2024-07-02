@@ -50,8 +50,8 @@ const LineChart = () => {
   };
 
   return (
-    <div className="w-[27rem] h-[17.5rem] bg-white p-6 mt-4 rounded-[10px] shadow-md">
-      <h1 className="bold text-left">Line Chart</h1>
+    <div className="flex-grow h-[17.5rem] bg-white p-4 mt-4 rounded-[10px] shadow-md">
+      <h1 className="bold text-left leading-none">Line Chart</h1>
       <div className="flex items-center justify-center min-h-full">
         <Line data={data} options={options}/>
       </div>
