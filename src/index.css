@@ -19,6 +19,17 @@
   src: url("./src/assets/font/Gotham-Bold.ttf") format("opentype");
 }
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: "Gotham";
 }

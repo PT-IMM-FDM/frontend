@@ -26,7 +26,7 @@ const DateRangePicker = () => {
   
 
   return (
-    <div className="bg-white p-1 rounded-[10px] shadow-md">
+    <div className="flex-grow bg-white p-1 rounded-[10px] flex justify-center shadow-md">
       <DateRange
         editableDateInputs={true}
         style={pickerStyles}
