@@ -12,14 +12,14 @@ const Dashboard = () => {
     <Layout>
       <div>
         <MenuHeader />
-        <div className="flex gap-4">
-          <div className="flex flex-col">
+        <div className="flex gap-4 w-full">
+          <div className="flex flex-col w-[52vw]">
             <CardHero />
             <CardJumlahStats />
           </div>
           <DateRangePicker />
         </div>
-        <div className="flex gap-4">
+        <div className="flex w-full bg-red-200 gap-4">
           <DoughnutChart />
           <DoughnutChart />
           <LineChart />
