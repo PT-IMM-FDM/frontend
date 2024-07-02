@@ -1,9 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import { DateRange } from "react-date-range";
-import "react-date-range/dist/styles.css"; // main css file
+// import "react-date-range/dist/styles.css"; // main css file
 // import "react-date-range/dist/theme/default.css"; // theme css file
-import "./style.css"
+import "./theme-style.css"
+import "./default-style.css"
 
 const DateRangePicker = () => {
   const [state, setState] = useState([
@@ -15,9 +16,9 @@ const DateRangePicker = () => {
   ]);
 
   const pickerStyles = {
-    width: "35rem",
-    fontSize: "11px",
-    borderRadius: "10px",
+    width: "25rem",
+    fontSize: "10px",
+    borderRadius: "20px",
     ".rdrDateDisplayWrapper": {
       backgroundColor: "transparent",
     },
@@ -25,7 +26,7 @@ const DateRangePicker = () => {
   
 
   return (
-    <div className="mt-4 mx-auto bg-white rounded-[10px] flex items-center shadow-md">
+    <div className="bg-white p-1 rounded-[10px] shadow-md">
       <DateRange
         editableDateInputs={true}
         style={pickerStyles}
