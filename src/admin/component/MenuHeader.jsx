@@ -6,9 +6,9 @@ const MenuHeader = ({ title }) => {
   const tanggalHariIni = formatDate();
 
   return (
-    <div className="flex h-[4.5rem] justify-between items-center">
+    <div className="flex py-1 justify-between items-center">
       <div>
-        <div className="text-[2rem] text-purple-800 medium">Dashboard FDM</div>
+        <div className="text-[1.5rem] text-purple-800 medium">Dashboard FDM</div>
         <p className="text-[14px] text-gray-500 normal">{tanggalHariIni}</p>
       </div>
       <div className="flex items-center gap-2">
