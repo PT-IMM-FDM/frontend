@@ -1,13 +1,11 @@
 import React from "react";
-import { Component as Sidebar } from "../component/Sidebar";
-import { Component as Footer } from "../component/Footer";
+import { Component as Sidebar } from "./Sidebar";
+import { Component as Footer } from "./Footer";
 
 const Layout = ({ children }) => {
   return (
-    <div className="flex max-w-[1920px] bg-red-200 min-h-screen ">
-      <div>
-        <Sidebar />
-      </div>
+    <div className="flex max-w-[1920px] h-screen bg-red-200 min-h-screen ">
+      <Sidebar />
       <div className="flex flex-col max-w-full w-screen bg-gray-100 p-4">
         <main className="h-full w-full">{children}</main>
         <Footer className="justify-self-end" />

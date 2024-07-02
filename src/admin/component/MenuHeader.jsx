@@ -8,7 +8,7 @@ const MenuHeader = ({ title }) => {
   return (
     <div className="flex py-1 justify-between items-center">
       <div>
-        <div className="text-[1.5rem] text-purple-800 medium">Dashboard FDM</div>
+        <div className="text-[1.5rem] text-purple-800 medium">{title}</div>
         <p className="text-[14px] text-gray-500 normal">{tanggalHariIni}</p>
       </div>
       <div className="flex items-center gap-2">

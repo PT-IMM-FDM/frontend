@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../Layout";
+import Layout from "../../component/Layout";
 import MenuHeader from "../../component/MenuHeader";
 import CardHero from "../../component/DashboardMenu/CardHero";
 import CardJumlahStats from "../../component/DashboardMenu/CardJumlahStats";
@@ -11,7 +11,7 @@ const Dashboard = () => {
   return (
     <Layout>
       <div>
-        <MenuHeader />
+        <MenuHeader title={"Dashboard FDM"}/>
         <div className="flex gap-4">
           <div className="flex flex-col">
             <CardHero />
