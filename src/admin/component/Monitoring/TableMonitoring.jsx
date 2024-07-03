@@ -26,14 +26,27 @@ import { visuallyHidden } from "@mui/utils";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 
-function createData(id, name, calories, fat, carbs, protein) {
+function createData(
+  id,
+  timestamp,
+  nama_lengkap,
+  nohandphone,
+  departemen,
+  posisi,
+  hasil,
+  perusahaan,
+  kontraktor
+) {
   return {
     id,
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
+    timestamp,
+    nama_lengkap,
+    nohandphone,
+    departemen,
+    posisi,
+    hasil,
+    perusahaan,
+    kontraktor,
   };
 }
 
@@ -55,21 +68,79 @@ const theme = createTheme({
   },
 });
 
+// const rows = [
+//   createData(1, "Cupcake", 305, 3.7, 67, 4.3),
+//   createData(2, "Donut", 452, 25.0, 51, 4.9),
+//   createData(3, "Eclair", 262, 16.0, 24, 6.0),
+//   createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
+//   createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
+//   createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
+//   createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
+//   createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
+//   createData(9, "KitKat", 518, 26.0, 65, 7.0),
+//   createData(10, "Lollipop", 392, 0.2, 98, 0.0),
+//   createData(11, "Marshmallow", 318, 0, 81, 2.0),
+//   createData(12, "Nougat", 360, 19.0, 9, 37.0),
+//   createData(13, "Oreo", 437, 18.0, 63, 4.0),
+// ];
+
 const rows = [
-  createData(1, "Cupcake", 305, 3.7, 67, 4.3),
-  createData(2, "Donut", 452, 25.0, 51, 4.9),
-  createData(3, "Eclair", 262, 16.0, 24, 6.0),
-  createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
-  createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
-  createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
-  createData(9, "KitKat", 518, 26.0, 65, 7.0),
-  createData(10, "Lollipop", 392, 0.2, 98, 0.0),
-  createData(11, "Marshmallow", 318, 0, 81, 2.0),
-  createData(12, "Nougat", 360, 19.0, 9, 37.0),
-  createData(13, "Oreo", 437, 18.0, 63, 4.0),
-];
+    createData(
+      1,
+      "2024-07-02 10:00:00",
+      "Budi Santoso",
+      "081234567890",
+      "IT",
+      "Software Engineer",
+      "Passed",
+      "TechCorp",
+      "TechSolutions"
+    ),
+    createData(
+      2,
+      "2024-07-02 11:00:00",
+      "Siti Aminah",
+      "081234567891",
+      "HR",
+      "HR Manager",
+      "Passed",
+      "TechCorp",
+      "HRPro"
+    ),
+    createData(
+      3,
+      "2024-07-02 12:00:00",
+      "Andi Wijaya",
+      "081234567892",
+      "Finance",
+      "Accountant",
+      "Failed",
+      "TechCorp",
+      "FinServe"
+    ),
+    createData(
+      4,
+      "2024-07-02 13:00:00",
+      "Rina Puspita",
+      "081234567893",
+      "Marketing",
+      "Marketing Specialist",
+      "Passed",
+      "TechCorp",
+      "MarketPros"
+    ),
+    createData(
+      5,
+      "2024-07-02 14:00:00",
+      "Joko Sutrisno",
+      "081234567894",
+      "Sales",
+      "Sales Executive",
+      "Failed",
+      "TechCorp",
+      "SalesForce"
+    ),
+  ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -107,7 +178,7 @@ const headCells = [
     label: "Timestamp",
   },
   {
-    id: "nama lengkap",
+    id: "nama_lengkap",
     numeric: false,
     disablePadding: false,
     label: "Nama Lengkap",
@@ -390,7 +461,7 @@ export default function EnhancedTable() {
                 onRequestSort={handleRequestSort}
                 rowCount={rows.length}
               />
-              <TableBody sx={{fontSize: "12px"}}>
+              <TableBody sx={{ fontSize: "12px" }}>
                 {visibleRows.map((row, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
@@ -420,14 +491,31 @@ export default function EnhancedTable() {
                         id={labelId}
                         scope="row"
                         padding="none"
-                        sx={{fontSize: "12px"}}
+                        sx={{ fontSize: "12px" }}
                       >
-                        {row.name}
+                        {row.timestamp}
                       </TableCell>
-                      <TableCell align="right" sx={{fontSize: "12px"}}>{row.calories}</TableCell>
-                      <TableCell align="right" sx={{fontSize: "12px"}}>{row.fat}</TableCell>
-                      <TableCell align="right" sx={{fontSize: "12px"}}>{row.carbs}</TableCell>
-                      <TableCell align="right" sx={{fontSize: "12px"}}>{row.protein}</TableCell>
+                      <TableCell align="left" sx={{ fontSize: "12px" }}>
+                        {row.nama_lengkap}
+                      </TableCell>
+                      <TableCell align="left" sx={{ fontSize: "12px" }}>
+                        {row.nohandphone}
+                      </TableCell>
+                      <TableCell align="left" sx={{ fontSize: "12px" }}>
+                        {row.departemen}
+                      </TableCell>
+                      <TableCell align="left" sx={{ fontSize: "12px" }}>
+                        {row.posisi}
+                      </TableCell>
+                      <TableCell align="left" sx={{ fontSize: "12px" }}>
+                        {row.hasil}
+                      </TableCell>
+                      <TableCell align="left" sx={{ fontSize: "12px" }}>
+                        {row.perusahaan}
+                      </TableCell>
+                      <TableCell align="left" sx={{ fontSize: "12px" }}>
+                        {row.kontraktor}
+                      </TableCell>
                     </TableRow>
                   );
                 })}
