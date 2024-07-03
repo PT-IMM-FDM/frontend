@@ -21,7 +21,7 @@ export function Component() {
               Dashboard
             </Sidebar.Item>
             <Sidebar.Item
-              href="#"
+              href="/data-monitoring"
               icon={MdOutlineMonitorHeart}
               className="normal text-sm"
             >
