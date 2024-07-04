@@ -12,7 +12,7 @@ export function ExportButton() {
     <>
       <Button
         color="light"
-        className=" pt-1 text-gray-700 bg-transparent border-gray-400 border-[1px] hover:bg-gray-400"
+        className=" pt-1 text-gray-700 bg-transparent border-gray-500 border-[1px] hover:bg-gray-400"
         onClick={() => setOpenModal(true)}
       >
         <PiExportBold className="text-lg"/>

@@ -12,6 +12,7 @@ export default function FilterButton() {
         className="pt-1 text-gray-700 bg-transparent border-0"
         color="light"
         onClick={() => setOpenModal(true)}
+        
       >
         <FilterListRoundedIcon sx={{ fontSize: "large" }} />
         <p className="ml-2 text-[12px]">Filters</p>

@@ -9,10 +9,11 @@ export function DeleteButton({ selected }) {
   const [openModal, setOpenModal] = useState(false);
 
   const handleDeleteClick = () => {
-    if (selected === 0) {
+    if (selected <= 0) {
       setOpenModal(false);
+    } else {
+      setOpenModal(true);
     }
-    // Add any additional logic if needed for selected != 0
   };
 
   return (
