@@ -35,7 +35,7 @@ const Dashboard = () => {
             <DateRangePicker />
           </div>
         </div>
-        <div className="container bg-blue-200 grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <DoughnutChart />
           <DoughnutChart />
           <div className="col-span-2">

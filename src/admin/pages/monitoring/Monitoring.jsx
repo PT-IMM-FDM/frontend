@@ -7,7 +7,7 @@ const Monitoring = () => {
   return (
     <Layout>
       <MenuHeader title={"Data Monitoring"}/>
-      <div>
+      <div className='mt-2'>
         <EnhancedTable />
       </div>
     </Layout>
