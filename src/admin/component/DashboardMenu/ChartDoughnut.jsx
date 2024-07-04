@@ -53,9 +53,9 @@ const DoughnutChart = () => {
   };
 
   return (
-    <div className="flex-grow bg-white p-4 mt-4 rounded-[10px] shadow-md">
+    <div className="bg-white p-4 rounded-[10px] h-[18rem] shadow-md">
       <h1 className="bold text-left leading-none">Doughnut Chart</h1>
-      <div className="flex w-[22rem] h-[14rem] justify-center">
+      <div className="flex h-[15rem] items-center justify-center">
         <Doughnut data={data} options={options} />
       </div>
     </div>
