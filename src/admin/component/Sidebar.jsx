@@ -8,8 +8,18 @@ import {
 } from "react-icons/hi";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { MdOutlineMonitorHeart } from "react-icons/md";
+import useAuthStore from "../stores/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 export function Component() {
+  const { logout } = useAuthStore();
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login-admin')
+  }
+
   return (
     <Sidebar className="" aria-label="Sidebar with logo branding example">
       <div className="flex justify-center">
@@ -35,8 +45,10 @@ export function Component() {
             </Sidebar.Item>
           </Sidebar.ItemGroup>
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="/login-admin" icon={HiOutlineLogout} className="normal text-sm text-red-500">
-              Logout
+            <Sidebar.Item icon={HiOutlineLogout} className="normal text-sm text-red-500">
+              <div onClick={handleLogout}>
+                Logout
+              </div>
             </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>

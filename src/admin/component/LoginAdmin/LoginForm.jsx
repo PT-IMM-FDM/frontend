@@ -1,39 +1,39 @@
-// Login.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
+import useAuthStore from "../../stores/useAuthStore";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const apiUrl = import.meta.env.VITE_API_URL
+  const { setError, setLoading, error, loading, login } = useAuthStore((state) => ({
+    setError: state.setError,
+    setLoading: state.setLoading,
+    error: state.error,
+    loading: state.loading,
+    login: state.login,
+  }));
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const response = await axios.post(`${apiUrl}/auth/login/admin`, {
-        email,
-        password,
-      });
-      console.log(response)
-      setError(null)
-    //   const { token } = response.data;
-    //   localStorage.setItem('token', token);
-      navigate('/dashboard')
+      await login(email, password);
+      setError(null);
+      navigate("/dashboard");
     } catch (error) {
-            // console.log(error.response.data)
-        if (error.response.data.status == "VALIDATION_ERROR") {
-            console.log(error.response.data.errors[0].password)
-            setError(error.response.data.errors[0].password)
-        } else {
-            console.log(error.response.data.message)
-            setError(error.response.data.message)
-        }
+      let errorMessage = "An error occurred";
+      console.log(error);
+      if (error.response?.data?.status === "VALIDATION_ERROR") {
+        errorMessage = error.response.data.errors[0].password;
+      } else {
+        errorMessage = error.response?.data?.message || errorMessage;
+      }
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,7 +47,9 @@ const LoginForm = () => {
         <p className="mt-8 text-center thin text-sm text-gray-900">
           Welcome to Admin Login, Please Sign In to Continue
         </p>
-        {error && <p className="text-red-500 mt-2 text-center text-sm">{error}</p>}
+        {error && (
+          <p className="text-red-500 mt-2 text-center text-sm">{error}</p>
+        )}
       </div>
       <form className="mt-4" onSubmit={handleLogin}>
         <div className="flex flex-col gap-4 mb-4">
@@ -60,11 +62,11 @@ const LoginForm = () => {
               name="email"
               type="email"
               autoComplete="email"
-              size='2rem'
+              size="2rem"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="rounded-[5px]  w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              className="rounded-[5px] w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Email address"
             />
           </div>
@@ -118,8 +120,9 @@ const LoginForm = () => {
           <button
             type="submit"
             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            disabled={loading}
           >
-            Sign in
+            {loading ? "Signing in.." : "Sign In"}
           </button>
         </div>
       </form>
