@@ -4,7 +4,6 @@ import LoginAdmin from './admin/pages/login-admin'
 import Monitoring from './admin/pages/monitoring'
 
 function App() {
-
   return (
     <>
       <Router>

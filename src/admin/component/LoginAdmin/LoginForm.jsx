@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
+import { getCurrentLogin } from "../../api/auth";
+import { Button, Spinner } from "flowbite-react";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -8,13 +10,16 @@ const LoginForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
-  const { setError, setLoading, error, loading, login } = useAuthStore((state) => ({
-    setError: state.setError,
-    setLoading: state.setLoading,
-    error: state.error,
-    loading: state.loading,
-    login: state.login,
-  }));
+  const { setError, setLoading, error, loading, login, token, setUser } =
+    useAuthStore((state) => ({
+      setError: state.setError,
+      setLoading: state.setLoading,
+      error: state.error,
+      loading: state.loading,
+      login: state.login,
+      token: state.token,
+      setUser: state.setUser,
+    }));
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -44,12 +49,9 @@ const LoginForm = () => {
         <h2 className="mt-2 text-center text-md medium text-gray-900">
           Fit Daily Monitoring
         </h2>
-        <p className="mt-8 text-center thin text-sm text-gray-900">
+        <p className="mt-4 text-center thin text-sm text-gray-900">
           Welcome to Admin Login, Please Sign In to Continue
         </p>
-        {error && (
-          <p className="text-red-500 mt-2 text-center text-sm">{error}</p>
-        )}
       </div>
       <form className="mt-4" onSubmit={handleLogin}>
         <div className="flex flex-col gap-4 mb-4">
@@ -115,15 +117,30 @@ const LoginForm = () => {
             </a>
           </div>
         </div>
+        {error ? (
+          <p className="text-red-500 mt-2 text-center text-sm mb-2">{error}</p>
+        ) : (
+          <div className="h-[14px] mt-2 text-center text-sm mb-2"></div>
+        )}
 
         <div>
-          <button
-            type="submit"
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            disabled={loading}
-          >
-            {loading ? "Signing in.." : "Sign In"}
-          </button>
+          {loading ? (
+            <Button color="gray" className="w-full">
+              <Spinner
+                aria-label="Alternate spinner button example"
+                size="sm"
+              />
+              <span className="pl-3">Loading...</span>
+            </Button>
+          ) : (
+            <button
+              type="submit"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              // disabled={loading}
+            >
+              Sign In
+            </button>
+          )}
         </div>
       </form>
     </div>
