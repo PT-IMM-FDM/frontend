@@ -42,7 +42,7 @@ export function Component() {
             Data Monitoring
           </Sidebar.Item>
           <Sidebar.Item
-            href="#"
+            href="/data-pengguna"
             icon={HiOutlineUser}
             className="normal text-sm"
           >
@@ -56,15 +56,15 @@ export function Component() {
             Manajemen Perusahaan
           </Sidebar.Item>
         </Sidebar.ItemGroup>
+
         <Sidebar.ItemGroup>
-          <div onClick={handleLogout} className="cursor-pointer">
-            <Sidebar.Item
-              icon={HiOutlineLogout}
-              className="normal text-sm text-red-500"
-            >
-              Logout
-            </Sidebar.Item>
-          </div>
+          <Sidebar.Item
+            href="/login-admin"
+            icon={HiOutlineLogout}
+            className="normal text-sm text-red-500"
+          >
+            Logout
+          </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
     </Sidebar>
