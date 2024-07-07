@@ -6,7 +6,6 @@ import Monitoring from './admin/pages/monitoring'
 import FDM from './user/pages/FDM-user/FDMForm'
 
 function App() {
-
   return (
     <>
       <Router>

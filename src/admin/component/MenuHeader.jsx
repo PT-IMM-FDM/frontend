@@ -2,7 +2,7 @@ import React from "react";
 import { LuUserCircle2 } from "react-icons/lu";
 import { format } from "date-fns";
 
-const MenuHeader = ({ title }) => {
+const MenuHeader = ({ title, name, email }) => {
   const tanggalHariIni = formatDate();
 
   return (
@@ -13,8 +13,8 @@ const MenuHeader = ({ title }) => {
       </div>
       <div className="flex items-center gap-2">
         <div className="text-right">
-          <p className="bold">ADMIN</p>
-          <p className="text-[12px] thin">admin@gmail.com</p>
+          <p className="bold">{name}</p>
+          <p className="text-[12px] thin">{email}</p>
         </div>
         <LuUserCircle2 className="text-[2.5rem]" />
       </div>

@@ -17,6 +17,7 @@ const DateRangePicker = () => {
 
   const pickerStyles = {
     width: "25rem",
+    height: "100%",
     fontSize: "10px",
     borderRadius: "20px",
     ".rdrDateDisplayWrapper": {
