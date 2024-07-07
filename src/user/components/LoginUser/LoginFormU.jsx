@@ -25,7 +25,7 @@ const LoginFormU = () => {
       });
       console.log(response);
       setError(null);
-      navigate("/dashboard");
+      navigate("/fdm");
     } catch (error) {
       if (error.response.data.status === "VALIDATION_ERROR") {
         console.log(error.response.data.errors[0].password);
