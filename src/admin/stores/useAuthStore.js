@@ -13,9 +13,9 @@ const useAuthStore = create(
       setToken: (newToken) => set({ token: newToken }),
       setError: (newError) => set({ error: newError }),
       setLoading: (loading) => set({ loading }),
-      login: async (email, password) => {
+      login: async (email_or_phone_number, password) => {
           set({ loading: true, error: null });
-          const { token } = await loginApi(email, password);
+          const { token } = await loginApi(email_or_phone_number, password);
           set({ token, loading: false });
           console.log(token);
         // try {

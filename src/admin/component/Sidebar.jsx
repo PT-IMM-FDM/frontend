@@ -59,7 +59,7 @@ export function Component() {
 
         <Sidebar.ItemGroup>
           <Sidebar.Item
-            href="/login-admin"
+            href="/login"
             icon={HiOutlineLogout}
             className="normal text-sm text-red-500"
           >

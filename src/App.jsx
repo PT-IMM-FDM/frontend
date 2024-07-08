@@ -10,7 +10,7 @@ function App() {
       <Router>
         <main className='min-h-screen'>
           <Routes>
-            <Route path="/login-admin" element={<LoginAdmin/>}/>
+            <Route path="/login" element={<LoginAdmin/>}/>
             <Route path="/dashboard" element={<Dashboard/>}/>
             <Route path="/data-monitoring" element={<Monitoring/>}/>
             <Route path="/data-pengguna" element={<ManagementUser/>}/>
