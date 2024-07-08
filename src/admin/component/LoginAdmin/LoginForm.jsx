@@ -21,26 +21,38 @@ const LoginForm = () => {
       setUser: state.setUser,
     }));
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await login(email, password);
-      setError(null);
-      navigate("/dashboard");
-    } catch (error) {
-      let errorMessage = "An error occurred";
-      console.log(error);
-      if (error.response?.data?.status === "VALIDATION_ERROR") {
-        errorMessage = error.response.data.errors[0].password;
-      } else {
-        errorMessage = error.response?.data?.message || errorMessage;
+    const handleLogin = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      
+      // Check if the input is valid email or phone number
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      const isPhoneNumber = /^[0-9]{10,14}$/.test(email); // Example for phone number
+      
+      if (!isEmail && !isPhoneNumber) {
+        setError("Please enter a valid email address or phone number.");
+        setLoading(false);
+        return;
       }
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
+      
+      try {
+        await login(email, password);
+        setError(null);
+        navigate("/dashboard");
+      } catch (error) {
+        let errorMessage = "An error occurred";
+        console.log(error);
+        if (error.response?.data?.status === "VALIDATION_ERROR") {
+          errorMessage = error.response.data.errors[0].password;
+        } else {
+          errorMessage = error.response?.data?.message || errorMessage;
+        }
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
 
   return (
     <div className="max-w-md w-full bg-white shadow-md rounded-[10px] p-6">
@@ -50,7 +62,7 @@ const LoginForm = () => {
           Fit Daily Monitoring
         </h2>
         <p className="mt-4 text-center thin text-sm text-gray-900">
-          Welcome to Admin Login, Please Sign In to Continue
+          Welcome, Please Sign In to Continue
         </p>
       </div>
       <form className="mt-4" onSubmit={handleLogin}>
@@ -62,8 +74,8 @@ const LoginForm = () => {
             <input
               id="email-address"
               name="email"
-              type="email"
-              autoComplete="email"
+              type="text"
+              // autoComplete="email"
               size="2rem"
               required
               value={email}

@@ -3,9 +3,9 @@ import Cookies from "js-cookie";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export const loginApi = async (email, password) => {
-  const response = await axios.post(`${apiUrl}/auth/login/admin`, {
-    email,
+export const loginApi = async (email_or_phone_number, password) => {
+  const response = await axios.post(`${apiUrl}/auth/login`, {
+    email_or_phone_number,
     password,
   });
   const { token } = response.data.data;
