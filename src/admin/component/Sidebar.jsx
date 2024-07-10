@@ -22,38 +22,39 @@ export function Component() {
 
   return (
     <Sidebar className="" aria-label="Sidebar with logo branding example">
-      <div className="flex justify-center">
-        <img className="h-10 mb-4" src="/IMM.svg" alt="Logo PT IMM" />
+      <div className="flex flex-col items-center justify-center mb-4">
+        <img className="h-10 mb-1" src="/IMM.svg" alt="Logo PT IMM" />
+        <p className="text-[12px] thin">Fit Daily Monitoring</p>
       </div>
-      <Sidebar.Items className="flex flex-col justify-between">
-        <Sidebar.ItemGroup>
+      <Sidebar.Items className="flex flex-col">
+        <Sidebar.ItemGroup className="">
           <Sidebar.Item
             href="/dashboard"
             icon={LuLayoutDashboard}
-            className="normal text-sm hover:text-purple-800 hover:bg-gray-100"
+            className="normal text-sm hover:text-purple-800 hover:bg-gray-100 pr-2"
           >
             Dashboard
           </Sidebar.Item>
           <Sidebar.Item
             href="/data-monitoring"
             icon={MdOutlineMonitorHeart}
-            className="normal text-sm"
+            className="normal text-sm hover:text-purple-800"
           >
             Data Monitoring
           </Sidebar.Item>
           <Sidebar.Item
             href="/data-pengguna"
             icon={HiOutlineUser}
-            className="normal text-sm"
+            className="normal text-sm hover:text-purple-800"
           >
             Data Pengguna
           </Sidebar.Item>
           <Sidebar.Item
             href="#"
             icon={HiOutlineOfficeBuilding}
-            className="normal text-sm"
+            className="normal text-sm hover:text-purple-800"
           >
-            Manajemen Perusahaan
+            Master Data
           </Sidebar.Item>
         </Sidebar.ItemGroup>
 
@@ -62,6 +63,7 @@ export function Component() {
             href="/login"
             icon={HiOutlineLogout}
             className="normal text-sm text-red-500"
+            onClick={handleLogout}
           >
             Logout
           </Sidebar.Item>
