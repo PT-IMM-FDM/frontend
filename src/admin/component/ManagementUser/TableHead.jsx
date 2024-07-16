@@ -1,3 +1,4 @@
+// EnhancedTableHead.js
 import * as React from "react";
 import PropTypes from "prop-types";
 import TableHead from "@mui/material/TableHead";
@@ -9,12 +10,13 @@ import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
 
 const headCells = [
-  { id: "nama_lengkap", numeric: false, disablePadding: true, label: "Nama Lengkap" },
-  { id: "nohandphone", numeric: false, disablePadding: false, label: "No. Handphone" },
-  { id: "departemen", numeric: false, disablePadding: false, label: "Departemen" },
-  { id: "posisi", numeric: false, disablePadding: false, label: "Posisi" },
-  { id: "status_pekerjaan", numeric: false, disablePadding: false, label: "Status Pekerjaan" },
-  { id: "perusahaan", numeric: false, disablePadding: false, label: "Nama Perusahaan" },
+  { id: "full_name", numeric: false, disablePadding: true, label: "Nama Lengkap" },
+  { id: "phone_number", numeric: false, disablePadding: false, label: "No. Handphone" },
+  { id: "department.name", numeric: false, disablePadding: false, label: "Departemen" },
+  { id: "job_position.name", numeric: false, disablePadding: false, label: "Posisi" },
+  { id: "employment_status.name", numeric: false, disablePadding: false, label: "Status Pekerjaan" },
+  { id: "company.name", numeric: false, disablePadding: false, label: "Nama Perusahaan" },
+  { id: "action", numeric: false, disablePadding: false, label: "Action" },
 ];
 
 function EnhancedTableHead(props) {

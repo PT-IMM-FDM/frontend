@@ -118,32 +118,7 @@ export default function FilterButton() {
             </div>
           </div>
 
-          {/* Hasil */}
-          <div className="mb-4">
-            <p className="mb-2 text-[14px] medium">Hasil</p>
-            <div className="flex grid-flow-col gap-4">
-              <div className="flex items-center gap-2">
-                <Checkbox id="accept" />
-                <Label htmlFor="accept" className="flex text-[12px]">
-                  Fit
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox id="accept" />
-                <Label htmlFor="accept" className="flex text-[12px]">
-                  Fit Follow Up
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox id="accept" />
-                <Label htmlFor="accept" className="flex text-[12px]">
-                  Unfit
-                </Label>
-              </div>
-            </div>
-          </div>
-
-            {/* Nama Perusahaan */}
+          {/* Nama Perusahaan */}
           <div className="mb-4">
             <p className="mb-2 text-[14px] medium">Nama Perusahaan</p>
             <div className="grid grid-cols-2 grid-flow-col gap-1">

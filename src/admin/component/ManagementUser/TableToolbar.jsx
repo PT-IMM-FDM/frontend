@@ -1,16 +1,16 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import { alpha } from "@mui/material/styles";
 import FilterButton from "./FilterButton";
 import { DeleteButton } from "./DeleteButton";
 import { ExportButton } from "./ExportButton";
 import { AddUserButton } from "./AddUserButton";
 import SearchBar from "./SearchBar";
+import ImportButton from "./ImportButton";
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, onSearch } = props;
+  const { numSelected, onSearch, selected } = props;
 
   return (
     <Toolbar
@@ -33,12 +33,13 @@ function EnhancedTableToolbar(props) {
               <div className="p-2 text-[12px]">
                 <p>{numSelected} rows selected</p>
               </div>
-              <DeleteButton className="right-0" selected={numSelected} />
+              <DeleteButton className="right-0" numSelected={numSelected} selected={selected} />
             </div>
           ) : (
             <div className="flex gap-2">
               <AddUserButton />
-              <DeleteButton selected={numSelected} />
+              <ImportButton/>
+              <DeleteButton className="right-0" numSelected={numSelected} selected={selected} />
             </div>
           )}
         </div>

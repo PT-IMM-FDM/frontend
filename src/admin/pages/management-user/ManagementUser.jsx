@@ -5,15 +5,15 @@ import EnhancedTable from '../../component/ManagementUser/Table'
 import useAuthStore from '../../stores/useAuthStore'
 
 const ManagementUser = () => {
-    const {user} = useAuthStore((state) => ({user: state.user}))
+    const {user, token} = useAuthStore((state) => ({user: state.user, token: state.token}))
 
   return (
-    <Layout>
+    <>
       <MenuHeader title={"Data Pengguna"} name={user?.full_name} email={user?.email}/>
       <div className='mt-2'>
-        <EnhancedTable />
+        <EnhancedTable token={token}/>
       </div>
-    </Layout>
+    </>
   )
 }
 
