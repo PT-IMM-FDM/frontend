@@ -129,7 +129,7 @@ export const deleteStatusEmployment = async (token, data) => {
     {
       headers: { Authorization: `Bearer ${token}` },
       data: {
-        status_employment_id: data,
+        employment_status_id: data,
       },
     }
   );

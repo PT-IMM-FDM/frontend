@@ -66,13 +66,13 @@ export function AddStatusButton() {
         onClick={() => setOpenModal(true)}
       >
         <LuUser className="text-lg" />
-        <p className="ml-1 text-[12px]">Tambah Posisi</p>
+        <p className="ml-1 text-[12px]">Tambah Status</p>
       </Button>
 
       {/* Modal */}
       <Modal dismissible show={openModal} size="lg" onClose={onCloseModal}>
         <Modal.Header style={{ fontSize: "12px" }}>
-          Tambah Posisi
+          Tambah Status
         </Modal.Header>
         <Modal.Body>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -82,7 +82,7 @@ export function AddStatusButton() {
                 htmlFor="status_employment"
                 className="block text-[12px] font-medium text-gray-700"
               >
-                Nama Posisi
+                Nama Status
               </label>
               <TextInput
                 id="status_employment"
@@ -101,7 +101,7 @@ export function AddStatusButton() {
                 className="h-[2.5rem] bg-purple-700 text-white border-[1px]"
                 onClick={handleSubmit}
               >
-                <p className="text-[12px]">Tambah Posisi</p>
+                <p className="text-[12px]">Tambah Status</p>
               </Button>
               <Button
                 color="failure"

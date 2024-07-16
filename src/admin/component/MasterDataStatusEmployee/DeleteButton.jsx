@@ -6,7 +6,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import useAuthStore from "../../stores/useAuthStore";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
-import { deletePosition, deleteStatusEmployment } from "../../api/data-company";
+import { deleteStatusEmployment } from "../../api/data-company";
 
 const CACHE_KEY = "dataStatus";
 
@@ -40,7 +40,7 @@ export function DeleteButton({ numSelected, selected }) {
       await deleteStatusEmployment(token, selected);
 
       // Filter out the deleted user data from the rows
-      const updatedRows = rowsStatus.filter((row) => !selected.includes(row.status_employment_id));
+      const updatedRows = rowsStatus.filter((row) => !selected.includes(row.employment_status_id));
 
       // Update the rows in the data users store
       setRowsStatus(updatedRows);

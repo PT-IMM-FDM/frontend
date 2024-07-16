@@ -11,7 +11,7 @@ import { visuallyHidden } from "@mui/utils";
   
 const headCells = [
   { id: 'number', numeric: true, disablePadding: true, label: 'No.', width: '10px'},
-  { id: "name", numeric: false, disablePadding: false, label: "Nama Posisi" },
+  { id: "name", numeric: false, disablePadding: false, label: "Nama Status" },
   { id: "action", numeric: false, disablePadding: false, label: "Action", width: 100 }, // Added width here
 ];
 
