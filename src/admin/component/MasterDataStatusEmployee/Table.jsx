@@ -39,7 +39,7 @@ export default function EnhancedTable({ token }) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rowsStatus.map((n) => n.employement_status_id);
+      const newSelected = rowsStatus.map((n) => n.employment_status_id);
       setSelected(newSelected);
       return;
     }
@@ -79,7 +79,7 @@ export default function EnhancedTable({ token }) {
 
   const emptyRows =
     page > 0
-      ? Math.max(0, (1 + page) * rowsPerPage - rowsDepartment.length)
+      ? Math.max(0, (1 + page) * rowsPerPage - rowsStatus.length)
       : 0;
 
   const handleSearch = (query) => {
