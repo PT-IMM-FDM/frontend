@@ -38,7 +38,7 @@ const LoginForm = () => {
       try {
         await login(email, password);
         setError(null);
-        navigate("/dashboard");
+        navigate("/admin/dashboard");
       } catch (error) {
         let errorMessage = "An error occurred";
         console.log(error);

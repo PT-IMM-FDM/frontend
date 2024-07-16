@@ -2,18 +2,29 @@
 
 import { Sidebar } from "flowbite-react";
 import {
-  HiOutlineOfficeBuilding,
   HiOutlineUser,
   HiOutlineLogout,
 } from "react-icons/hi";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { MdOutlineMonitorHeart } from "react-icons/md";
 import useAuthStore from "../stores/useAuthStore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { BiData } from "react-icons/bi";
+import AssignmentIndRoundedIcon from '@mui/icons-material/AssignmentIndRounded';
+import DomainAddRoundedIcon from '@mui/icons-material/DomainAddRounded';
+import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
+import { useState, useEffect } from "react";
 
 export function Component() {
   const { logout } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [activeItem, setActiveItem] = useState("");
+
+  useEffect(() => {
+    setActiveItem(location.pathname);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -29,40 +40,75 @@ export function Component() {
       <Sidebar.Items className="flex flex-col">
         <Sidebar.ItemGroup className="">
           <Sidebar.Item
-            href="/dashboard"
+            // href="/admin/dashboard"
+            onClick={() => navigate('/admin/dashboard')}
             icon={LuLayoutDashboard}
-            className="normal text-sm hover:text-purple-800 hover:bg-gray-100 pr-2"
+            className={`cursor-pointer normal text-sm hover:text-purple-800 hover:bg-gray-100 pr-2 ${activeItem === "/admin/dashboard" ? "text-purple-800 bg-gray-100" : ""}`}
           >
             Dashboard
           </Sidebar.Item>
           <Sidebar.Item
-            href="/data-monitoring"
+            // href="/admin/data-monitoring"
+            onClick={() => navigate('/admin/data-monitoring')}
             icon={MdOutlineMonitorHeart}
-            className="normal text-sm hover:text-purple-800"
+            className={`cursor-pointer normal text-sm hover:text-purple-800 ${activeItem === "/admin/data-monitoring" ? "text-purple-800 bg-gray-100" : ""}`}
           >
             Data Monitoring
           </Sidebar.Item>
           <Sidebar.Item
-            href="/data-pengguna"
+            // href="/admin/data-pengguna"
+            onClick={() => navigate('/admin/data-pengguna')}
             icon={HiOutlineUser}
-            className="normal text-sm hover:text-purple-800"
+            className={`cursor-pointer normal text-sm hover:text-purple-800 ${activeItem === "/admin/data-pengguna" ? "text-purple-800 bg-gray-100" : ""}`}
           >
             Data Pengguna
           </Sidebar.Item>
-          <Sidebar.Item
-            href="#"
-            icon={HiOutlineOfficeBuilding}
-            className="normal text-sm hover:text-purple-800"
+          <Sidebar.Collapse
+            className="cursor-pointer text-sm hover:text-purple-800"
+            icon={BiData}
+            label="Master Data"
+            open={activeItem.includes("/admin/")}
           >
-            Master Data
-          </Sidebar.Item>
+            <Sidebar.Item
+              icon={DomainAddRoundedIcon}
+              className={`cursor-pointer normal text-[12px] hover:text-purple-800 ${activeItem === "/admin/data-perusahaan" ? "text-purple-800 bg-gray-100" : ""}`}
+              // href="/admin/data-perusahaan"
+              onClick={() => navigate('/admin/data-perusahaan')}
+            >
+              Perusahaan
+            </Sidebar.Item>
+            <Sidebar.Item
+              icon={AccountTreeRoundedIcon}
+              className={`cursor-pointer normal text-[12px] hover:text-purple-800 ${activeItem === "/admin/data-departemen" ? "text-purple-800 bg-gray-100" : ""}`}
+              // href="/admin/data-departemen"
+              onClick={() => navigate('/admin/data-departemen')}
+            >
+              Departemen
+            </Sidebar.Item>
+            <Sidebar.Item
+              icon={BadgeRoundedIcon}
+              className={`cursor-pointer normal text-[12px] hover:text-purple-800 ${activeItem === "/admin/data-posisi" ? "text-purple-800 bg-gray-100" : ""}`}
+              // href="/admin/data-posisi"
+              onClick={() => navigate('/admin/data-posisi')}
+            >
+              Posisi
+            </Sidebar.Item>
+            <Sidebar.Item
+              icon={AssignmentIndRoundedIcon}
+              className={`cursor-pointer normal text-[12px] hover:text-purple-800 ${activeItem === "/admin/data-status" ? "text-purple-800 bg-gray-100" : ""}`}
+              // href="#"
+              onClick={() => navigate('/admin/data-status')}
+            >
+              Status Pekerjaan
+            </Sidebar.Item>
+          </Sidebar.Collapse>
         </Sidebar.ItemGroup>
 
         <Sidebar.ItemGroup>
           <Sidebar.Item
             href="/login"
             icon={HiOutlineLogout}
-            className="normal text-sm text-red-500"
+            className="cursor-pointer normal text-sm text-red-500"
             onClick={handleLogout}
           >
             Logout

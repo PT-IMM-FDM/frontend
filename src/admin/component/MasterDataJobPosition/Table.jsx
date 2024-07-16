@@ -14,24 +14,22 @@ import EnhancedTableHead from "./TableHead";
 import EnhancedTableToolbar from "./TableToolbar";
 import { theme } from "./TableTheme";
 import { stableSort, getComparator } from "../../utils/sorting";
-import { getAllUser } from "../../api/data-user";
 import { FaRegEdit } from "react-icons/fa";
 import { Button, Tooltip } from "flowbite-react";
-import useDataUsersStore from "../../stores/useDataUsersStore";
-import { toCamelCase } from "../../utils/stringUtils";
+import { getAllDepartments, getAllPositions } from "../../api/data-company";
+import useDataCompanyStore from "../../stores/useDataCompanyStore";
 
-const CACHE_KEY = "usersData";
+const CACHE_KEY = "dataJobPositions";
 
 export default function EnhancedTable({ token }) {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("full_name");
-  // const [selected, setSelected] = React.useState([]);
+  const [orderBy, setOrderBy] = React.useState("name");
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
-  // const [rows, setRows] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const { rows, selected, setRows, setSelected } = useDataUsersStore();
+  const { rowsPosition, selected, setRowsPosition, setSelected } =
+    useDataCompanyStore();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -39,46 +37,21 @@ export default function EnhancedTable({ token }) {
     setOrderBy(property);
   };
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const cachedData = localStorage.getItem(CACHE_KEY);
-      if (cachedData) {
-        setRows(JSON.parse(cachedData));
-      }
-
-      try {
-        const dataUsers = await getAllUser(token);
-        const data = dataUsers.data.map((row) => ({
-          ...row,
-        }))
-
-        if (!cachedData || JSON.stringify(data)!== cachedData) {
-          setRows(data);
-          localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-        }
-      } catch (error) {
-        console.error('Failed to fetch data:', error)
-      }
-    };
-
-    fetchData();
-  }, [token, setRows]);
-
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.user_id);
+      const newSelected = rowsPosition.map((n) => n.job_position_id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, user_id) => {
-    const selectedIndex = selected.indexOf(user_id);
+  const handleClick = (event, job_position_id) => {
+    const selectedIndex = selected.indexOf(job_position_id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, user_id);
+      newSelected = newSelected.concat(selected, job_position_id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -102,25 +75,55 @@ export default function EnhancedTable({ token }) {
     setPage(0);
   };
 
-  const isSelected = (user_id) => selected.indexOf(user_id) !== -1;
+  const isSelected = (job_position_id) => selected?.indexOf(job_position_id) !== -1;
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - rowsPosition.length)
+      : 0;
 
   const handleSearch = (query) => {
     setSearchQuery(query);
     setPage(0);
   };
 
+  // console.log(rowsPosition);
+
+  // Modify the useEffect to include index
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        setRowsPosition(JSON.parse(cachedData));
+      }
+
+      try {
+        const dataPosition = await getAllPositions(token);
+        const data = dataPosition.data.map((row, index) => ({
+          ...row,
+          index: index + 1,
+        }));
+        if (!cachedData || JSON.stringify(data) !== cachedData) {
+          setRowsPosition(data);
+          localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+
+    fetchData();
+  }, [token, setRowsPosition]);
+
   const visibleRows = React.useMemo(() => {
-    const filteredRows = rows.filter((row) =>
-      String(row.full_name).toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredRows = rowsPosition.filter((row) =>
+      String(row.name).toLowerCase().includes(searchQuery.toLowerCase())
     );
     return stableSort(filteredRows, getComparator(order, orderBy)).slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage
     );
-  }, [order, orderBy, page, rowsPerPage, rows, searchQuery]);
+  }, [order, orderBy, page, rowsPerPage, rowsPosition, searchQuery]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -136,7 +139,7 @@ export default function EnhancedTable({ token }) {
           }}
         >
           <EnhancedTableToolbar
-            numSelected={selected.length}
+            numSelected={selected?.length}
             onSearch={handleSearch}
             selected={selected}
           />
@@ -147,26 +150,26 @@ export default function EnhancedTable({ token }) {
               size={dense ? "small" : "medium"}
             >
               <EnhancedTableHead
-                numSelected={selected.length}
+                numSelected={selected?.length}
                 order={order}
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={rowsPosition.length}
               />
               <TableBody>
                 {visibleRows.map((row, index) => {
-                  const isItemSelected = isSelected(row.user_id);
+                  const isItemSelected = isSelected(row.job_position_id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.user_id)}
+                      onClick={(event) => handleClick(event, row.job_position_id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.user_id}
+                      key={row.job_position_id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -183,26 +186,17 @@ export default function EnhancedTable({ token }) {
                         id={labelId}
                         scope="row"
                         padding="none"
-                        sx={{ fontSize: "12px" }}
+                        sx={{ fontSize: "12px", width: "10px" }}
                       >
-                        {toCamelCase(row.full_name)}
+                        {index + 1}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.phone_number}
+                        {row.name}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.department?.name}
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.job_position?.name}
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.employment_status?.name}
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.company?.name}
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
+                      <TableCell
+                        sx={{ fontSize: "12px", pl: "1.5rem" }}
+                        align="left"
+                      >
                         <Tooltip content="Edit" className="text-[10px]">
                           <Button
                             className="text-sm p-0 border-none bg-transparent"
@@ -210,7 +204,7 @@ export default function EnhancedTable({ token }) {
                             color="light"
                             onClick={(event) => {
                               event.stopPropagation();
-                              console.log("edit", row.user_id);
+                              console.log("edit", rowsDepartment.job_position_id);
                             }}
                           >
                             <FaRegEdit className="text-[1rem] hover:text-purple-700" />
@@ -235,7 +229,7 @@ export default function EnhancedTable({ token }) {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
+            count={rowsPosition.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

@@ -8,12 +8,12 @@ const Monitoring = () => {
   const {user} = useAuthStore((state) => ({user: state.user}))
 
   return (
-    <Layout>
+    <>
       <MenuHeader title={"Data Monitoring"} name={user.full_name} email={user.email}/>
       <div className='mt-2'>
         <EnhancedTable />
       </div>
-    </Layout>
+    </>
   )
 }
 

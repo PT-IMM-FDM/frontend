@@ -1,5 +1,3 @@
-// utils/sorting.js
-
 export const stableSort = (array, comparator) => {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -30,7 +28,10 @@ const descendingComparator = (a, b, orderBy) => {
   }
 
   // Perform descending comparison
-  if (typeof valueA === 'string' && typeof valueB === 'string') {
+  if (orderBy === 'index') {
+    // Ensure numeric comparison for index
+    return valueB - valueA;
+  } else if (typeof valueA === 'string' && typeof valueB === 'string') {
     return valueB.localeCompare(valueA);
   } else {
     return valueB - valueA;
