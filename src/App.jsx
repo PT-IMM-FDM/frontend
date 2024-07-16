@@ -1,3 +1,4 @@
+import FDM from "./user/pages/FDM-user/FDMForm";
 import { Navigate, BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Dashboard from './admin/pages/dashboard'
 import LoginAdmin from './admin/pages/login-admin'
@@ -13,10 +14,11 @@ function App() {
   return (
     <>
       <Router>
-        <main className='min-h-screen'>
+        <main className="min-h-screen">
           <Routes>
             <Route exact path="/" element={<Navigate to="/login" />} />
             <Route path="/admin/*" element={<LayoutPages/>}/>
+            <Route path="/FDM-form" element={<FDM />} />
             <Route path="/login" element={<LoginAdmin/>}/>
             {/* <Route path="/dashboard" element={<Dashboard/>}/>
             <Route path="/data-monitoring" element={<Monitoring/>}/>
@@ -28,7 +30,7 @@ function App() {
         </main>
       </Router>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
