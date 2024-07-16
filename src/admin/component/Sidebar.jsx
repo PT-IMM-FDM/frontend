@@ -28,7 +28,7 @@ export function Component() {
 
   const handleLogout = () => {
     logout();
-    navigate("/login-admin");
+    navigate("/login");
   };
 
   return (
@@ -106,7 +106,6 @@ export function Component() {
 
         <Sidebar.ItemGroup>
           <Sidebar.Item
-            href="/login"
             icon={HiOutlineLogout}
             className="cursor-pointer normal text-sm text-red-500"
             onClick={handleLogout}

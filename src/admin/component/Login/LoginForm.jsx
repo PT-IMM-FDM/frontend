@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { getCurrentLogin } from "../../api/auth";
 import { Button, Spinner } from "flowbite-react";
+import Cookies from 'js-cookie'
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -10,7 +11,7 @@ const LoginForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
-  const { setError, setLoading, error, loading, login, token, setUser } =
+  const { setError, setLoading, error, loading, login, token, user, setUser } =
     useAuthStore((state) => ({
       setError: state.setError,
       setLoading: state.setLoading,
@@ -18,7 +19,7 @@ const LoginForm = () => {
       loading: state.loading,
       login: state.login,
       token: state.token,
-      setUser: state.setUser,
+      user: state.user,
     }));
 
     const handleLogin = async (e) => {
@@ -38,7 +39,13 @@ const LoginForm = () => {
       try {
         await login(email, password);
         setError(null);
-        navigate("/admin/dashboard");
+        const newToken = Cookies.get('token');
+        const dataUser = await getCurrentLogin(newToken)
+        if (dataUser.role.name !== 'User') {
+          navigate("/admin/dashboard");
+        } else {
+          navigate('/fdm-form')
+        }
       } catch (error) {
         let errorMessage = "An error occurred";
         console.log(error);
