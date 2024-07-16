@@ -1,298 +1,239 @@
 "use client";
 
-import { useState } from "react";
-import { Label, Radio, Button, HR } from "flowbite-react";
+import { useState, useEffect } from "react";
+import {
+  Label,
+  Radio,
+  Button,
+  HR,
+  Card,
+  Select,
+  TextInput,
+} from "flowbite-react";
+import axios from "axios";
+import useAuthStore from "../../admin/stores/useAuthStore";
 
 export function Component() {
-  const [answers, setAnswers] = useState({
-    1: "",
-    2: "",
-    3: "",
-    4: "",
-    5: "",
-    6: "",
-    7: "",
-  });
+  const { token, user } = useAuthStore((state) => ({
+    token: state.token,
+    user: state.user, // Asumsikan user object memiliki id
+  }));
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiGetAllQuestionsURL = `${apiUrl}/fdm/question/getall`;
+  const apiCreateResponseURL = `${apiUrl}/fdm/response/create`;
+
+  const [questions, setQuestions] = useState([]);
+  const [answers, setAnswers] = useState({});
+  const [attendanceStatus, setAttendanceStatus] = useState("");
+  const [workDurationPlan, setWorkDurationPlan] = useState("");
+  const [shift, setShift] = useState("");
+  const [isDriver, setIsDriver] = useState("");
+  const [licensePlate, setLicensePlate] = useState("");
+
+  useEffect(() => {
+    // Fungsi untuk mendapatkan data dari API
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.get(apiGetAllQuestionsURL, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const result = response.data;
+        setQuestions(result.data);
+
+        const initialAnswers = {};
+        result.data.forEach((question) => {
+          initialAnswers[question.question_id] = "";
+        });
+        setAnswers(initialAnswers);
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+        alert("Terjadi kesalahan saat mendapatkan data.");
+      }
+    };
+
+    fetchQuestions();
+  }, [token, apiGetAllQuestionsURL]);
 
   const handleRadioChange = (e) => {
     setAnswers({ ...answers, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleDriverStatusChange = (e) => {
+    setIsDriver(e.target.value);
+  };
+
+  const handleShiftChange = (e) => {
+    setShift(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const allAnswered = Object.values(answers).every((answer) => answer !== "");
-    if (!allAnswered) {
+    if (!allAnswered && (isDriver == "true")) {
       alert("Harap menjawab semua pertanyaan sebelum mengirimkan.");
     } else {
-      // Lakukan sesuatu dengan jawaban, misalnya mengirim ke server
-      console.log("Jawaban terkirim:", answers);
+      const questionIds = Object.keys(answers).map(Number); // Mengubah key menjadi angka
+      const questionAnswerIds = Object.values(answers).map(Number); // Mengubah value menjadi angka
+      const requestBody = {
+        user_id: user.user_id, // Mengambil user_id dari state useAuthStore
+        question_id: questionIds,
+        question_answer_id: questionAnswerIds,
+        attendance_status: attendanceStatus,
+        work_duration_plan: workDurationPlan,
+        shift: shift,
+        is_driver: isDriver,
+        vehicle_hull_number: isDriver ? licensePlate : null,
+      };
+
+      try {
+        const response = await axios.post(apiCreateResponseURL, requestBody, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        alert("Jawaban terkirim sukses!");
+        console.log("Jawaban terkirim:", response.data);
+      } catch (error) {
+        console.error("Error submitting answers:", error);
+        alert("Terjadi kesalahan saat mengirimkan jawaban.");
+      }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <fieldset className="flex max-w-md flex-col gap-4">
-        <legend className="mb-4 font-semibold">
-          Pertanyaan 1 : BAGAIMANA PERASAAN KEADAAN KELELAHAN ANDA SEKARANG?
-        </legend>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q1a1"
-            name="1"
-            value="USA"
-            onChange={handleRadioChange}
-            checked={answers["1"] === "USA"}
+    <>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-2 block">
+          <Label
+            className="font-bold text-[16px]"
+            htmlFor="attendanceStatus"
+            value="Status Kehadiran"
           />
-          <Label htmlFor="q1a1">
-            Sangat waspada & terjaga
-          </Label>
         </div>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q1a2"
-            name="1"
-            value="Germany"
-            onChange={handleRadioChange}
-            checked={answers["1"] === "Germany"}
+        <Select
+          id="attendanceStatus"
+          required
+          value={attendanceStatus}
+          onChange={(e) => setAttendanceStatus(e.target.value)}
+        >
+          <option value="" disabled>
+            Pilih status kehadiran
+          </option>
+          <option value="K1">K1: Kerja di Hari Kerja Biasa</option>
+          <option value="K1+OT">
+            K1+OT: Kerja di Hari Kerja Biasa, Lanjut Overtime
+          </option>
+          <option value="OT">OT: Kerja Pada Hari Libur/Overtime</option>
+        </Select>
+        <HR />
+        <div className="mb-2 block">
+          <Label
+            className="font-bold text-[16px]"
+            htmlFor="workDurationPlan"
+            value="Rencana durasi kerja hari ini?"
           />
-          <Label htmlFor="q1a2">
-            Sedikit lelah & perlu upaya untuk tetap waspada
-          </Label>
         </div>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q1a3"
-            name="1"
-            value="Spain"
-            onChange={handleRadioChange}
-            checked={answers["1"] === "Spain"}
-          />
-          <Label htmlFor="q1a3">
-            Sangat lelah & sulit untuk tetap waspada
-          </Label>
-        </div>
-        <HR.Text text="2" />
+        <Select
+          id="workDurationPlan"
+          required
+          value={workDurationPlan}
+          onChange={(e) => setWorkDurationPlan(e.target.value)}
+        >
+          <option value="" disabled>
+            Pilih rencana durasi kerja
+          </option>
+          <option value="< 8 jam">&lt; 8 jam</option>
+          <option value="8 Jam">8 Jam</option>
+          <option value="9 - 12 Jam">9 - 12 Jam</option>
+          <option value="> 12 Jam">&gt; 12 Jam</option>
+        </Select>
+        <HR />
 
+        <div className="mb-2 block">
+          <Label
+            className="font-bold text-[16px]"
+            htmlFor="shift"
+            value="Apakah anda kerja Shift/ Non-Shift?"
+          />
+        </div>
+        <Select
+          id="shift"
+          required
+          value={shift}
+          onChange={handleShiftChange}
+        >
+          <option value="" disabled>
+            Pilih jawaban anda
+          </option>
+          <option value="true">Shift</option>
+          <option value="false">Non-Shift</option>
+        </Select>
+        <HR />
 
-        <legend className="mb-4 font-semibold">
-          Pertanyaan 2 : BERAPA JAM ANDA TIDUR DALAM 24 JAM TERAKHIR/ 1 HARI
-          TERAKHIR? (DIHITUNG MUNDUR 24 JAM DARI JAM PERMULAAN SHIFT KERJA
-          SEKARANG, KEMUDIAN JUMLAHKAN JAM TIDUR ANDA YANG TERPUTUS)
-        </legend>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q2a1"
-            name="2"
-            value="USA"
-            onChange={handleRadioChange}
-            checked={answers["2"] === "USA"}
+        <div className="mb-2 block">
+          <Label
+            className="font-bold text-[16px]"
+            htmlFor="driverStatus"
+            value="Apakah anda seorang Pengendara/Driver/Operator?"
           />
-          <Label htmlFor="q2a1">
-            1. Tidur lebih dari/ sama dengan 6 jam 
-          </Label>
         </div>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q2a2"
-            name="2"
-            value="Germany"
-            onChange={handleRadioChange}
-            checked={answers["2"] === "Germany"}
-          />
-          <Label htmlFor="q2a2">
-            2. Tidur 5 jam
-          </Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q2a3"
-            name="2"
-            value="Spain"
-            onChange={handleRadioChange}
-            checked={answers["2"] === "Spain"}
-          />
-          <Label htmlFor="q2a3">
-            3. Tidur kurang dari/ sama dengan 4 jam
-          </Label>
-        </div>
-        <HR.Text text="3" />
-        {/* <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr> */}
+        <Select
+          id="driverStatus"
+          required
+          value={isDriver}
+          onChange={handleDriverStatusChange}
+        >
+          <option value="" disabled>
+            Pilih jawaban anda
+          </option>
+          <option value="false">Tidak</option>
+          <option value="true">Ya</option>
+        </Select>
+        <HR />
 
+        {isDriver == "true" && (
+          <div className="mb-4">
+            <Label
+              className="font-bold text-[16px]"
+              htmlFor="licensePlate"
+              value="Masukkan nomor lambung kendaraan"
+            />
+            <TextInput
+              id="licensePlate"
+              placeholder="Nomor Plat Kendaraan"
+              required
+              value={licensePlate}
+              onChange={(e) => setLicensePlate(e.target.value)}
+            />
+            <HR />
+          </div>
+        )}
 
-        
-        <legend className="mb-4 font-semibold">
-          Pertanyaan 3 : BERAPA JAM ANDA TIDUR DALAM 48 JAM TERAKHIR/ 2 HARI
-          TERAKHIR? (DIHITUNG MUNDUR 48 JAM DARI JAM PERMULAAN SHIFT KERJA
-          SEKARANG, KEMUDIAN JUMLAHKAN JAM TIDUR ANDA YANG TERPUTUS)
-        </legend>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q3a1"
-            name="3"
-            value="USA"
-            onChange={handleRadioChange}
-            checked={answers["3"] === "USA"}
-          />
-          <Label htmlFor="q3a1">
-            1. Tidur lebih dari/ sama dengan dua belas jam
-          </Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q3a2"
-            name="3"
-            value="Germany"
-            onChange={handleRadioChange}
-            checked={answers["3"] === "Germany"}
-          />
-          <Label htmlFor="q3a2">
-            2. Tidur sembilan s.d sebelas jam
-          </Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q3a3"
-            name="3"
-            value="Spain"
-            onChange={handleRadioChange}
-            checked={answers["3"] === "Spain"}
-          />
-          <Label htmlFor="q3a3">
-            3. Tidur kurang dari/ sama dengan 8 jam
-          </Label>
-        </div>
-        <HR.Text text="4" />
-
-
-
-        <legend className="mb-4 font-semibold">
-          Pertanyaan 4 : BAGAIMANA KUALITAS TIDUR ANDA ?
-          (Jawablah Pertanyaan dengan Mengklik Salah Satu Jawaban)
-        </legend>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q4a1"
-            name="4"
-            value="USA"
-            onChange={handleRadioChange}
-            checked={answers["4"] === "USA"}
-          />
-          <Label htmlFor="q4a1">
-            1. Baik
-          </Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q4a2"
-            name="4"
-            value="Germany"
-            onChange={handleRadioChange}
-            checked={answers["4"] === "Germany"}
-          />
-          <Label htmlFor="q4a2">
-            2. Buruk (Sering terbangun saat tidur dengan frekuensi dua kali atau
-            lebih disertai baru bisa tidur setelah lebih tiga puluh menit di
-            pembaringan/tempat tidur)
-          </Label>
-        </div>
-        <HR.Text text="5" />
-
-
-
-        <legend className="mb-4 font-semibold">
-          Pertanyaan 5 : APAKAH HARI INI ANDA MENGALAMI TANDA & GEJALA FATIGUE
-          DALAM KATEGORI FAKTOR FISIK ? (LIHAT DAFTAR TANDA & GEJALA FAKTOR
-          FISIK DIATAS)
-        </legend>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q5a1"
-            name="5"
-            value="USA"
-            onChange={handleRadioChange}
-            checked={answers["5"] === "USA"}
-          />
-          <Label htmlFor="q5a1">
-            1. Tidak terdapat tanda gejala Fatigue
-          </Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q5a2"
-            name="5"
-            value="Germany"
-            onChange={handleRadioChange}
-            checked={answers["5"] === "Germany"}
-          />
-          <Label htmlFor="q5a2">
-            2. Ya, terdapat tanda gejala Fatigue
-          </Label>
-        </div>
-        <HR.Text text="6" />
-
-        <legend className="mb-4 font-semibold">
-          Pertanyaan 6 : APAKAH HARI INI ANDA MENGALAMI TANDA & GEJALA FATIGUE
-          DALAM KATEGORI FAKTOR MENTAL ? (LIHAT DAFTAR TANDA & GEJALA FAKTOR
-          MENTAL DIATAS)
-        </legend>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q6a1"
-            name="6"
-            value="USA"
-            onChange={handleRadioChange}
-            checked={answers["6"] === "USA"}
-          />
-          <Label htmlFor="q6a1">
-            1. Tidak terdapat tanda gejala Fatigue
-          </Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q6a2"
-            name="6"
-            value="Germany"
-            onChange={handleRadioChange}
-            checked={answers["6"] === "Germany"}
-          />
-          <Label htmlFor="q6a2">
-            2. Ya, terdapat tanda gejala Fatigue
-          </Label>
-        </div>
-        <HR.Text text="7" />
-
-        <legend className="mb-4 font-semibold">
-          Pertanyaan 7 : APAKAH DALAM 24 JAM TERKAHIR ANDA MENGALAMI SALAH SATU
-          KELUHAN BERIKUT: NYERI DADA, SESAK NAPAS, NYERI ULU HATI, BERDEBAR ?
-        </legend>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q7a1"
-            name="7"
-            value="USA"
-            onChange={handleRadioChange}
-            checked={answers["7"] === "USA"}
-          />
-          <Label htmlFor="q7a1">
-            1. Tidak
-          </Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Radio
-            id="q7a2"
-            name="7"
-            value="Germany"
-            onChange={handleRadioChange}
-            checked={answers["7"] === "Germany"}
-          />
-          <Label htmlFor="q7a2">
-            2. Ya
-          </Label>
-        </div>
-        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
-
-        <Button className="mb-8" type="submit">Submit</Button>
-      </fieldset>
-    </form>
+        {questions.map((question) => (
+          <div key={question.question_id}>
+            <div className="mb-4 font-semibold">{question.question}</div>
+            {question.question_answer.map((answer) => (
+              <div
+                className="flex items-center gap-2"
+                key={answer.question_answer_id}
+              >
+                <Radio
+                  id={answer.question_id}
+                  name={question.question_id}
+                  value={answer.question_answer_id}
+                  onChange={handleRadioChange}
+                />
+                <Label htmlFor={answer.question_id}>
+                  {answer.question_answer}
+                </Label>
+              </div>
+            ))}
+            <HR />
+          </div>
+        ))}
+        <Button className="mb-8 w-full" type="submit">
+          Submit
+        </Button>
+      </form>
+    </>
   );
 }
