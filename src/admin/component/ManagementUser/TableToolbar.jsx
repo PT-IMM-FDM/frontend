@@ -8,6 +8,7 @@ import { ExportButton } from "./ExportButton";
 import { AddUserButton } from "./AddUserButton";
 import SearchBar from "./SearchBar";
 import ImportButton from "./ImportButton";
+import DownloadTemplateButton from "./DownloadTemplateButton";
 
 function EnhancedTableToolbar(props) {
   const { numSelected, onSearch, selected } = props;
@@ -47,6 +48,7 @@ function EnhancedTableToolbar(props) {
           <SearchBar onSearch={onSearch} />
           <FilterButton />
           <ExportButton />
+          <DownloadTemplateButton/>
         </div>
       </div>
     </Toolbar>
