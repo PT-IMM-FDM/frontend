@@ -100,7 +100,7 @@ export function AddCompanyButton() {
               <Button
                 color="purple"
                 className="h-[2.5rem] bg-purple-700 text-white border-[1px]"
-                onClick={handleSubmit}
+                type="submit"
               >
                 <p className="text-[12px]">Tambah Kontraktor</p>
               </Button>
