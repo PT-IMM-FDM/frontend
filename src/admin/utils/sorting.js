@@ -1,28 +1,48 @@
-export function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
+export const stableSort = (array, comparator) => {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+};
+
+export const getComparator = (order, orderBy) => {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+};
+
+const descendingComparator = (a, b, orderBy) => {
+  const valueA = getNestedValue(a, orderBy);
+  const valueB = getNestedValue(b, orderBy);
+
+  // Handle undefined or null values appropriately
+  if (valueA == null && valueB == null) {
     return 0;
+  } else if (valueA == null) {
+    return 1;
+  } else if (valueB == null) {
+    return -1;
   }
-  
-  export function getComparator(order, orderBy) {
-    return order === "desc"
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
+
+  // Perform descending comparison
+  if (orderBy === 'index') {
+    // Ensure numeric comparison for index
+    return valueB - valueA;
+  } else if (typeof valueA === 'string' && typeof valueB === 'string') {
+    return valueB.localeCompare(valueA);
+  } else {
+    return valueB - valueA;
   }
-  
-  export function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) {
-        return order;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
+};
+
+const getNestedValue = (obj, path) => {
+  const keys = path.split('.');
+  let value = obj;
+  for (const key of keys) {
+    value = value ? value[key] : null;
   }
-  
+  return value;
+};

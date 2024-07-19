@@ -15,6 +15,7 @@ export const loginApi = async (email_or_phone_number, password) => {
 
 export const logoutApi = () => {
   Cookies.remove("token");
+  localStorage.clear();
 };
 
 export const getCurrentLogin = async (token) => {

@@ -34,7 +34,7 @@ const Dashboard = () => {
 
   if (!user) {
     return (
-      <Layout>
+      <>
         <MenuHeader title={"Dashboard FDM"} />
         <div className="grid grid-row-2 gap-4">
           <div className="grid grid-cols-3 gap-4">
@@ -56,12 +56,12 @@ const Dashboard = () => {
             <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={300} className="col-span-2" />
           </div>
         </div>
-      </Layout>
+      </>
     );
   }
 
   return (
-    <Layout>
+    <>
       <MenuHeader title={"Dashboard FDM"} name={user.full_name} email={user.email} />
       <div className="grid grid-row-2 gap-4">
         <div className="grid grid-cols-3 gap-4">
@@ -81,7 +81,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

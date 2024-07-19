@@ -1,31 +1,70 @@
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import LayoutPages from "./admin/pages/LayoutPages";
+import "./index.css";
+import Login from "./admin/pages/login-admin";
+import useAuthStore from "./admin/stores/useAuthStore";
+import { getCurrentLogin } from "./admin/api/auth";
+import ProtectedRoute from "./admin/pages/ProtectedRoute";
+import NotFound from "./admin/pages/NotFound";
 import FDM from "./user/pages/FDM-user/FDMForm";
-import { Navigate, BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Dashboard from './admin/pages/dashboard'
-import LoginAdmin from './admin/pages/login-admin'
-import Monitoring from './admin/pages/monitoring'
-import ManagementUser from './admin/pages/management-user'
+import PublicRoute from "./admin/pages/PublicRoute";
 import HistoryU from "./user/pages/History-user/HistoryU";
 import ResultU from "./user/pages/Result-user/ResultU";
 
 
 function App() {
+  const { token, setUser } = useAuthStore((state) => ({
+    token: state.token,
+    setUser: state.setUser,
+  }));
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (token) {
+        try {
+          const dataUser = await getCurrentLogin(token);
+          setUser(dataUser);
+        } catch (error) {
+          console.error("Error fetching current user:", error);
+        }
+      }
+    };
+
+    fetchUser();
+  }, [token, setUser]);
+
   return (
-    <>
-      <Router>
-        <main className="min-h-screen">
-          <Routes>
+    <Router>
+      <Routes>
+        {/* <Route path="/" element={<Navigate to={token ? '/admin/dashboard' : '/login'} />} />
+        <Route path="/login" element={!token ? <Login /> : <Navigate to="/admin/dashboard" replace />} /> */}
+        <Route path="/" element={<Navigate to={"/login"} />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+          <Route path="/admin/*" element={<LayoutPages />} />
+        </Route>
+        <Route element={<ProtectedRoute allowedRoles={["User"]} />}>
             <Route exact path="/" element={<Navigate to="/login"/>} />
-            <Route path="/fdm-form" element={<FDM />} />
-            <Route path="/login" element={<LoginAdmin/>}/>
-            <Route path="/dashboard" element={<Dashboard/>}/>
-            <Route path="/data-monitoring" element={<Monitoring/>}/>
-            <Route path="/data-pengguna" element={<ManagementUser/>}/>
+          <Route path="/fdm-form" element={<FDM />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
             <Route path="/riwayat-user" element= {<HistoryU/>}/>
             <Route path="/fdm-form/hasil" element= {<ResultU/>}/>
-          </Routes>
-        </main>
-      </Router>
-    </>
+      </Routes>
+    </Router>
   );
 }
 
