@@ -26,7 +26,6 @@ export default function ImportButton() {
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      console.log("File selected:", file);
       try {
         await uploadFile(file, token);
         const dataUsers = await getAllUser(token); // Fetch the latest data

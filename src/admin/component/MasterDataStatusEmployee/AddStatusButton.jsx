@@ -37,8 +37,6 @@ export function AddStatusButton() {
     setFormData({[name]: value,});
   };
 
-  // console.log(formData)
-
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();

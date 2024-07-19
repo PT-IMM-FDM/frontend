@@ -1,5 +1,5 @@
 import { Button, Modal, Select, TextInput } from "flowbite-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LuUser } from "react-icons/lu";
 import { createUser } from "../../api/data-user";
 import useAuthStore from "../../stores/useAuthStore";
@@ -13,7 +13,10 @@ export function AddUserButton() {
     rows: state.rows,
     setRows: state.setRows,
   }));
-
+  const [departments, setDepartments] = useState([]);
+  const [jobPositions, setJobPositions] = useState([]);
+  const [employmentStatuses, setEmploymentStatuses] = useState([]);
+  const [companies, setCompanies] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [formData, setFormData] = useState({
     company_id: "",
@@ -26,6 +29,29 @@ export function AddUserButton() {
     role_id: "",
     email: "",
   });
+
+  useEffect(() => {
+    // Get data from localStorage if available
+    const storedDepartments = localStorage.getItem("dataDepartments");
+    if (storedDepartments) {
+      setDepartments(JSON.parse(storedDepartments));
+    }
+
+    const storedJobPositions = localStorage.getItem("dataJobPositions");
+    if (storedJobPositions) {
+      setJobPositions(JSON.parse(storedJobPositions));
+    }
+
+    const storedStatuses = localStorage.getItem("dataStatus");
+    if (storedStatuses) {
+      setEmploymentStatuses(JSON.parse(storedStatuses));
+    }
+
+    const storedCompanies = localStorage.getItem("dataCompany");
+    if (storedCompanies) {
+      setCompanies(JSON.parse(storedCompanies));
+    }
+  }, []);
 
   function onCloseModal() {
     setOpenModal(false);
@@ -53,9 +79,6 @@ export function AddUserButton() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     
-    // Log the form data for debugging
-    console.log(formData);
-
     try {
       const newDataUser = await createUser(token, formData);
       setRows([...rows, newDataUser]);
@@ -164,9 +187,11 @@ export function AddUserButton() {
                 className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               >
                 <option value="">Select Company</option>
-                <option value="1">Company 1</option>
-                <option value="2">Company 2</option>
-                <option value="3">Company 3</option>
+                {companies.map((company) => (
+                  <option key={company.company_id} value={company.company_id}>
+                    {company.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -188,9 +213,11 @@ export function AddUserButton() {
                 className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               >
                 <option value="">Select Department</option>
-                <option value="1">Department 1</option>
-                <option value="2">Department 2</option>
-                <option value="3">Department 3</option>
+                {departments.map((department) => (
+                  <option key={department.department_id} value={department.department_id}>
+                    {department.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -212,9 +239,11 @@ export function AddUserButton() {
                 className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               >
                 <option value="">Select Job Position</option>
-                <option value="1">Position 1</option>
-                <option value="2">Position 2</option>
-                <option value="3">Position 3</option>
+                {jobPositions.map((position) => (
+                  <option key={position.job_position_id} value={position.job_position_id}>
+                    {position.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -236,9 +265,11 @@ export function AddUserButton() {
                 className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               >
                 <option value="">Select Employment Status</option>
-                <option value="1">Status 1</option>
-                <option value="2">Status 2</option>
-                <option value="3">Status 3</option>
+                {employmentStatuses.map((status) => (
+                  <option key={status.employment_status_id} value={status.employment_status_id}>
+                    {status.name}
+                  </option>
+                ))}
               </select>
             </div>
 

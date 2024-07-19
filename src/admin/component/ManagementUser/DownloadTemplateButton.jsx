@@ -22,7 +22,6 @@ const DownloadTemplateButton = () => {
 
       // Open the download link in a new tab
       window.open(fileLink, '_blank');
-      // console.log(fileLink)
     } catch (error) {
       console.error('Error downloading the template:', error);
     }

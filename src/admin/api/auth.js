@@ -2,7 +2,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const apiUrl = import.meta.env.VITE_API_URL;
-console.log(apiUrl)
 
 export const loginApi = async (email_or_phone_number, password) => {
   const response = await axios.post(`${apiUrl}/auth/login`, {
