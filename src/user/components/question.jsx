@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import {
   Label,
@@ -12,11 +10,12 @@ import {
 } from "flowbite-react";
 import axios from "axios";
 import useAuthStore from "../../admin/stores/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 export function Component() {
   const { token, user } = useAuthStore((state) => ({
     token: state.token,
-    user: state.user, // Asumsikan user object memiliki id
+    user: state.user,
   }));
 
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -30,9 +29,9 @@ export function Component() {
   const [shift, setShift] = useState("");
   const [isDriver, setIsDriver] = useState("");
   const [licensePlate, setLicensePlate] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fungsi untuk mendapatkan data dari API
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(apiGetAllQuestionsURL, {
@@ -70,13 +69,13 @@ export function Component() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const allAnswered = Object.values(answers).every((answer) => answer !== "");
-    if (!allAnswered && (isDriver == "true")) {
+    if (!allAnswered && (isDriver === "true")) {
       alert("Harap menjawab semua pertanyaan sebelum mengirimkan.");
     } else {
-      const questionIds = Object.keys(answers).map(Number); // Mengubah key menjadi angka
-      const questionAnswerIds = Object.values(answers).map(Number); // Mengubah value menjadi angka
+      const questionIds = Object.keys(answers).map(Number);
+      const questionAnswerIds = Object.values(answers).map(Number);
       const requestBody = {
-        user_id: user.user_id, // Mengambil user_id dari state useAuthStore
+        user_id: user.user_id,
         question_id: questionIds,
         question_answer_id: questionAnswerIds,
         attendance_status: attendanceStatus,
@@ -90,11 +89,11 @@ export function Component() {
         const response = await axios.post(apiCreateResponseURL, requestBody, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        alert("Jawaban terkirim sukses!");
         console.log("Jawaban terkirim:", response.data);
+        navigate('/fdm-form/hasil', { state: response.data });
       } catch (error) {
         console.error("Error submitting answers:", error);
-        alert("Terjadi kesalahan saat mengirimkan jawaban.");
+        alert("Mohon mengisi seluruh pertanyaan.");
       }
     }
   };
@@ -190,7 +189,7 @@ export function Component() {
         </Select>
         <HR />
 
-        {isDriver == "true" && (
+        {isDriver === "true" && (
           <div className="mb-4">
             <Label
               className="font-bold text-[16px]"
@@ -213,7 +212,7 @@ export function Component() {
             <div className="mb-4 font-semibold">{question.question}</div>
             {question.question_answer.map((answer) => (
               <div
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 mb-4"
                 key={answer.question_answer_id}
               >
                 <Radio

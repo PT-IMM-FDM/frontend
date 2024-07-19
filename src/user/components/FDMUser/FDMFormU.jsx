@@ -3,7 +3,7 @@
 import React from "react";
 // import { Component as Navbar } from "../navbar";
 // import { Component as Button } from "../button";
-import { Component as Radio } from "../radiobutton";
+import { Component as Quest } from "../question";
 import { Card } from "flowbite-react";
 import useAuthStore from "../../../admin/stores/useAuthStore";
 
@@ -19,7 +19,7 @@ function FDMFormU() {
     <div>
       <Card
         className="max-w-[500px] mx-auto mb-5 p-4"
-        imgAlt="Meaningful alt text for an image that is not purely decorative"
+        imgAlt="rekomendasi"
         imgSrc="/rekomendasi.png"
       >
         <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -33,7 +33,7 @@ function FDMFormU() {
       </Card>
 
       <Card className="max-w-[500px] mx-auto">
-        <Radio />
+        <Quest />
       </Card>
     </div>
   );

@@ -21,7 +21,7 @@ function App() {
             <Route path="/data-monitoring" element={<Monitoring/>}/>
             <Route path="/data-pengguna" element={<ManagementUser/>}/>
             <Route path="/riwayat-user" element= {<HistoryU/>}/>
-            <Route path="/hasil" element= {<ResultU/>}/>
+            <Route path="/fdm-form/hasil" element= {<ResultU/>}/>
           </Routes>
         </main>
       </Router>

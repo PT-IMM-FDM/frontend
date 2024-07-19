@@ -6,21 +6,26 @@ import { useNavigate } from "react-router-dom";
 
 export function Component() {
   const location = useLocation();
-  const getLinkClass = (path) => location.pathname === path ? "font-normal text-blue-500" : "";
-  
-    const { logout } = useAuthStore();
-    const navigate = useNavigate();
-  
-    const handleLogout = () => {
-      logout();
-      navigate("/login");
-    };
+  const getLinkClass = (path) =>
+    location.pathname === path ? "font-normal text-blue-500" : "";
+
+  const { logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <Navbar fluid rounded className="mb-4 sticky top-0 z-50 bg-white">
-      <Navbar.Brand>
-        <img src="IMM.svg" className="mr-3 h-6 sm:h-8" alt="Logo IMM" />
-        <span className="pt-5 whitespace-nowrap text-l font-semibold dark:text-white">Fit Daily Monitoring</span>
+      <Navbar.Brand className="px-3 lg:px-[]">
+        <div className="flex flex-col justify-center gap-1">
+          <img src="/IMM.svg" className="mr-3 h-6 sm:h-8" alt="Logo IMM" />
+          <span className="whitespace-nowrap text-[12px] font-semibold dark:text-white">
+            Fit Daily Monitoring
+          </span>
+        </div>
       </Navbar.Brand>
       <div>
         <Navbar.Toggle />
@@ -29,13 +34,19 @@ export function Component() {
         <Navbar.Link href="/fdm-form" className={getLinkClass("/fdm-form")}>
           FDM Form
         </Navbar.Link>
-        <Navbar.Link href="/riwayat-user" className={getLinkClass("/riwayat-user")}>
+        <Navbar.Link
+          href="/riwayat-user"
+          className={getLinkClass("/riwayat-user")}
+        >
           Riwayat
         </Navbar.Link>
         <Navbar.Link href="/pengaturan" className={getLinkClass("/pengaturan")}>
           Pengaturan
         </Navbar.Link>
-        <Navbar.Link className={`text-red-600 ${getLinkClass("/logout")} cursor-pointer`} onClick={handleLogout}>
+        <Navbar.Link
+          className={`text-red-600 ${getLinkClass("/logout")} cursor-pointer`}
+          onClick={handleLogout}
+        >
           Logout
         </Navbar.Link>
       </Navbar.Collapse>
