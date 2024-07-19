@@ -38,7 +38,6 @@ const LoginForm = () => {
       
       try {
         await login(email, password);
-        setError(null);
         const newToken = Cookies.get('token');
         const dataUser = await getCurrentLogin(newToken)
         if (dataUser.role.name !== 'User') {
@@ -46,6 +45,8 @@ const LoginForm = () => {
         } else {
           navigate('/fdm-form')
         }
+        setError(null);
+        setLoading(false)
       } catch (error) {
         let errorMessage = "An error occurred";
         console.log(error);
