@@ -17,7 +17,6 @@ import PublicRoute from "./admin/pages/PublicRoute";
 import HistoryU from "./user/pages/History-user/HistoryU";
 import ResultU from "./user/pages/Result-user/ResultU";
 
-
 function App() {
   const { token, setUser } = useAuthStore((state) => ({
     token: state.token,
@@ -57,12 +56,12 @@ function App() {
           <Route path="/admin/*" element={<LayoutPages />} />
         </Route>
         <Route element={<ProtectedRoute allowedRoles={["User"]} />}>
-            <Route exact path="/" element={<Navigate to="/login"/>} />
+          <Route exact path="/" element={<Navigate to="/login" />} />
           <Route path="/fdm-form" element={<FDM />} />
+          <Route path="/fdm-form/hasil" element={<ResultU />} />
+          <Route path="/riwayat-user" element={<HistoryU />} />
         </Route>
         <Route path="*" element={<NotFound />} />
-            <Route path="/riwayat-user" element= {<HistoryU/>}/>
-            <Route path="/fdm-form/hasil" element= {<ResultU/>}/>
       </Routes>
     </Router>
   );
