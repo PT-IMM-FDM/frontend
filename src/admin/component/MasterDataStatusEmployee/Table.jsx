@@ -87,8 +87,6 @@ export default function EnhancedTable({ token }) {
     setPage(0);
   };
 
-  // console.log(rowsPosition);
-
   // Modify the useEffect to include index
   React.useEffect(() => {
     const fetchData = async () => {

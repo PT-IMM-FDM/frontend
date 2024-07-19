@@ -36,7 +36,6 @@ export default function EnhancedTable({ token }) {
     setOrderBy(property);
   };
 
-  console.log(selected);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -86,7 +85,6 @@ export default function EnhancedTable({ token }) {
     setPage(0);
   };
 
-  // console.log(rows);
 
   // Modify the useEffect to include index
   React.useEffect(() => {
@@ -203,7 +201,6 @@ export default function EnhancedTable({ token }) {
                             color="light"
                             onClick={(event) => {
                               event.stopPropagation();
-                              console.log("edit", row.company_id);
                             }}
                           >
                             <FaRegEdit className="text-[1rem] hover:text-purple-700" />

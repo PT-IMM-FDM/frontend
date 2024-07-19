@@ -37,8 +37,6 @@ export function AddJobPositionButton() {
     setFormData({[name]: value,});
   };
 
-  // console.log(formData)
-
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -99,7 +97,7 @@ export function AddJobPositionButton() {
               <Button
                 color="purple"
                 className="h-[2.5rem] bg-purple-700 text-white border-[1px]"
-                onClick={handleSubmit}
+                type="submit"
               >
                 <p className="text-[12px]">Tambah Posisi</p>
               </Button>

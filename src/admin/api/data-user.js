@@ -57,8 +57,29 @@ export const createUser = async (token, dataBody) => {
   return response.data.data;
 };
 
+export const updateUser = async (token, dataBody) => {
+  const response = await axios.put(
+    `${apiUrl}/user/update`,
+    {
+      user_id: dataBody.user_id,
+      company_id: parseInt(dataBody.company.company_id),
+      job_position_id: parseInt(dataBody.job_position.job_position_id),
+      employment_status_id: parseInt(dataBody.employment_status.employment_status_id),
+      department_id: parseInt(dataBody.department.department_id),
+      full_name: dataBody.full_name,
+      phone_number: dataBody.phone_number,
+      birth_date: dataBody.birth_date,
+      role_id: parseInt(dataBody.role.role_id),
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return response.data.data;
+};
+
 export const deleteUsers = async (token, dataBody) => {
-  // console.log(dataBody);
   const response = await axios.delete(`${apiUrl}/user/delete`, {
     headers: { Authorization: `Bearer ${token}` },
     data: {

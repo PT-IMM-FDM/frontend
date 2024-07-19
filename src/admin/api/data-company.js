@@ -7,7 +7,7 @@ export const getAllCompany = async (token) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  return response.data;
+  return response.data.data;
 };
 
 export const createCompany = async (token, data) => {
@@ -40,7 +40,7 @@ export const getAllDepartments = async (token) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  return response.data;
+  return response.data.data;
 };
 
 export const createDepartment = async (token, data) => {
@@ -73,7 +73,7 @@ export const getAllPositions = async (token) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  return response.data;
+  return response.data.data;
 };
 
 export const createPosition = async (token, data) => {
@@ -106,7 +106,7 @@ export const getAllStatusEmployment = async (token) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  return response.data;
+  return response.data.data;
 };
 
 export const createStatusEmployment = async (token, data) => {

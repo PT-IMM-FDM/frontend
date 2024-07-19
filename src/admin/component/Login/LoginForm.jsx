@@ -49,7 +49,6 @@ const LoginForm = () => {
         setLoading(false)
       } catch (error) {
         let errorMessage = "An error occurred";
-        console.log(error);
         if (error.response?.data?.status === "VALIDATION_ERROR") {
           errorMessage = error.response.data.errors[0].password;
         } else {

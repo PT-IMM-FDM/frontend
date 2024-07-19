@@ -240,8 +240,6 @@ const rows = [
   ),
 ];
 
-console.log(rows)
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;

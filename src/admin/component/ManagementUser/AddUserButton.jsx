@@ -1,24 +1,22 @@
 import { Button, Modal, Select, TextInput } from "flowbite-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LuUser } from "react-icons/lu";
 import { createUser } from "../../api/data-user";
 import useAuthStore from "../../stores/useAuthStore";
 import useDataUsersStore from "../../stores/useDataUsersStore";
 
 const CACHE_KEY = "usersData";
-// const CACHE_EXPIRATION = 60 * 60 * 1000;
 
 export function AddUserButton() {
-  // Fetch the token from the authentication store
   const { token } = useAuthStore((state) => ({ token: state.token }));
-
-  // Fetch the user data from the data users store
   const { rows, setRows } = useDataUsersStore((state) => ({
     rows: state.rows,
     setRows: state.setRows,
   }));
-
-  // State variables for managing the modal visibility and form data
+  const [departments, setDepartments] = useState([]);
+  const [jobPositions, setJobPositions] = useState([]);
+  const [employmentStatuses, setEmploymentStatuses] = useState([]);
+  const [companies, setCompanies] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [formData, setFormData] = useState({
     company_id: "",
@@ -29,9 +27,32 @@ export function AddUserButton() {
     phone_number: "",
     birth_date: "",
     role_id: "",
+    email: "",
   });
 
-  // Function to close the modal and reset the form data
+  useEffect(() => {
+    // Get data from localStorage if available
+    const storedDepartments = localStorage.getItem("dataDepartments");
+    if (storedDepartments) {
+      setDepartments(JSON.parse(storedDepartments));
+    }
+
+    const storedJobPositions = localStorage.getItem("dataJobPositions");
+    if (storedJobPositions) {
+      setJobPositions(JSON.parse(storedJobPositions));
+    }
+
+    const storedStatuses = localStorage.getItem("dataStatus");
+    if (storedStatuses) {
+      setEmploymentStatuses(JSON.parse(storedStatuses));
+    }
+
+    const storedCompanies = localStorage.getItem("dataCompany");
+    if (storedCompanies) {
+      setCompanies(JSON.parse(storedCompanies));
+    }
+  }, []);
+
   function onCloseModal() {
     setOpenModal(false);
     setFormData({
@@ -43,10 +64,10 @@ export function AddUserButton() {
       phone_number: "",
       birth_date: "",
       role_id: "",
+      email: "",
     });
   }
 
-  // Function to handle form input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
@@ -55,27 +76,22 @@ export function AddUserButton() {
     }));
   };
 
-  // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Call the API to create a new user with the provided form data
-    const newDataUser = await createUser(token, formData);
-
-    // Update the user data in the store
-    setRows([...rows, newDataUser]);
-
-    // Cache the updated user data in the local storage
-    localStorage.setItem(CACHE_KEY, JSON.stringify([...rows, newDataUser]));
-    localStorage.setItem(`${CACHE_KEY}_timestamp`, new Date().getTime());
-
-    // Close the modal after successful submission
-    onCloseModal();
+    
+    try {
+      const newDataUser = await createUser(token, formData);
+      setRows([...rows, newDataUser]);
+      localStorage.setItem(CACHE_KEY, JSON.stringify([...rows, newDataUser]));
+      localStorage.setItem(`${CACHE_KEY}_timestamp`, new Date().getTime());
+      onCloseModal();
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
   };
 
   return (
     <>
-      {/* Button */}
       <Button
         color="purple"
         className="h-[2.5rem] bg-purple-700 text-white border-[1px]"
@@ -85,25 +101,25 @@ export function AddUserButton() {
         <p className="ml-1 text-[12px]">Tambah Pengguna</p>
       </Button>
 
-      {/* Modal */}
       <Modal dismissible show={openModal} size="2xl" onClose={onCloseModal}>
         <Modal.Header style={{ fontSize: "12px" }}>
           Tambah Pengguna
         </Modal.Header>
         <Modal.Body>
           <form className="grid grid-cols-2 gap-6" onSubmit={handleSubmit}>
-            {/* nama lengkap */}
+            {/* Nama Lengkap */}
             <div>
               <label
                 htmlFor="full_name"
                 className="block text-[12px] font-medium text-gray-700"
               >
-                Nama Lengkap
+                Nama Lengkap <span className="text-red-500">*</span>
               </label>
-              <TextInput
+              <input
                 id="full_name"
                 name="full_name"
                 placeholder="Enter a fullname"
+                type="text"
                 value={formData.full_name}
                 onChange={handleChange}
                 style={{ fontSize: "12px" }}
@@ -112,18 +128,19 @@ export function AddUserButton() {
               />
             </div>
 
-            {/* nomor telepon */}
+            {/* No. Telepon */}
             <div>
               <label
                 htmlFor="phone_number"
                 className="block text-[12px] font-medium text-gray-700"
               >
-                No. Telepon
+                No. Telepon <span className="text-red-500">*</span>
               </label>
-              <TextInput
+              <input
                 id="phone_number"
                 name="phone_number"
                 placeholder="ex. 081234567899"
+                type="tel"
                 value={formData.phone_number}
                 onChange={handleChange}
                 style={{ fontSize: "12px" }}
@@ -132,15 +149,35 @@ export function AddUserButton() {
               />
             </div>
 
-            {/* nama perusahaan */}
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-[12px] font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="example@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                style={{ fontSize: "12px" }}
+                className="mt-1 block w-full border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              />
+            </div>
+
+            {/* Nama Perusahaan */}
             <div>
               <label
                 htmlFor="company_id"
                 className="block text-[12px] font-medium text-gray-700"
               >
-                Nama Perusahaan
+                Nama Perusahaan <span className="text-red-500">*</span>
               </label>
-              <Select
+              <select
                 id="company_id"
                 name="company_id"
                 value={formData.company_id}
@@ -150,21 +187,23 @@ export function AddUserButton() {
                 className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               >
                 <option value="">Select Company</option>
-                <option value="1">Company 1</option>
-                <option value="2">Company 2</option>
-                <option value="3">Company 3</option>
-              </Select>
+                {companies.map((company) => (
+                  <option key={company.company_id} value={company.company_id}>
+                    {company.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            {/* nama departemen */}
+            {/* Departemen */}
             <div>
               <label
                 htmlFor="department_id"
                 className="block text-[12px] font-medium text-gray-700"
               >
-                Departemen
+                Departemen <span className="text-red-500">*</span>
               </label>
-              <Select
+              <select
                 id="department_id"
                 name="department_id"
                 value={formData.department_id}
@@ -174,21 +213,23 @@ export function AddUserButton() {
                 className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               >
                 <option value="">Select Department</option>
-                <option value="1">Department 1</option>
-                <option value="2">Department 2</option>
-                <option value="3">Department 3</option>
-              </Select>
+                {departments.map((department) => (
+                  <option key={department.department_id} value={department.department_id}>
+                    {department.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            {/* posisi */}
+            {/* Posisi */}
             <div>
               <label
                 htmlFor="job_position_id"
                 className="block text-[12px] font-medium text-gray-700"
               >
-                Posisi
+                Posisi <span className="text-red-500">*</span>
               </label>
-              <Select
+              <select
                 id="job_position_id"
                 name="job_position_id"
                 value={formData.job_position_id}
@@ -198,21 +239,23 @@ export function AddUserButton() {
                 className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               >
                 <option value="">Select Job Position</option>
-                <option value="1">Position 1</option>
-                <option value="2">Position 2</option>
-                <option value="3">Position 3</option>
-              </Select>
+                {jobPositions.map((position) => (
+                  <option key={position.job_position_id} value={position.job_position_id}>
+                    {position.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            {/* status pekerjaan */}
+            {/* Status Pekerjaan */}
             <div>
               <label
                 htmlFor="employment_status_id"
                 className="block text-[12px] font-medium text-gray-700"
               >
-                Status Pekerjaan
+                Status Pekerjaan <span className="text-red-500">*</span>
               </label>
-              <Select
+              <select
                 id="employment_status_id"
                 name="employment_status_id"
                 value={formData.employment_status_id}
@@ -222,21 +265,23 @@ export function AddUserButton() {
                 className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               >
                 <option value="">Select Employment Status</option>
-                <option value="1">Status 1</option>
-                <option value="2">Status 2</option>
-                <option value="3">Status 3</option>
-              </Select>
+                {employmentStatuses.map((status) => (
+                  <option key={status.employment_status_id} value={status.employment_status_id}>
+                    {status.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            {/* tanggal lahir */}
+            {/* Birth Date */}
             <div>
               <label
                 htmlFor="birth_date"
                 className="block text-[12px] font-medium text-gray-700"
               >
-                Birth Date
+                Tanggal Lahir <span className="text-red-500">*</span>
               </label>
-              <TextInput
+              <input
                 id="birth_date"
                 name="birth_date"
                 type="date"
@@ -249,15 +294,15 @@ export function AddUserButton() {
               />
             </div>
 
-            {/* role */}
+            {/* Role */}
             <div>
               <label
                 htmlFor="role"
                 className="block text-[12px] font-medium text-gray-700"
               >
-                Role
+                Role <span className="text-red-500">*</span>
               </label>
-              <Select
+              <select
                 id="role_id"
                 name="role_id"
                 value={formData.role_id}
@@ -270,13 +315,13 @@ export function AddUserButton() {
                 <option value="1">Admin</option>
                 <option value="2">Monitoring</option>
                 <option value="3">User</option>
-              </Select>
+              </select>
             </div>
             <div className="col-span-2 flex gap-2 justify-end">
               <Button
                 color="purple"
                 className="h-[2.5rem] bg-purple-700 text-white border-[1px]"
-                onClick={handleSubmit}
+                type="submit"
               >
                 <p className="text-[12px]">Tambah Pengguna</p>
               </Button>
