@@ -5,7 +5,6 @@ import { HiSearch } from "react-icons/hi";
 export default function SearchBar({ onSearch }) {
   const handleSearch = (event) => {
     onSearch(event.target.value);
-    // console.log(event.target.value);
   };
 
   return (

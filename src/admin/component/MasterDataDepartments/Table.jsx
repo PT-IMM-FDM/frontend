@@ -87,8 +87,6 @@ export default function EnhancedTable({ token }) {
     setPage(0);
   };
 
-  // console.log(rowsDepartment);
-
   // Modify the useEffect to include index
   React.useEffect(() => {
     const fetchData = async () => {
@@ -205,7 +203,6 @@ export default function EnhancedTable({ token }) {
                             color="light"
                             onClick={(event) => {
                               event.stopPropagation();
-                              console.log("edit", rowsDepartment.department_id);
                             }}
                           >
                             <FaRegEdit className="text-[1rem] hover:text-purple-700" />

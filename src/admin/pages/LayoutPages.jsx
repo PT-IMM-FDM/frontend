@@ -10,6 +10,7 @@ import MasterDataJobPositions from "./master-data-job-positions";
 import MasterDataStatusEmployee from "./master-data-status-employee";
 import NotFound from "./NotFound";
 import "../../index.css";
+import DetailDataUserPage from "./detail-data-user";
 
 const LayoutPages = () => {
   return (
@@ -20,6 +21,10 @@ const LayoutPages = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/data-monitoring" element={<Monitoring />} />
             <Route path="/data-pengguna" element={<ManagementUser />} />
+            <Route
+              path="/data-pengguna/:user_id"
+              element={<DetailDataUserPage />}
+            />
             <Route path="/data-perusahaan" element={<MasterDataCompany />} />
             <Route
               path="/data-departemen"

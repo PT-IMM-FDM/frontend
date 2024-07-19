@@ -87,7 +87,6 @@ export default function EnhancedTable({ token }) {
     setPage(0);
   };
 
-  // console.log(rowsPosition);
 
   // Modify the useEffect to include index
   React.useEffect(() => {
@@ -204,7 +203,6 @@ export default function EnhancedTable({ token }) {
                             color="light"
                             onClick={(event) => {
                               event.stopPropagation();
-                              console.log("edit", rowsDepartment.job_position_id);
                             }}
                           >
                             <FaRegEdit className="text-[1rem] hover:text-purple-700" />

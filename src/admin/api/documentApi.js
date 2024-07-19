@@ -28,7 +28,6 @@ export const uploadFile = async (file, token) => {
     );
 
     if (response.status === 200) {
-      console.log("File uploaded successfully");
       return response.data;
     } else {
       console.error("Failed to upload file:", response.statusText);

@@ -6,7 +6,7 @@ import useAuthStore from '../../stores/useAuthStore'
 
 const ManagementUser = () => {
     const {user, token} = useAuthStore((state) => ({user: state.user, token: state.token}))
-
+    
   return (
     <>
       <MenuHeader title={"Data Pengguna"} name={user?.full_name} email={user?.email}/>
