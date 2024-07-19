@@ -24,10 +24,6 @@ export default function DetailDataUser() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setOriginalUserData(userData);
-  }, [])
-
-  useEffect(() => {
     const fetchData = async () => {
       try {
         const dataUser = await getUserById(token, user_id);
@@ -49,6 +45,12 @@ export default function DetailDataUser() {
       fetchData();
     }
   }, [token, user_id]);
+
+  useEffect(() => {
+    setOriginalUserData(userData);
+  }, [])
+
+  console.log(userData)
 
   useEffect(() => {
     const storedDepartments = localStorage.getItem("dataDepartments");

@@ -35,7 +35,9 @@ export const getAllUser = async (token, filters) => {
 
 
 export const getUserById = async (token, user_id) => {
-  const response = await axios.get(`${apiUrl}/user?user_id=${user_id}`, {
+  const response = await axios.post(`${apiUrl}/user`,{
+    user_id: user_id
+  }, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
