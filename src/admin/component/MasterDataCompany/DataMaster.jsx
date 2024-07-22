@@ -4,9 +4,10 @@ import useAuthStore from "../../stores/useAuthStore";
 
 const DataMaster = () => {
   const { token } = useAuthStore((state) => ({ token: state.token }));
+
   return (
     <div>
-      <EnhancedTable token={token}  />
+      <EnhancedTable token={token} />
     </div>
   );
 };
