@@ -3,26 +3,20 @@ import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export const getAllUser = async (token, filters) => {
-  const { name, jobPosition, company, department, employmentStatus, is_active, user_id } = filters;
-  // Buat objek body hanya jika filter tidak kosong
   const body = {};
-  if (name) body.name = name;
-  if (jobPosition && jobPosition.length > 0) body.job_position = jobPosition.map((e) => e.name);
-  if (company && company.length > 0) body.company = company.map((e) => e.name);
-  if (department && department.length > 0) body.department = department.map((e) => e.name);
-  if (employmentStatus && employmentStatus.length > 0) body.employment_status = employmentStatus.map((e)=> e.name);
-  if (is_active !== undefined) body.is_active = is_active;
-  if (user_id) body.user_id = user_id;
+  if (filters) {
+    const { name, jobPosition, company, department, employmentStatus, is_active, user_id } = filters;
+    // Buat objek body hanya jika filter tidak kosong
+    if (name) body.name = name;
+    if (jobPosition && jobPosition.length > 0) body.job_position = jobPosition.map((e) => e.name);
+    if (company && company.length > 0) body.company = company.map((e) => e.name);
+    if (department && department.length > 0) body.department = department.map((e) => e.name);
+    if (employmentStatus && employmentStatus.length > 0) body.employment_status = employmentStatus.map((e)=> e.name);
+    if (is_active !== undefined) body.is_active = is_active;
+    if (user_id) body.user_id = user_id;
+  }
 
   try {
-    // const response = Object.keys(body).length > 0
-    //   ? await axios.post(`${apiUrl}/user`, body, {
-    //       headers: { Authorization: `Bearer ${token}` },
-    //     })
-    //   : await axios.post(`${apiUrl}/user`, {
-    //       headers: { Authorization: `Bearer ${token}` },
-    //     });
-
     const response = await axios.post(`${apiUrl}/user`, body, {
       headers: { Authorization: `Bearer ${token}` },
     })

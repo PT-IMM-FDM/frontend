@@ -14,10 +14,9 @@ import EnhancedTableHead from "./TableHead";
 import EnhancedTableToolbar from "./TableToolbar";
 import { theme } from "./TableTheme";
 import { stableSort, getComparator } from "../../utils/sorting";
-import { FaRegEdit } from "react-icons/fa";
-import { Button, Tooltip } from "flowbite-react";
-import { getAllDepartments, getAllPositions, getAllStatusEmployment } from "../../api/data-company";
+import { getAllStatusEmployment } from "../../api/data-company";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
+import { EditStatusButton } from "./EditStatusButton";
 
 const CACHE_KEY = "dataStatus";
 
@@ -75,12 +74,11 @@ export default function EnhancedTable({ token }) {
     setPage(0);
   };
 
-  const isSelected = (employment_status_id) => selected?.indexOf(employment_status_id) !== -1;
+  const isSelected = (employment_status_id) =>
+    selected?.indexOf(employment_status_id) !== -1;
 
   const emptyRows =
-    page > 0
-      ? Math.max(0, (1 + page) * rowsPerPage - rowsStatus.length)
-      : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsStatus.length) : 0;
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -97,7 +95,7 @@ export default function EnhancedTable({ token }) {
 
       try {
         const dataStatus = await getAllStatusEmployment(token);
-        const data = dataStatus.data.map((row, index) => ({
+        const data = dataStatus.map((row, index) => ({
           ...row,
           index: index + 1,
         }));
@@ -143,6 +141,7 @@ export default function EnhancedTable({ token }) {
           />
           <TableContainer sx={{ borderRadius: "10px" }}>
             <Table
+              stickyHeader
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
               size={dense ? "small" : "medium"}
@@ -163,7 +162,9 @@ export default function EnhancedTable({ token }) {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.employment_status_id)}
+                      onClick={(event) =>
+                        handleClick(event, row.employment_status_id)
+                      }
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -195,19 +196,7 @@ export default function EnhancedTable({ token }) {
                         sx={{ fontSize: "12px", pl: "1.5rem" }}
                         align="left"
                       >
-                        <Tooltip content="Edit" className="text-[10px]">
-                          <Button
-                            className="text-sm p-0 border-none bg-transparent"
-                            size="xs"
-                            color="light"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              console.log("edit", rowsStatus.employment_status_id);
-                            }}
-                          >
-                            <FaRegEdit className="text-[1rem] hover:text-purple-700" />
-                          </Button>
-                        </Tooltip>
+                        <EditStatusButton employment_status_id={row.employment_status_id} employment_status_name={row.name}/>
                       </TableCell>
                     </TableRow>
                   );
@@ -215,7 +204,7 @@ export default function EnhancedTable({ token }) {
                 {emptyRows > 0 && (
                   <TableRow
                     style={{
-                      height: (dense ? 33 : 53) * emptyRows,
+                      maxHeight: (dense ? 33 : 53) * emptyRows,
                     }}
                   >
                     <TableCell colSpan={6} />

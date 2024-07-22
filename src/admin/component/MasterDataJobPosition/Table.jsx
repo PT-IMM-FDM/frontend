@@ -14,10 +14,9 @@ import EnhancedTableHead from "./TableHead";
 import EnhancedTableToolbar from "./TableToolbar";
 import { theme } from "./TableTheme";
 import { stableSort, getComparator } from "../../utils/sorting";
-import { FaRegEdit } from "react-icons/fa";
-import { Button, Tooltip } from "flowbite-react";
-import { getAllDepartments, getAllPositions } from "../../api/data-company";
+import { getAllPositions } from "../../api/data-company";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
+import { EditJobPositionButton } from "./EditJobPositionButton";
 
 const CACHE_KEY = "dataJobPositions";
 
@@ -47,6 +46,8 @@ export default function EnhancedTable({ token }) {
   };
 
   const handleClick = (event, job_position_id) => {
+    event.stopPropagation();
+
     const selectedIndex = selected.indexOf(job_position_id);
     let newSelected = [];
 
@@ -75,18 +76,16 @@ export default function EnhancedTable({ token }) {
     setPage(0);
   };
 
-  const isSelected = (job_position_id) => selected?.indexOf(job_position_id) !== -1;
+  const isSelected = (job_position_id) =>
+    selected?.indexOf(job_position_id) !== -1;
 
   const emptyRows =
-    page > 0
-      ? Math.max(0, (1 + page) * rowsPerPage - rowsPosition.length)
-      : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsPosition.length) : 0;
 
   const handleSearch = (query) => {
     setSearchQuery(query);
     setPage(0);
   };
-
 
   // Modify the useEffect to include index
   React.useEffect(() => {
@@ -98,7 +97,7 @@ export default function EnhancedTable({ token }) {
 
       try {
         const dataPosition = await getAllPositions(token);
-        const data = dataPosition.data.map((row, index) => ({
+        const data = dataPosition.map((row, index) => ({
           ...row,
           index: index + 1,
         }));
@@ -142,8 +141,9 @@ export default function EnhancedTable({ token }) {
             onSearch={handleSearch}
             selected={selected}
           />
-          <TableContainer sx={{ borderRadius: "10px" }}>
+          <TableContainer sx={{ borderRadius: "10px", maxHeight: 450 }}>
             <Table
+              stickyHeader
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
               size={dense ? "small" : "medium"}
@@ -164,7 +164,6 @@ export default function EnhancedTable({ token }) {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.job_position_id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -178,6 +177,9 @@ export default function EnhancedTable({ token }) {
                           inputProps={{
                             "aria-labelledby": labelId,
                           }}
+                          onClick={(event) =>
+                            handleClick(event, row.job_position_id)
+                          }
                         />
                       </TableCell>
                       <TableCell
@@ -196,18 +198,7 @@ export default function EnhancedTable({ token }) {
                         sx={{ fontSize: "12px", pl: "1.5rem" }}
                         align="left"
                       >
-                        <Tooltip content="Edit" className="text-[10px]">
-                          <Button
-                            className="text-sm p-0 border-none bg-transparent"
-                            size="xs"
-                            color="light"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                            }}
-                          >
-                            <FaRegEdit className="text-[1rem] hover:text-purple-700" />
-                          </Button>
-                        </Tooltip>
+                        <EditJobPositionButton job_position_id={row.job_position_id} job_position_name={row.name}/>
                       </TableCell>
                     </TableRow>
                   );
@@ -215,7 +206,7 @@ export default function EnhancedTable({ token }) {
                 {emptyRows > 0 && (
                   <TableRow
                     style={{
-                      height: (dense ? 33 : 53) * emptyRows,
+                      maxHeight: (dense ? 33 : 53) * emptyRows,
                     }}
                   >
                     <TableCell colSpan={6} />

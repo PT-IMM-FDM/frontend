@@ -14,10 +14,12 @@ import EnhancedTableHead from "./TableHead";
 import EnhancedTableToolbar from "./TableToolbar";
 import { theme } from "./TableTheme";
 import { stableSort, getComparator } from "../../utils/sorting";
-import { FaRegEdit } from "react-icons/fa";
-import { Button, Tooltip } from "flowbite-react";
 import { getAllCompany } from "../../api/data-company";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
+import { Tooltip } from "@mui/material";
+import { styled } from "@mui/material";
+import {tooltipClasses} from "@mui/material";
+import { EditCompanyButton } from "./EditCompanyButton";
 
 const CACHE_KEY = "dataCompany";
 
@@ -36,7 +38,6 @@ export default function EnhancedTable({ token }) {
     setOrderBy(property);
   };
 
-
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.company_id);
@@ -47,6 +48,8 @@ export default function EnhancedTable({ token }) {
   };
 
   const handleClick = (event, company_id) => {
+    if (event.target.type !== "checkbox") return;
+
     const selectedIndex = selected.indexOf(company_id);
     let newSelected = [];
 
@@ -75,7 +78,7 @@ export default function EnhancedTable({ token }) {
     setPage(0);
   };
 
-  const isSelected = (company_id) => selected?.indexOf(company_id) !== -1;
+  const isSelected = (company_id) => selected?.includes(company_id);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -84,7 +87,6 @@ export default function EnhancedTable({ token }) {
     setSearchQuery(query);
     setPage(0);
   };
-
 
   // Modify the useEffect to include index
   React.useEffect(() => {
@@ -96,7 +98,8 @@ export default function EnhancedTable({ token }) {
 
       try {
         const dataCompany = await getAllCompany(token);
-        const data = dataCompany.data.map((row, index) => ({
+        console.log(dataCompany);
+        const data = dataCompany.map((row, index) => ({
           ...row,
           index: index + 1,
         }));
@@ -112,6 +115,18 @@ export default function EnhancedTable({ token }) {
     fetchData();
   }, [token, setRows]);
 
+  const BootstrapTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+      color: theme.palette.common.black,
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: theme.palette.common.black,
+    },
+  }));
+
+
   const visibleRows = React.useMemo(() => {
     const filteredRows = rows.filter((row) =>
       String(row.name).toLowerCase().includes(searchQuery.toLowerCase())
@@ -124,12 +139,14 @@ export default function EnhancedTable({ token }) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ width: "100%" }} className="shadow-md rounded-[10px]">
+      <Box
+        sx={{ width: "100%", height: "100%" }}
+        className="shadow-md rounded-[10px]"
+      >
         <Paper
           className="shadow-md"
           sx={{
             width: "100%",
-            overflow: "hidden",
             mb: 2,
             boxShadow: "none",
             borderRadius: "10px",
@@ -140,8 +157,9 @@ export default function EnhancedTable({ token }) {
             onSearch={handleSearch}
             selected={selected}
           />
-          <TableContainer sx={{ borderRadius: "10px" }}>
+          <TableContainer sx={{ maxHeight: 450 }}>
             <Table
+              stickyHeader
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
               size={dense ? "small" : "medium"}
@@ -162,12 +180,13 @@ export default function EnhancedTable({ token }) {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.company_id)}
+                      onClick={(event) => event.stopPropagation()}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.company_id}
                       selected={isItemSelected}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
@@ -176,6 +195,7 @@ export default function EnhancedTable({ token }) {
                           inputProps={{
                             "aria-labelledby": labelId,
                           }}
+                          onClick={(event) => handleClick(event, row.company_id)}
                         />
                       </TableCell>
                       <TableCell
@@ -194,18 +214,7 @@ export default function EnhancedTable({ token }) {
                         sx={{ fontSize: "12px", pl: "1.5rem" }}
                         align="left"
                       >
-                        <Tooltip content="Edit" className="text-[10px]">
-                          <Button
-                            className="text-sm p-0 border-none bg-transparent"
-                            size="xs"
-                            color="light"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                            }}
-                          >
-                            <FaRegEdit className="text-[1rem] hover:text-purple-700" />
-                          </Button>
-                        </Tooltip>
+                        <EditCompanyButton company_id={row.company_id} company_name={row.name} />
                       </TableCell>
                     </TableRow>
                   );
@@ -213,7 +222,7 @@ export default function EnhancedTable({ token }) {
                 {emptyRows > 0 && (
                   <TableRow
                     style={{
-                      height: (dense ? 33 : 53) * emptyRows,
+                      maxHeight: (dense ? 33 : 53) * emptyRows,
                     }}
                   >
                     <TableCell colSpan={6} />
@@ -223,7 +232,7 @@ export default function EnhancedTable({ token }) {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[10, 25, 50]}
             component="div"
             count={rows.length}
             rowsPerPage={rowsPerPage}
