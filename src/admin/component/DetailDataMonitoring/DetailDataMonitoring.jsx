@@ -7,7 +7,7 @@ import UserForm from "./UserForm";
 import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 
-export default function DetailDataUser() {
+export default function DetailDataMonitoring() {
   const { token } = useAuthStore((state) => ({ token: state.token }));
   const { rows, setRows } = useDataUsersStore((state) => ({
     rows: state.rows,
@@ -18,7 +18,7 @@ export default function DetailDataUser() {
   const [jobPositions, setJobPositions] = useState([]);
   const [employmentStatuses, setEmploymentStatuses] = useState([]);
   const [companies, setCompanies] = useState([]);
-  const { user_id } = useParams();
+  const { attendance_health_result_id } = useParams();
   const [userData, setUserData] = useState({});
   const [originalUserData, setOriginalUserData] = useState({})
   const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ export default function DetailDataUser() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const dataUser = await getUserById(token, user_id);
+        const dataUser = await getUserById(token, attendance_health_result_id);
         const formattedBirthDate = new Date(dataUser.data[0].birth_date)
           .toISOString()
           .split("T")[0];
