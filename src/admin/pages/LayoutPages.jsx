@@ -11,7 +11,8 @@ import MasterDataStatusEmployee from "./master-data-status-employee";
 import NotFound from "./NotFound";
 import "../../index.css";
 import DetailDataUserPage from "./detail-data-user";
-import DetailDataMonitoringPage from "./detail-data-monitoring/DetailDataMonitoringPage";
+import DetailDataMonitoringPage from "./detail-data-monitoring";
+import ManagementQuestionPage from "./management-question";
 
 const LayoutPages = () => {
   return (
@@ -37,6 +38,7 @@ const LayoutPages = () => {
             />
             <Route path="/data-posisi" element={<MasterDataJobPositions />} />
             <Route path="/data-status" element={<MasterDataStatusEmployee />} />
+            <Route path="/manajemen-pertanyaan" element={<ManagementQuestionPage/>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
