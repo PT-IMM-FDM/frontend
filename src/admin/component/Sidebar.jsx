@@ -63,6 +63,14 @@ export function Component() {
           >
             Data Pengguna
           </Sidebar.Item>
+          <Sidebar.Item
+            // href="/admin/data-pengguna"
+            onClick={() => navigate('/admin/manajemen-pertanyaan')}
+            icon={HiOutlineUser}
+            className={`cursor-pointer normal text-sm hover:text-purple-800 ${activeItem === "/admin/manajemen-pertanyaan" ? "text-purple-800 bg-gray-100" : ""}`}
+          >
+            Kelola Pertanyaan
+          </Sidebar.Item>
           <Sidebar.Collapse
             className="cursor-pointer text-sm hover:text-purple-800"
             icon={BiData}

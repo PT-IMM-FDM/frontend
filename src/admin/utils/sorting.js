@@ -18,6 +18,12 @@ const descendingComparator = (a, b, orderBy) => {
   const valueA = getNestedValue(a, orderBy);
   const valueB = getNestedValue(b, orderBy);
 
+  if (orderBy === 'timestamp') {
+    const dateA = new Date(a.created_at);
+    const dateB = new Date(b.created_at);
+    return dateB - dateA;
+  }
+
   // Handle undefined or null values appropriately
   if (valueA == null && valueB == null) {
     return 0;

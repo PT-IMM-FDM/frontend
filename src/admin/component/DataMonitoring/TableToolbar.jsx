@@ -38,8 +38,8 @@ function EnhancedTableToolbar(props) {
             </div>
           ) : (
             <div className="flex gap-2">
-              <AddUserButton />
-              <ImportButton/>
+              {/* <AddUserButton /> */}
+              {/* <ImportButton/> */}
               <DeleteButton className="right-0" numSelected={numSelected} selected={selected} />
             </div>
           )}
@@ -48,7 +48,7 @@ function EnhancedTableToolbar(props) {
           <SearchBar onSearch={onSearch} />
           <FilterButton />
           <ExportButton />
-          <DownloadTemplateButton/>
+          {/* <DownloadTemplateButton/> */}
         </div>
       </div>
     </Toolbar>

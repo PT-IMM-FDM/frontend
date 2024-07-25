@@ -98,7 +98,6 @@ export default function EnhancedTable({ token }) {
 
       try {
         const dataCompany = await getAllCompany(token);
-        console.log(dataCompany);
         const data = dataCompany.map((row, index) => ({
           ...row,
           index: index + 1,

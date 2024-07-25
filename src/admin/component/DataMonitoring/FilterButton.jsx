@@ -9,6 +9,7 @@ import {
 } from "../../api/data-company";
 import useAuthStore from "../../stores/useAuthStore";
 import useDataUsersStore from "../../stores/useDataUsersStore"; // Import store
+import useDataFDM from "../../stores/useDataFDM";
 
 export default function FilterButton() {
   const [openModal, setOpenModal] = useState(false);
@@ -17,8 +18,7 @@ export default function FilterButton() {
   const [employmentStatuses, setEmploymentStatuses] = useState([]);
   const [companies, setCompanies] = useState([]);
   const { token } = useAuthStore((state) => ({ token: state.token }));
-  const { filters, setFilters } = useDataUsersStore(); // Get filters and setFilters from store
-
+  const { filters, setFilters } = useDataFDM(); // Get filters and setFilters from store
 
   useEffect(() => {
     const fetchDataFromAPI = async () => {
@@ -111,6 +111,7 @@ export default function FilterButton() {
       department: [],
       jobPosition: [],
       employmentStatus: [],
+      fdm_result: [],
     });
   };
 
@@ -125,7 +126,7 @@ export default function FilterButton() {
         <p className="ml-2 text-[12px]">Filters</p>
       </Button>
       <Modal
-        size="md"
+        size="2xl"
         dismissible
         show={openModal}
         onClose={() => setOpenModal(false)}
@@ -262,6 +263,40 @@ export default function FilterButton() {
                     className="flex text-[12px]"
                   >
                     {status.name}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* FDM Result */}
+          <div className="mb-4">
+            <p className="mb-2 text-[14px] medium">Status FDM</p>
+            <div className="grid grid-rows-3 grid-flow-col gap-1">
+              {[
+                { id: 1, name: "FIT" },
+                { id: 2, name: "FIT_FOLLOW_UP" },
+                { id: 3, name: "UNFIT" },
+              ].map((result) => (
+                <div key={result.id} className="flex items-center gap-2">
+                  <Checkbox
+                    id={`result_${result.id}`}
+                    checked={filters.fdm_result.some(
+                      (item) => item.id === result.id
+                    )}
+                    onChange={(event) =>
+                      handleCheckboxChange(
+                        event,
+                        "fdm_result",
+                        result.id,
+                        result.name
+                      )
+                    }
+                  />
+                  <Label
+                    htmlFor={`status_${result.id}`}
+                    className="flex text-[12px]"
+                  >
+                    {result.name}
                   </Label>
                 </div>
               ))}

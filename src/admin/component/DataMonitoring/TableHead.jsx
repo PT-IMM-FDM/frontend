@@ -10,12 +10,14 @@ import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
 
 const headCells = [
-  { id: "full_name", numeric: false, disablePadding: true, label: "Nama Lengkap" },
-  { id: "phone_number", numeric: false, disablePadding: false, label: "No. Handphone" },
+  { id: "timestamp", numeric: false, disablePadding: true, label: "Timestamp" },
+  { id: "full_name", numeric: false, disablePadding: false, label: "Nama Lengkap" },
   { id: "department.name", numeric: false, disablePadding: false, label: "Departemen" },
   { id: "job_position.name", numeric: false, disablePadding: false, label: "Posisi" },
   { id: "employment_status.name", numeric: false, disablePadding: false, label: "Status Pekerjaan" },
   { id: "company.name", numeric: false, disablePadding: false, label: "Nama Perusahaan" },
+  { id: "hasil", numeric: false, disablePadding: false, label: "Hasil" },
+  { id: "attachment", numeric: false, disablePadding: false, label: "Attachment" },
   { id: "action", numeric: false, disablePadding: false, label: "Action" },
 ];
 

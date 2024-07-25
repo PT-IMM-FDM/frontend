@@ -9,7 +9,7 @@ export const getAllUser = async (token, filters) => {
     // Buat objek body hanya jika filter tidak kosong
     if (name) body.name = name;
     if (jobPosition && jobPosition.length > 0) body.job_position = jobPosition.map((e) => e.name);
-    if (company && company.length > 0) body.company = company.map((e) => e.name);
+    if (company && company.length > 0) body.company_name = company.map((e) => e.name);
     if (department && department.length > 0) body.department = department.map((e) => e.name);
     if (employmentStatus && employmentStatus.length > 0) body.employment_status = employmentStatus.map((e)=> e.name);
     if (is_active !== undefined) body.is_active = is_active;
