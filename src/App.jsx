@@ -50,7 +50,7 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["Admin", "Viewer"]} />}>
           <Route path="/admin/*" element={<LayoutPages />} />
         </Route>
         <Route element={<ProtectedRoute allowedRoles={["User"]} />}>

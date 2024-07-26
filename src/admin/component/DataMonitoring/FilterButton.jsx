@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import { Button, Modal, Checkbox, Label } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
 import {
   getAllCompany,
   getAllDepartments,
@@ -8,7 +9,6 @@ import {
   getAllStatusEmployment,
 } from "../../api/data-company";
 import useAuthStore from "../../stores/useAuthStore";
-import useDataUsersStore from "../../stores/useDataUsersStore"; // Import store
 import useDataFDM from "../../stores/useDataFDM";
 
 export default function FilterButton() {
@@ -19,6 +19,7 @@ export default function FilterButton() {
   const [companies, setCompanies] = useState([]);
   const { token } = useAuthStore((state) => ({ token: state.token }));
   const { filters, setFilters } = useDataFDM(); // Get filters and setFilters from store
+  const navigate = useNavigate(); // Added navigate for routing
 
   useEffect(() => {
     const fetchDataFromAPI = async () => {
@@ -34,10 +35,7 @@ export default function FilterButton() {
       try {
         const fetchedDepartments = await getAllDepartments(token);
         setDepartments(fetchedDepartments);
-        localStorage.setItem(
-          "dataDepartments",
-          JSON.stringify(fetchedDepartments)
-        );
+        localStorage.setItem("dataDepartments", JSON.stringify(fetchedDepartments));
       } catch (error) {
         console.error("Error fetching departments:", error);
         setDepartments([]);
@@ -46,10 +44,7 @@ export default function FilterButton() {
       try {
         const fetchedPositions = await getAllPositions(token);
         setJobPositions(fetchedPositions);
-        localStorage.setItem(
-          "dataJobPositions",
-          JSON.stringify(fetchedPositions)
-        );
+        localStorage.setItem("dataJobPositions", JSON.stringify(fetchedPositions));
       } catch (error) {
         console.error("Error fetching job positions:", error);
         setJobPositions([]);
@@ -70,12 +65,7 @@ export default function FilterButton() {
     const storedStatuses = localStorage.getItem("dataStatus");
     const storedCompanies = localStorage.getItem("dataCompany");
 
-    if (
-      !storedDepartments ||
-      !storedJobPositions ||
-      !storedStatuses ||
-      !storedCompanies
-    ) {
+    if (!storedDepartments || !storedJobPositions || !storedStatuses || !storedCompanies) {
       fetchDataFromAPI();
     } else {
       setDepartments(JSON.parse(storedDepartments));
@@ -85,34 +75,54 @@ export default function FilterButton() {
     }
   }, [token]);
 
+  const updateRoute = (updatedFilters) => {
+    const queryParams = new URLSearchParams();
+
+    if (updatedFilters.company.length > 0) {
+      const sortedCompanies = updatedFilters.company.map((item) => item.id).sort((a, b) => a - b);
+      queryParams.append("cid", sortedCompanies.join(","));
+    }
+    if (updatedFilters.department.length > 0) {
+      const sortedDepartments = updatedFilters.department.map((item) => item.id).sort((a, b) => a - b);
+      queryParams.append("did", sortedDepartments.join(","));
+    }
+    if (updatedFilters.jobPosition.length > 0) {
+      const sortedJobPositions = updatedFilters.jobPosition.map((item) => item.id).sort((a, b) => a - b);
+      queryParams.append("pid", sortedJobPositions.join(","));
+    }
+    if (updatedFilters.employmentStatus.length > 0) {
+      const sortedStatuses = updatedFilters.employmentStatus.map((item) => item.id).sort((a, b) => a - b);
+      queryParams.append("sid", sortedStatuses.join(","));
+    }
+
+    navigate(`/admin/data-monitoring?${queryParams.toString()}`);
+  };
+
   const handleCheckboxChange = (event, filterKey, id, name) => {
     const isChecked = event.target.checked;
     let updatedFilters = { ...filters };
 
     if (isChecked) {
       if (!updatedFilters[filterKey].some((item) => item.id === id)) {
-        updatedFilters[filterKey] = [
-          ...updatedFilters[filterKey],
-          { id, name },
-        ];
+        updatedFilters[filterKey] = [...updatedFilters[filterKey], { id, name }];
       }
     } else {
-      updatedFilters[filterKey] = updatedFilters[filterKey].filter(
-        (item) => item.id !== id
-      );
+      updatedFilters[filterKey] = updatedFilters[filterKey].filter((item) => item.id !== id);
     }
 
     setFilters(updatedFilters);
+    updateRoute(updatedFilters);
   };
 
   const clearFilters = () => {
-    setFilters({
+    const newFilters = {
       company: [],
       department: [],
       jobPosition: [],
       employmentStatus: [],
-      fdm_result: [],
-    });
+    };
+    setFilters(newFilters);
+    updateRoute(newFilters);
   };
 
   return (
@@ -126,7 +136,7 @@ export default function FilterButton() {
         <p className="ml-2 text-[12px]">Filters</p>
       </Button>
       <Modal
-        size="2xl"
+        size="lg"
         dismissible
         show={openModal}
         onClose={() => setOpenModal(false)}
@@ -144,16 +154,9 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`company_${company.company_id}`}
-                    checked={filters.company.some(
-                      (item) => item.id === company.company_id
-                    )}
+                    checked={filters.company.some((item) => item.id === company.company_id)}
                     onChange={(event) =>
-                      handleCheckboxChange(
-                        event,
-                        "company",
-                        company.company_id,
-                        company.name
-                      )
+                      handleCheckboxChange(event, "company", company.company_id, company.name)
                     }
                   />
                   <Label
@@ -178,16 +181,9 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`department_${department.department_id}`}
-                    checked={filters.department.some(
-                      (item) => item.id === department.department_id
-                    )}
+                    checked={filters.department.some((item) => item.id === department.department_id)}
                     onChange={(event) =>
-                      handleCheckboxChange(
-                        event,
-                        "department",
-                        department.department_id,
-                        department.name
-                      )
+                      handleCheckboxChange(event, "department", department.department_id, department.name)
                     }
                   />
                   <Label
@@ -212,16 +208,9 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`position_${position.job_position_id}`}
-                    checked={filters.jobPosition.some(
-                      (item) => item.id === position.job_position_id
-                    )}
+                    checked={filters.jobPosition.some((item) => item.id === position.job_position_id)}
                     onChange={(event) =>
-                      handleCheckboxChange(
-                        event,
-                        "jobPosition",
-                        position.job_position_id,
-                        position.name
-                      )
+                      handleCheckboxChange(event, "jobPosition", position.job_position_id, position.name)
                     }
                   />
                   <Label
@@ -246,16 +235,9 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`status_${status.employment_status_id}`}
-                    checked={filters.employmentStatus.some(
-                      (item) => item.id === status.employment_status_id
-                    )}
+                    checked={filters.employmentStatus.some((item) => item.id === status.employment_status_id)}
                     onChange={(event) =>
-                      handleCheckboxChange(
-                        event,
-                        "employmentStatus",
-                        status.employment_status_id,
-                        status.name
-                      )
+                      handleCheckboxChange(event, "employmentStatus", status.employment_status_id, status.name)
                     }
                   />
                   <Label
@@ -263,40 +245,6 @@ export default function FilterButton() {
                     className="flex text-[12px]"
                   >
                     {status.name}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
-          {/* FDM Result */}
-          <div className="mb-4">
-            <p className="mb-2 text-[14px] medium">Status FDM</p>
-            <div className="grid grid-rows-3 grid-flow-col gap-1">
-              {[
-                { id: 1, name: "FIT" },
-                { id: 2, name: "FIT_FOLLOW_UP" },
-                { id: 3, name: "UNFIT" },
-              ].map((result) => (
-                <div key={result.id} className="flex items-center gap-2">
-                  <Checkbox
-                    id={`result_${result.id}`}
-                    checked={filters.fdm_result.some(
-                      (item) => item.id === result.id
-                    )}
-                    onChange={(event) =>
-                      handleCheckboxChange(
-                        event,
-                        "fdm_result",
-                        result.id,
-                        result.name
-                      )
-                    }
-                  />
-                  <Label
-                    htmlFor={`status_${result.id}`}
-                    className="flex text-[12px]"
-                  >
-                    {result.name}
                   </Label>
                 </div>
               ))}
