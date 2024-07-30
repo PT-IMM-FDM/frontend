@@ -34,13 +34,13 @@ function EnhancedTableToolbar(props) {
               <div className="p-2 text-[12px]">
                 <p>{numSelected} rows selected</p>
               </div>
-              <DeleteButton className="right-0" numSelected={numSelected} selected={selected} />
+              {/* <DeleteButton className="right-0" numSelected={numSelected} selected={selected} /> */}
             </div>
           ) : (
             <div className="flex gap-2">
               {/* <AddUserButton /> */}
               {/* <ImportButton/> */}
-              <DeleteButton className="right-0" numSelected={numSelected} selected={selected} />
+              {/* <DeleteButton className="right-0" numSelected={numSelected} selected={selected} /> */}
             </div>
           )}
         </div>

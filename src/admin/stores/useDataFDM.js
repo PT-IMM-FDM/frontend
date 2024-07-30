@@ -12,7 +12,7 @@ const useDataFDM = create((set) => ({
     fdm_result: [],
     startDate: null,
     endDate: null,
-    user_id: null,
+    user_id: [],
     attendance_health_result_id: null,
     is_active: null,
   },

@@ -18,7 +18,7 @@ const headCells = [
   { id: "company.name", numeric: false, disablePadding: false, label: "Nama Perusahaan" },
   { id: "hasil", numeric: false, disablePadding: false, label: "Hasil" },
   { id: "attachment", numeric: false, disablePadding: false, label: "Attachment" },
-  { id: "action", numeric: false, disablePadding: false, label: "Action" },
+  { id: "action", numeric: false, disablePadding: false, label: "Action", width: "5px" },
 ];
 
 function EnhancedTableHead(props) {
@@ -41,7 +41,7 @@ function EnhancedTableHead(props) {
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
-            sx={{ fontSize: "12px", fontWeight: 600 }}
+            sx={{ fontSize: "12px", fontWeight: 600, width: headCell.width }}
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}

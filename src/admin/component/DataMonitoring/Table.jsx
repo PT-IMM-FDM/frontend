@@ -279,7 +279,7 @@ export default function EnhancedTable({ token }) {
                         -
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        <EditUserButton attendance_health_result_id={row.attendance_health_result_id} />
+                        <EditUserButton user_id={row.user_id} attendance_health_result_id={row.attendance_health_result_id} />
                       </TableCell>
                     </TableRow>
                   );

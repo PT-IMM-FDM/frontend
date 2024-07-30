@@ -17,9 +17,12 @@ export default function FilterButton() {
   const [jobPositions, setJobPositions] = useState([]);
   const [employmentStatuses, setEmploymentStatuses] = useState([]);
   const [companies, setCompanies] = useState([]);
+  // const [fdm_result, setFdmResults] = useState([]);
   const { token } = useAuthStore((state) => ({ token: state.token }));
   const { filters, setFilters } = useDataFDM(); // Get filters and setFilters from store
-  const navigate = useNavigate(); // Added navigate for routing
+  // const navigate = useNavigate();
+
+  console.log(filters)
 
   useEffect(() => {
     const fetchDataFromAPI = async () => {
@@ -35,7 +38,10 @@ export default function FilterButton() {
       try {
         const fetchedDepartments = await getAllDepartments(token);
         setDepartments(fetchedDepartments);
-        localStorage.setItem("dataDepartments", JSON.stringify(fetchedDepartments));
+        localStorage.setItem(
+          "dataDepartments",
+          JSON.stringify(fetchedDepartments)
+        );
       } catch (error) {
         console.error("Error fetching departments:", error);
         setDepartments([]);
@@ -44,7 +50,10 @@ export default function FilterButton() {
       try {
         const fetchedPositions = await getAllPositions(token);
         setJobPositions(fetchedPositions);
-        localStorage.setItem("dataJobPositions", JSON.stringify(fetchedPositions));
+        localStorage.setItem(
+          "dataJobPositions",
+          JSON.stringify(fetchedPositions)
+        );
       } catch (error) {
         console.error("Error fetching job positions:", error);
         setJobPositions([]);
@@ -65,7 +74,12 @@ export default function FilterButton() {
     const storedStatuses = localStorage.getItem("dataStatus");
     const storedCompanies = localStorage.getItem("dataCompany");
 
-    if (!storedDepartments || !storedJobPositions || !storedStatuses || !storedCompanies) {
+    if (
+      !storedDepartments ||
+      !storedJobPositions ||
+      !storedStatuses ||
+      !storedCompanies
+    ) {
       fetchDataFromAPI();
     } else {
       setDepartments(JSON.parse(storedDepartments));
@@ -75,28 +89,36 @@ export default function FilterButton() {
     }
   }, [token]);
 
-  const updateRoute = (updatedFilters) => {
-    const queryParams = new URLSearchParams();
+  // const updateRoute = (updatedFilters) => {
+  //   const queryParams = new URLSearchParams();
 
-    if (updatedFilters.company.length > 0) {
-      const sortedCompanies = updatedFilters.company.map((item) => item.id).sort((a, b) => a - b);
-      queryParams.append("cid", sortedCompanies.join(","));
-    }
-    if (updatedFilters.department.length > 0) {
-      const sortedDepartments = updatedFilters.department.map((item) => item.id).sort((a, b) => a - b);
-      queryParams.append("did", sortedDepartments.join(","));
-    }
-    if (updatedFilters.jobPosition.length > 0) {
-      const sortedJobPositions = updatedFilters.jobPosition.map((item) => item.id).sort((a, b) => a - b);
-      queryParams.append("pid", sortedJobPositions.join(","));
-    }
-    if (updatedFilters.employmentStatus.length > 0) {
-      const sortedStatuses = updatedFilters.employmentStatus.map((item) => item.id).sort((a, b) => a - b);
-      queryParams.append("sid", sortedStatuses.join(","));
-    }
+  //   if (updatedFilters.company.length > 0) {
+  //     const sortedCompanies = updatedFilters.company
+  //       .map((item) => item.id)
+  //       .sort((a, b) => a - b);
+  //     queryParams.append("cid", sortedCompanies.join(","));
+  //   }
+  //   if (updatedFilters.department.length > 0) {
+  //     const sortedDepartments = updatedFilters.department
+  //       .map((item) => item.id)
+  //       .sort((a, b) => a - b);
+  //     queryParams.append("did", sortedDepartments.join(","));
+  //   }
+  //   if (updatedFilters.jobPosition.length > 0) {
+  //     const sortedJobPositions = updatedFilters.jobPosition
+  //       .map((item) => item.id)
+  //       .sort((a, b) => a - b);
+  //     queryParams.append("pid", sortedJobPositions.join(","));
+  //   }
+  //   if (updatedFilters.employmentStatus.length > 0) {
+  //     const sortedStatuses = updatedFilters.employmentStatus
+  //       .map((item) => item.id)
+  //       .sort((a, b) => a - b);
+  //     queryParams.append("sid", sortedStatuses.join(","));
+  //   }
 
-    navigate(`/admin/data-monitoring?${queryParams.toString()}`);
-  };
+  //   navigate(`/admin/data-monitoring?${queryParams.toString()}`);
+  // };
 
   const handleCheckboxChange = (event, filterKey, id, name) => {
     const isChecked = event.target.checked;
@@ -104,14 +126,19 @@ export default function FilterButton() {
 
     if (isChecked) {
       if (!updatedFilters[filterKey].some((item) => item.id === id)) {
-        updatedFilters[filterKey] = [...updatedFilters[filterKey], { id, name }];
+        updatedFilters[filterKey] = [
+          ...updatedFilters[filterKey],
+          { id, name },
+        ];
       }
     } else {
-      updatedFilters[filterKey] = updatedFilters[filterKey].filter((item) => item.id !== id);
+      updatedFilters[filterKey] = updatedFilters[filterKey].filter(
+        (item) => item.id !== id
+      );
     }
 
     setFilters(updatedFilters);
-    updateRoute(updatedFilters);
+    // updateRoute(updatedFilters);
   };
 
   const clearFilters = () => {
@@ -120,9 +147,12 @@ export default function FilterButton() {
       department: [],
       jobPosition: [],
       employmentStatus: [],
+      fdm_result: [],
+      startDate: "",
+      endDate: "",
     };
     setFilters(newFilters);
-    updateRoute(newFilters);
+    // updateRoute(newFilters);
   };
 
   return (
@@ -143,6 +173,81 @@ export default function FilterButton() {
       >
         <Modal.Header>Filter</Modal.Header>
         <Modal.Body className="h-[50vh]">
+          <div className="mb-4">
+            <p className="text-[14px] medium">Filter Date</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor="startDate"
+                  className="text-[12px] leading-none text-gray-500"
+                >
+                  Start Date
+                </label>
+                <input
+                  className="text-[12px] rounded-lg border-gray-200 h-[2rem] w-full placeholder:text-[10px]"
+                  type="date"
+                  name="startDate"
+                  value={filters.startDate}
+                  onChange={(event) =>
+                    setFilters({ ...filters, startDate: event.target.value })
+                  }
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="endDate"
+                  className="text-[12px] leading-none text-gray-500"
+                >
+                  End Date
+                </label>
+                <input
+                  className="text-[12px] rounded-lg border-gray-200 h-[2rem]  w-full"
+                  type="date"
+                  name="endDate"
+                  value={filters.endDate}
+                  onChange={(event) =>
+                    setFilters({ ...filters, endDate: event.target.value })
+                  }
+                />
+              </div>
+              
+            </div>
+          </div>
+          {/* FDM Result */}
+          <div className="mb-4">
+            <p className="mb-2 text-[14px] medium">Status FDM</p>
+            <div className="flex gap-4">
+              {[
+                { id: 1, value: "FIT", name: "FIT" },
+                { id: 2, value: "FIT_FOLLOW_UP", name: "FIT FOLLOW UP" },
+                { id: 3, value: "UNFIT", name: "UNFIT" },
+              ].map((result) => (
+                <div key={result.id} className="flex items-center gap-2">
+                  <Checkbox
+                    id={`result_${result.id}`}
+                    checked={filters.fdm_result.some(
+                      (item) => item.id === result.id
+                    )}
+                    onChange={(event) =>
+                      handleCheckboxChange(
+                        event,
+                        "fdm_result",
+                        result.id,
+                        result.value
+                      )
+                    }
+                  />
+                  <Label
+                    htmlFor={`status_${result.id}`}
+                    className="flex text-[12px]"
+                  >
+                    {result.name}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Nama Perusahaan */}
           <div className="mb-4">
             <p className="mb-2 text-[14px] medium">Nama Perusahaan</p>
@@ -154,9 +259,16 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`company_${company.company_id}`}
-                    checked={filters.company.some((item) => item.id === company.company_id)}
+                    checked={filters.company.some(
+                      (item) => item.id === company.company_id
+                    )}
                     onChange={(event) =>
-                      handleCheckboxChange(event, "company", company.company_id, company.name)
+                      handleCheckboxChange(
+                        event,
+                        "company",
+                        company.company_id,
+                        company.name
+                      )
                     }
                   />
                   <Label
@@ -181,9 +293,16 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`department_${department.department_id}`}
-                    checked={filters.department.some((item) => item.id === department.department_id)}
+                    checked={filters.department.some(
+                      (item) => item.id === department.department_id
+                    )}
                     onChange={(event) =>
-                      handleCheckboxChange(event, "department", department.department_id, department.name)
+                      handleCheckboxChange(
+                        event,
+                        "department",
+                        department.department_id,
+                        department.name
+                      )
                     }
                   />
                   <Label
@@ -208,9 +327,16 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`position_${position.job_position_id}`}
-                    checked={filters.jobPosition.some((item) => item.id === position.job_position_id)}
+                    checked={filters.jobPosition.some(
+                      (item) => item.id === position.job_position_id
+                    )}
                     onChange={(event) =>
-                      handleCheckboxChange(event, "jobPosition", position.job_position_id, position.name)
+                      handleCheckboxChange(
+                        event,
+                        "jobPosition",
+                        position.job_position_id,
+                        position.name
+                      )
                     }
                   />
                   <Label
@@ -235,9 +361,16 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`status_${status.employment_status_id}`}
-                    checked={filters.employmentStatus.some((item) => item.id === status.employment_status_id)}
+                    checked={filters.employmentStatus.some(
+                      (item) => item.id === status.employment_status_id
+                    )}
                     onChange={(event) =>
-                      handleCheckboxChange(event, "employmentStatus", status.employment_status_id, status.name)
+                      handleCheckboxChange(
+                        event,
+                        "employmentStatus",
+                        status.employment_status_id,
+                        status.name
+                      )
                     }
                   />
                   <Label
