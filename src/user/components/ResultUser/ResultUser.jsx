@@ -22,13 +22,16 @@ const ResultUser = () => {
         return "default"; // default color if none of the conditions match
     }
   };
+
   // Format the health status text
   const formatHealthStatus = (healthStatus) => {
     return healthStatus.replace(/_/g, " ");
   };
 
   const currentDate = new Date();
-  const formattedDate = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}`;
+  const formattedDate = `${
+    currentDate.getMonth() + 1
+  }/${currentDate.getDate()}/${currentDate.getFullYear()}`;
 
   return (
     <div>
@@ -38,25 +41,30 @@ const ResultUser = () => {
           <img src="/IMM.svg" className="mr-3 h-6 sm:h-8" alt="Logo IMM" />
           <p className="font-bold mt-2">{formattedDate} </p>
         </div>
-        <h1 className="font-bold text-[16px]">Hasil Fit Daily Monitoring</h1>
         <HR className="my-1" />
+        <h1 className="font-bold text-[16px]">Hasil Fit Daily Monitoring</h1>
         {success ? (
           <div>
-              <Alert
-                color={getAlertColor(data.formula_health)}
-                icon={HiInformationCircle}
-              >
-                <span className="font-medium">Kondisi Anda</span>{" "}
-                {formatHealthStatus(data.formula_health)}
-              </Alert>
-              <Blockquote className="my-4 border-l-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800 text-[16px]">
-                {data.recomendation}
-              </Blockquote>
+            <Alert
+              color={getAlertColor(data.result)}
+              icon={HiInformationCircle}
+            >
+              <span className="font-medium">Kondisi Anda</span>{" "}
+              {formatHealthStatus(data.result)}
+            </Alert>
+            <Blockquote className="my-4 border-l-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800 text-[16px]">
+              {data.recomendation}
+            </Blockquote>
             <HR className="my-2" />
-            <div className="flex items-center">
+            <img
+              src="/rekomendasi.svg"
+              className="w-full my-4"
+              alt="Rekomendasi"
+            />
+            {/* <div className="flex items-center">
               <HiOutlinePhone className="mr-2" />
               No. Telp: 0811111212
-            </div>
+            </div> */}
           </div>
         ) : (
           <p>Mohon mengisi FDM terlebih dahulu.</p>

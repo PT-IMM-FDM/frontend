@@ -7,7 +7,9 @@ import {
   Card,
   Select,
   TextInput,
+  Alert,
 } from "flowbite-react";
+import { HiInformationCircle } from "react-icons/hi";
 import axios from "axios";
 import useAuthStore from "../../admin/stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +21,7 @@ export function Component() {
   }));
 
   const apiUrl = import.meta.env.VITE_API_URL;
-  const apiGetAllQuestionsURL = `${apiUrl}/fdm/question/getall`;
+  const apiGetAllQuestionsURL = `${apiUrl}/fdm/question/form`;
   const apiCreateResponseURL = `${apiUrl}/fdm/response/create`;
 
   const [questions, setQuestions] = useState([]);
@@ -29,6 +31,7 @@ export function Component() {
   const [shift, setShift] = useState("");
   const [isDriver, setIsDriver] = useState("");
   const [licensePlate, setLicensePlate] = useState("");
+  const [showAlert, setShowAlert] = useState(false); // State untuk mengatur tampilan alert
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,16 +41,26 @@ export function Component() {
           headers: { Authorization: `Bearer ${token}` },
         });
         const result = response.data;
-        setQuestions(result.data);
+        if (result.message === "Form has been filled today") {
+          setShowAlert(true); // Menampilkan alert
+          console.log(response.data);
+          setTimeout(() => {
+            // Menggunakan setTimeout untuk mengarahkan setelah beberapa detik
+            navigate("/fdm-form/hasil", { state: response.data });
+          }, 3000); // Mengarahkan setelah 3 detik
+        } else {
+          setQuestions(result.data);
+          console.log(response);
 
-        const initialAnswers = {};
-        result.data.forEach((question) => {
-          initialAnswers[question.question_id] = "";
-        });
-        setAnswers(initialAnswers);
+          const initialAnswers = {};
+          result.data.forEach((question) => {
+            initialAnswers[question.question_id] = "";
+          });
+          setAnswers(initialAnswers);
+        }
       } catch (error) {
         console.error("Error fetching questions:", error);
-        alert("Terjadi kesalahan saat mendapatkan data.");
+        // alert("Terjadi kesalahan saat mendapatkan data.");
       }
     };
 
@@ -69,7 +82,7 @@ export function Component() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const allAnswered = Object.values(answers).every((answer) => answer !== "");
-    if (!allAnswered && (isDriver === "true")) {
+    if (!allAnswered && isDriver === "true") {
       alert("Harap menjawab semua pertanyaan sebelum mengirimkan.");
     } else {
       const questionIds = Object.keys(answers).map(Number);
@@ -90,7 +103,7 @@ export function Component() {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("Jawaban terkirim:", response.data);
-        navigate('/fdm-form/hasil', { state: response.data });
+        navigate("/fdm-form/hasil", { state: response.data });
       } catch (error) {
         console.error("Error submitting answers:", error);
         alert("Mohon mengisi seluruh pertanyaan.");
@@ -100,6 +113,11 @@ export function Component() {
 
   return (
     <>
+      {showAlert && (
+        <Alert color="success" icon={HiInformationCircle}>
+          <span className="font-medium">Anda sudah mengisi FDM hari ini</span> Silakan kembali besok hari
+        </Alert>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="mb-2 block">
           <Label
@@ -136,6 +154,7 @@ export function Component() {
           required
           value={workDurationPlan}
           onChange={(e) => setWorkDurationPlan(e.target.value)}
+          className="focus:ring-purple-500"
         >
           <option value="" disabled>
             Pilih rencana durasi kerja
@@ -154,12 +173,7 @@ export function Component() {
             value="Apakah anda kerja Shift/ Non-Shift?"
           />
         </div>
-        <Select
-          id="shift"
-          required
-          value={shift}
-          onChange={handleShiftChange}
-        >
+        <Select id="shift" required value={shift} onChange={handleShiftChange}>
           <option value="" disabled>
             Pilih jawaban anda
           </option>
@@ -216,12 +230,13 @@ export function Component() {
                 key={answer.question_answer_id}
               >
                 <Radio
-                  id={answer.question_id}
+                  id={`answer-${answer.question_answer_id}`}
                   name={question.question_id}
                   value={answer.question_answer_id}
                   onChange={handleRadioChange}
+                  className="text-purple-500 focus:ring-purple-500"
                 />
-                <Label htmlFor={answer.question_id}>
+                <Label htmlFor={`answer-${answer.question_answer_id}`}>
                   {answer.question_answer}
                 </Label>
               </div>
@@ -229,7 +244,7 @@ export function Component() {
             <HR />
           </div>
         ))}
-        <Button className="mb-8 w-full" type="submit">
+        <Button color="purple" className="mb-8 w-full" type="submit">
           Submit
         </Button>
       </form>

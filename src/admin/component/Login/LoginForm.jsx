@@ -26,19 +26,8 @@ const LoginForm = () => {
       e.preventDefault();
       setLoading(true);
       
-      // Check if the input is valid email or phone number
-      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-      const isPhoneNumber = /^[0-9]{10,14}$/.test(email); // Example for phone number
-      
-      if (!isEmail && !isPhoneNumber) {
-        setError("Please enter a valid email address or phone number.");
-        setLoading(false);
-        return;
-      }
-      
       try {
         await login(email, password);
-        setError(null);
         const newToken = Cookies.get('token');
         const dataUser = await getCurrentLogin(newToken)
         if (dataUser.role.name !== 'User') {
@@ -46,6 +35,8 @@ const LoginForm = () => {
         } else {
           navigate('/fdm-form')
         }
+        setError(null);
+        setLoading(false);
       } catch (error) {
         let errorMessage = "An error occurred";
         if (error.response?.data?.status === "VALIDATION_ERROR") {

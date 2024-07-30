@@ -19,8 +19,6 @@ function FDMFormU() {
     <div>
       <Card
         className="max-w-[500px] mx-auto mb-5 p-4"
-        imgAlt="rekomendasi"
-        imgSrc="/rekomendasi.png"
       >
         <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
           Selamat datang {user.full_name}

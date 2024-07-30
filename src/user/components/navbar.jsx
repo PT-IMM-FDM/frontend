@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 export function Component() {
   const location = useLocation();
   const getLinkClass = (path) =>
-    location.pathname === path ? "font-normal text-blue-500" : "";
+    location.pathname === path ? "font-normal text-purple-500 hover:text-purple-500" : "hover:text-purple-500";
 
   const { logout } = useAuthStore();
   const navigate = useNavigate();
@@ -40,8 +40,8 @@ export function Component() {
         >
           Riwayat
         </Navbar.Link>
-        <Navbar.Link href="/pengaturan" className={getLinkClass("/pengaturan")}>
-          Pengaturan
+        <Navbar.Link href="/profile" className={getLinkClass("/profile")}>
+          Profile
         </Navbar.Link>
         <Navbar.Link
           className={`text-red-600 ${getLinkClass("/logout")} cursor-pointer`}
