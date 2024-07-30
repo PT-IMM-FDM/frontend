@@ -13,9 +13,11 @@ export function ExportButton() {
   const { token } = useAuthStore((state) => ({ token: state.token }));
   const { filters } = useDataFDM(); // Get filters from store
 
-  console.log(filters);
   const handleClick = async () => {
-    await exportDocumentFDM(token, filters)
+    const urlFile = await exportDocumentFDM(token, filters);
+    if (urlFile) {
+      window.open(urlFile, '_blank');
+    }
   }
 
   return (

@@ -51,7 +51,7 @@ const LineChart = () => {
 
   return (
     <div className="bg-white p-4 rounded-[10px] h-[18rem] shadow-md">
-      <h1 className="bold text-left leading-none">Line Chart</h1>
+      <h1 className="bold text-left leading-none">Jumlah Fit Bulanan</h1>
       <div className="flex h-[15rem] items-center justify-center">
         <Line data={data} options={options}/>
       </div>
