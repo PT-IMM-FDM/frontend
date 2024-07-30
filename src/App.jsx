@@ -14,6 +14,9 @@ import ProtectedRoute from "./admin/pages/ProtectedRoute";
 import NotFound from "./admin/pages/NotFound";
 import FDM from "./user/pages/FDM-user/FDMForm";
 import PublicRoute from "./admin/pages/PublicRoute";
+import HistoryU from "./user/pages/History-user/HistoryU";
+import ResultU from "./user/pages/Result-user/ResultU";
+import ManageUser from "./user/pages/Manage-user/Manage-user";
 
 function App() {
   const { token, setUser } = useAuthStore((state) => ({
@@ -53,8 +56,12 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={["Admin", "Viewer"]} />}>
           <Route path="/admin/*" element={<LayoutPages />} />
         </Route>
-        <Route element={<ProtectedRoute allowedRoles={["User"]} />}>
-          <Route path="/FDM-form" element={<FDM />} />
+        <Route element={<ProtectedRoute allowedRoles={["User", "Admin", "Viewer"]} />}>
+          <Route exact path="/" element={<Navigate to="/login" />} />
+          <Route path="/fdm-form" element={<FDM />} />
+          <Route path="/fdm-form/hasil" element={<ResultU />} />
+          <Route path="/riwayat-user" element={<HistoryU />} />
+          <Route path="/profile" element={<ManageUser />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
