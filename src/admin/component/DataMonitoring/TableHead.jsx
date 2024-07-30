@@ -14,11 +14,12 @@ const headCells = [
   { id: "full_name", numeric: false, disablePadding: false, label: "Nama Lengkap" },
   { id: "department.name", numeric: false, disablePadding: false, label: "Departemen" },
   { id: "job_position.name", numeric: false, disablePadding: false, label: "Posisi" },
-  { id: "employment_status.name", numeric: false, disablePadding: false, label: "Status Pekerjaan" },
+  { id: "employment_status.name", numeric: false, disablePadding: false, label: "Status" },
   { id: "company.name", numeric: false, disablePadding: false, label: "Nama Perusahaan" },
   { id: "hasil", numeric: false, disablePadding: false, label: "Hasil" },
+  { id: "action", numeric: false, disablePadding: false, label: "Detail"},
+  { id: "follow_up", numeric: false, disablePadding: false, label: "Follow Up" },
   { id: "attachment", numeric: false, disablePadding: false, label: "Attachment" },
-  { id: "action", numeric: false, disablePadding: false, label: "Detail", width: "5px" },
 ];
 
 function EnhancedTableHead(props) {

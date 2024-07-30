@@ -276,10 +276,13 @@ export default function EnhancedTable({ token }) {
                         {formatResult(row.result) || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
+                        <EditUserButton user_id={row.user_id} attendance_health_result_id={row.attendance_health_result_id} />
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }} align="left">
                         -
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        <EditUserButton user_id={row.user_id} attendance_health_result_id={row.attendance_health_result_id} />
+                        -
                       </TableCell>
                     </TableRow>
                   );
@@ -288,7 +291,7 @@ export default function EnhancedTable({ token }) {
                   <TableRow
                     style={{ maxHeight: (dense ? 33 : 53) * emptyRows }}
                   >
-                    <TableCell colSpan={10} />
+                    <TableCell colSpan={12} />
                   </TableRow>
                 )}
               </TableBody>

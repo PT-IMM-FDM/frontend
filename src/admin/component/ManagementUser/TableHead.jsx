@@ -14,9 +14,9 @@ const headCells = [
   { id: "phone_number", numeric: false, disablePadding: false, label: "No. Handphone" },
   { id: "department.name", numeric: false, disablePadding: false, label: "Departemen" },
   { id: "job_position.name", numeric: false, disablePadding: false, label: "Posisi" },
-  { id: "employment_status.name", numeric: false, disablePadding: false, label: "Status Pekerjaan" },
+  { id: "employment_status.name", numeric: false, disablePadding: false, label: "Status" },
   { id: "company.name", numeric: false, disablePadding: false, label: "Nama Perusahaan" },
-  { id: "action", numeric: false, disablePadding: false, label: "Action" },
+  { id: "action", numeric: false, disablePadding: false, label: "Edit" },
 ];
 
 function EnhancedTableHead(props) {
