@@ -4,21 +4,31 @@ import { Button, Modal } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { PiExportBold } from "react-icons/pi";
+import { exportDocumentFDM } from "../../api/documentApi";
+import useAuthStore from "../../stores/useAuthStore"
+import useDataFDM from "../../stores/useDataFDM";
 
 export function ExportButton() {
   const [openModal, setOpenModal] = useState(false);
+  const { token } = useAuthStore((state) => ({ token: state.token }));
+  const { filters } = useDataFDM(); // Get filters from store
+
+  console.log(filters);
+  const handleClick = async () => {
+    await exportDocumentFDM(token, filters)
+  }
 
   return (
     <>
       <Button
         color="light"
-        className=" pt-1 text-gray-700 bg-transparent border-gray-500 border-[1px] hover:bg-gray-400"
-        onClick={() => setOpenModal(true)}
+        className="h-[2.5rem] text-gray-700 bg-transparent border-gray-300 border-[1px] hover:bg-gray-400"
+        onClick={() => handleClick()}
       >
         <PiExportBold className="text-lg"/>
         <p className="ml-2 text-[12px]">Export</p>
       </Button>
-      <Modal
+      {/* <Modal
         show={openModal}
         size="md"
         onClose={() => setOpenModal(false)}
@@ -41,7 +51,7 @@ export function ExportButton() {
             </div>
           </div>
         </Modal.Body>
-      </Modal>
+      </Modal> */}
     </>
   );
 }

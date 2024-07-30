@@ -38,3 +38,50 @@ export const uploadFile = async (file, token) => {
     throw error;
   }
 };
+
+export const exportDocumentFDM = async (token, data) => {
+  const body = {}
+  if (data) {
+    const {
+      company,
+      department,
+      jobPosition,
+      employmentStatus,
+      fdm_result,
+      startDate,
+      endDate,
+      user_id,
+      is_active,
+      attendance_health_result_id,
+    } = data;
+
+    // if (name) params.name = name;
+    if (jobPosition && jobPosition.length > 0)
+      body.job_position_name = jobPosition.map((e) => e.name);
+    if (company && company.length > 0) body.company_name = company.map((e) => e.name);
+    if (department && department.length > 0)
+      body.department_name = department.map((e) => e.name);
+    if (employmentStatus && employmentStatus.length > 0)
+      body.employment_status_name = employmentStatus.map((e) => e.name);
+    if (fdm_result && fdm_result.length > 0)
+      body.result = fdm_result.map((e) => e.name);
+    if (is_active !== undefined) body.is_active = is_active;
+    if (user_id && fdm_result.length > 0) body.user_id = user_id.map((e) => e.id);
+    // if (attendance_health_result_id) body.ahrid = attendance_health_result_id;
+    if (startDate) body.startDate = startDate;
+    if (endDate) body.endDate = endDate;
+  }
+
+  console.log(body)
+
+  try {
+    const response = await axios.post(`${apiUrl}/document/export-fdm`, body, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.error("Failed to export document FDM:", error);
+    throw error;
+  }
+}

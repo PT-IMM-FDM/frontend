@@ -13,21 +13,25 @@ import EnhancedTableHead from "./TableHead";
 import EnhancedTableToolbar from "./TableToolbar";
 import { theme } from "./TableTheme";
 import { stableSort, getComparator } from "../../utils/sorting";
-import { getAllUser } from "../../api/data-user";
-import useDataUsersStore from "../../stores/useDataUsersStore";
-import { toCamelCase } from "../../utils/stringUtils";
+import { formatDate, toCamelCase } from "../../utils/stringUtils";
 import { EditUserButton } from "./EditUserButton";
+import useDataFDM from "../../stores/useDataFDM";
+import { getFdm } from "../../api/fdm";
+import { FaRegCircleCheck } from "react-icons/fa6";
+import { FaRegCircleXmark } from "react-icons/fa6";
+import { PiWarningCircleBold } from "react-icons/pi";
+import { Badge, Tooltip } from "flowbite-react";
 
-const CACHE_KEY = "usersData";
+const CACHE_KEY = "dataMonitoring";
 
 export default function EnhancedTable({ token }) {
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("full_name");
+  const [order, setOrder] = React.useState("desc");
+  const [orderBy, setOrderBy] = React.useState("timestamp");
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const { rows, selected, setRows, setSelected, filters } = useDataUsersStore();
+  const { rows, selected, setRows, setSelected, filters } = useDataFDM();
 
   // Function to handle sorting
   const handleRequestSort = (event, property) => {
@@ -45,12 +49,11 @@ export default function EnhancedTable({ token }) {
       }
 
       try {
-        const { data } = await getAllUser(token, filters);
-        const newData = data.map((row) => ({ ...row }));
+        const data = await getFdm(token, filters);
 
-        if (!cachedData || JSON.stringify(newData) !== cachedData) {
-          setRows(newData);
-          localStorage.setItem(CACHE_KEY, JSON.stringify(newData));
+        if (!cachedData || JSON.stringify(data) !== cachedData) {
+          setRows(data);
+          localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         }
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -118,27 +121,31 @@ export default function EnhancedTable({ token }) {
       return (
         (!filters.company.length ||
           filters.company.some(
-            (item) => item.id === row.company?.company_id
+            (item) => item.name === row.user.company?.name
           )) &&
         (!filters.department.length ||
           filters.department.some(
-            (item) => item.id === row.department?.department_id
+            (item) => item.name === row.user.department?.name
           )) &&
         (!filters.jobPosition.length ||
           filters.jobPosition.some(
-            (item) => item.id === row.job_position?.job_position_id
+            (item) => item.name === row.user.job_position?.name
           )) &&
         (!filters.employmentStatus.length ||
           filters.employmentStatus.some(
-            (item) => item.id === row.employment_status?.employment_status_id
-          ))
+            (item) => item.name === row.user.employment_status?.name
+          )) &&
+        (!filters.fdm_result.length ||
+          filters.fdm_result.some((item) => item.name === row.result))
       );
     });
   }, [rows, filters]);
 
   const visibleRows = React.useMemo(() => {
     const filteredRows = filterRows.filter((row) =>
-      String(row.full_name).toLowerCase().includes(searchQuery.toLowerCase())
+      String(row.user.full_name)
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
     );
     return stableSort(filteredRows, getComparator(order, orderBy)).slice(
       page * rowsPerPage,
@@ -148,6 +155,40 @@ export default function EnhancedTable({ token }) {
 
   // Calculate empty rows for pagination
   const emptyRows = Math.max(0, (1 + page) * rowsPerPage - filterRows.length);
+
+  function formatResult(result) {
+    if (result == "UNFIT") {
+      return (
+        <Tooltip content="Unfit" className="text-[10px]">
+          <Badge
+            color="failure"
+            className="w-fit px-2"
+            icon={FaRegCircleXmark}
+          ></Badge>
+        </Tooltip>
+      );
+    } else if (result == "FIT_FOLLOW_UP") {
+      return (
+        <Tooltip content="Fit Follow Up" className="text-[10px]">
+          <Badge
+            color="warning"
+            className="w-fit px-2"
+            icon={PiWarningCircleBold}
+          ></Badge>
+        </Tooltip>
+      );
+    } else {
+      return (
+        <Tooltip content="Fit" className="text-[10px]">
+          <Badge
+            color="success"
+            className="w-fit px-2"
+            icon={FaRegCircleCheck}
+          ></Badge>
+        </Tooltip>
+      );
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -193,7 +234,7 @@ export default function EnhancedTable({ token }) {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.user_id}
+                      key={row.attendance_health_result_id}
                       selected={isItemSelected}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
@@ -212,32 +253,42 @@ export default function EnhancedTable({ token }) {
                         padding="none"
                         sx={{ fontSize: "12px" }}
                       >
-                        {row.full_name ? toCamelCase(row.full_name) : "-"}
+                        {row.created_at ? formatDate(row.created_at) : "-"}
+                      </TableCell>
+                      <TableCell>
+                        {row.user.full_name
+                          ? toCamelCase(row.user.full_name)
+                          : "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.phone_number || "-"}
+                        {row.user.department?.name || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.department?.name || "-"}
+                        {row.user.job_position?.name || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.job_position?.name || "-"}
+                        {row.user.employment_status?.name || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.employment_status?.name || "-"}
+                        {row.user.company?.name || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.company?.name || "-"}
+                        {formatResult(row.result) || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        <EditUserButton user_id={row.user_id} />
+                        -
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }} align="left">
+                        <EditUserButton user_id={row.user_id} attendance_health_result_id={row.attendance_health_result_id} />
                       </TableCell>
                     </TableRow>
                   );
                 })}
                 {emptyRows > 0 && (
-                  <TableRow style={{ maxHeight: (dense ? 33 : 53) * emptyRows }}>
-                    <TableCell colSpan={8} />
+                  <TableRow
+                    style={{ maxHeight: (dense ? 33 : 53) * emptyRows }}
+                  >
+                    <TableCell colSpan={10} />
                   </TableRow>
                 )}
               </TableBody>

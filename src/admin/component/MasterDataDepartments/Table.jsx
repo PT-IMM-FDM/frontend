@@ -1,4 +1,3 @@
-// EnhancedTable.js
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -14,10 +13,9 @@ import EnhancedTableHead from "./TableHead";
 import EnhancedTableToolbar from "./TableToolbar";
 import { theme } from "./TableTheme";
 import { stableSort, getComparator } from "../../utils/sorting";
-import { FaRegEdit } from "react-icons/fa";
-import { Button, Tooltip } from "flowbite-react";
 import { getAllDepartments } from "../../api/data-company";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
+import { EditDepartmentButton } from "./EditDepartmentButton";
 
 const CACHE_KEY = "dataDepartments";
 
@@ -46,7 +44,9 @@ export default function EnhancedTable({ token }) {
     setSelected([]);
   };
 
-  const handleClick = (event, department_id) => {
+  const handleCheckboxClick = (event, department_id) => {
+    event.stopPropagation(); // Hentikan propagasi event untuk mencegah baris terseleksi
+
     const selectedIndex = selected.indexOf(department_id);
     let newSelected = [];
 
@@ -78,7 +78,7 @@ export default function EnhancedTable({ token }) {
   const isSelected = (department_id) => selected?.indexOf(department_id) !== -1;
 
   const emptyRows =
-    page > 0
+    page < 0
       ? Math.max(0, (1 + page) * rowsPerPage - rowsDepartment.length)
       : 0;
 
@@ -87,27 +87,31 @@ export default function EnhancedTable({ token }) {
     setPage(0);
   };
 
-  // Modify the useEffect to include index
   React.useEffect(() => {
     const fetchData = async () => {
       const cachedData = localStorage.getItem(CACHE_KEY);
-      if (cachedData) {   
-        setRowsDepartment(JSON.parse(cachedData));
+      if (cachedData) {
+        const data = JSON.parse(cachedData).map((row, index) => ({
+          ...row,
+          id: row.department_id,
+        }));
+        setRowsDepartment(data);
       }
-      
+
       try {
         const dataDepartments = await getAllDepartments(token);
-        const data = dataDepartments.data.map((row, index) => ({
+        const data = dataDepartments.map((row, index) => ({
           ...row,
+          id: row.department_id,
           index: index + 1,
         }));
 
         if (!cachedData || JSON.stringify(data) !== cachedData) {
-          setRowsDepartment(data)
+          setRowsDepartment(data);
           localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         }
       } catch (error) {
-        console.error('Failed to fetch data:', error)
+        console.error("Failed to fetch data:", error);
       }
     };
 
@@ -142,9 +146,12 @@ export default function EnhancedTable({ token }) {
             onSearch={handleSearch}
             selected={selected}
           />
-          <TableContainer sx={{ borderRadius: "10px" }}>
+          <TableContainer sx={{ maxHeight: 450, borderRadius: "10px" }}>
             <Table
-              sx={{ minWidth: 750 }}
+              stickyHeader
+              sx={{
+                minWidth: 750,
+              }}
               aria-labelledby="tableTitle"
               size={dense ? "small" : "medium"}
             >
@@ -164,7 +171,6 @@ export default function EnhancedTable({ token }) {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.department_id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -178,6 +184,7 @@ export default function EnhancedTable({ token }) {
                           inputProps={{
                             "aria-labelledby": labelId,
                           }}
+                          onClick={(event) => handleCheckboxClick(event, row.department_id)} // Menangani klik pada checkbox
                         />
                       </TableCell>
                       <TableCell
@@ -193,31 +200,22 @@ export default function EnhancedTable({ token }) {
                         {row.name}
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", pl: "1.5rem" }}
+                        sx={{
+                          fontSize: "12px",
+                          pl: "1.5rem",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
                         align="left"
                       >
-                        <Tooltip content="Edit" className="text-[10px]">
-                          <Button
-                            className="text-sm p-0 border-none bg-transparent"
-                            size="xs"
-                            color="light"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                            }}
-                          >
-                            <FaRegEdit className="text-[1rem] hover:text-purple-700" />
-                          </Button>
-                        </Tooltip>
+                        <EditDepartmentButton department_id={row.department_id} department_name={row.name}/>
                       </TableCell>
                     </TableRow>
                   );
                 })}
                 {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
+                  <TableRow style={{ height: (dense ? 10 : 10) * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}
@@ -225,7 +223,7 @@ export default function EnhancedTable({ token }) {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[10, 25, 50]}
             component="div"
             count={rowsDepartment.length}
             rowsPerPage={rowsPerPage}

@@ -41,20 +41,33 @@ export function AddCompanyButton() {
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Call the API to create a new user with the provided form data
-    const newDataCompany = await createCompany(token, formData);
-
-    // Update the user data in the store
-    setRows([...rows, newDataCompany]);
-
-    // Cache the updated user data in the local storage
-    localStorage.setItem(CACHE_KEY, JSON.stringify([...rows, newDataCompany]));
-    localStorage.setItem(`${CACHE_KEY}_timestamp`, new Date().getTime());
-
-    // Close the modal after successful submission
-    onCloseModal();
+  
+    try {
+      // Call the API to create a new company with the provided form data
+      const newDataCompany = await createCompany(token, formData);
+  
+      // Ensure new data has a unique `id` field
+      const newDataWithId = {
+        ...newDataCompany,
+        id: newDataCompany.company_id, // Use company_id as the unique id
+      };
+  
+      // Update the user data in the store
+      const updatedRows = [...rows, newDataWithId];
+      setRows(updatedRows);
+  
+      // Cache the updated user data in local storage
+      localStorage.setItem(CACHE_KEY, JSON.stringify(updatedRows));
+      localStorage.setItem(`${CACHE_KEY}_timestamp`, new Date().getTime());
+  
+      // Close the modal after successful submission
+      onCloseModal();
+    } catch (error) {
+      console.error('Failed to add new company:', error);
+      // Handle error state or display error message
+    }
   };
+  
 
   return (
     <>

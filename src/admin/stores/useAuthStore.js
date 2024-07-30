@@ -17,7 +17,7 @@ const useAuthStore = create(
           set({ loading: true, error: null });
           const { token } = await loginApi(email_or_phone_number, password);
           // const dataUser = await getCurrentLogin(token);
-          set({ token: token, loading: false });
+          set({ token: token});
       },
       logout: () => {
         logoutApi();

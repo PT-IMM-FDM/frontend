@@ -36,7 +36,7 @@ const LoginForm = () => {
           navigate('/fdm-form')
         }
         setError(null);
-        setLoading(false);
+        setLoading(false)
       } catch (error) {
         let errorMessage = "An error occurred";
         if (error.response?.data?.status === "VALIDATION_ERROR") {

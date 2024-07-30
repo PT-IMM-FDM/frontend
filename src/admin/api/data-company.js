@@ -24,6 +24,18 @@ export const createCompany = async (token, data) => {
   return response.data.data;
 };
 
+export const updateCompany = async (token, data) => {
+  const response = await axios.put(`${apiUrl}/company/update`, 
+    {
+      company_id: data.company_id,
+      new_name: data.company_name,
+    },{
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+  return response.data.data;
+}
+
 export const deleteCompany = async (token, data) => {
   const response = await axios.delete(`${apiUrl}/company/delete`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -56,6 +68,18 @@ export const createDepartment = async (token, data) => {
 
   return response.data.data;
 };
+
+export const updateDepartment = async (token, data) => {
+  const response = await axios.put(`${apiUrl}/company/department/update`, 
+    {
+      department_id: data.department_id,
+      new_name: data.department_name,
+    },{
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+  return response.data.data;
+}
 
 export const deleteDepartment = async (token, data) => {
   const response = await axios.delete(`${apiUrl}/company/department/delete`, {
@@ -90,6 +114,18 @@ export const createPosition = async (token, data) => {
   return response.data.data;
 };
 
+export const updatePosition = async (token, data) => {
+  const response = await axios.put(`${apiUrl}/company/job-position/update`, 
+    {
+      job_position_id: data.job_position_id,
+      new_name: data.job_position_name,
+    },{
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+  return response.data.data;
+}
+
 export const deletePosition = async (token, data) => {
   const response = await axios.delete(`${apiUrl}/company/job-position/delete`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -122,6 +158,18 @@ export const createStatusEmployment = async (token, data) => {
 
   return response.data.data;
 };
+
+export const updateStatus = async (token, data) => {
+  const response = await axios.put(`${apiUrl}/company/employment-status/update`, 
+    {
+      employment_status_id: data.employment_status_id,
+      new_name: data.employment_status_name,
+    },{
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+  return response.data.data;
+}
 
 export const deleteStatusEmployment = async (token, data) => {
   const response = await axios.delete(
