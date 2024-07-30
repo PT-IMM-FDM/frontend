@@ -79,7 +79,7 @@ export const exportDocumentFDM = async (token, data) => {
       headers: { Authorization: `Bearer ${token}` },
     });
     console.log(response.data)
-    return response.data
+    return response.data.data
   } catch (error) {
     console.error("Failed to export document FDM:", error);
     throw error;

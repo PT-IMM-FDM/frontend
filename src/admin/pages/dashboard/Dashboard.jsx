@@ -74,8 +74,8 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="grid grid-cols-4 gap-4">
-          <DoughnutChart />
-          <DoughnutChart />
+          <DoughnutChart name={"Today"} />
+          <DoughnutChart name={"Today"}/>
           <div className="col-span-2">
             <LineChart className="min-h-full" />
           </div>
