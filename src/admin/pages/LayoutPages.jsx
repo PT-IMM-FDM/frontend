@@ -23,7 +23,7 @@ const LayoutPages = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/data-monitoring" element={<Monitoring />} />
             <Route
-              path="/data-monitoring/:attendance_health_result_id"
+              path="/data-monitoring/:user_id/:attendance_health_result_id"
               element={<DetailDataMonitoringPage />}
             />
             <Route path="/data-pengguna" element={<ManagementUser />} />

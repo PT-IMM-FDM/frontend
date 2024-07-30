@@ -50,6 +50,7 @@ export const createUser = async (token, dataBody) => {
       phone_number: dataBody.phone_number,
       birth_date: dataBody.birth_date,
       role_id: parseInt(dataBody.role_id),
+      email: dataBody.email,
     },
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -72,6 +73,7 @@ export const updateUser = async (token, dataBody) => {
       phone_number: dataBody.phone_number,
       birth_date: dataBody.birth_date,
       role_id: parseInt(dataBody.role.role_id),
+      email: dataBody.email,
     },
     {
       headers: { Authorization: `Bearer ${token}` },

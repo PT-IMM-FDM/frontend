@@ -1,8 +1,26 @@
 import React from "react";
 
-const EditableField = ({ label, name, value, onChange, isEditable, type = "text" }) => (
-  <div>
-    <label className="block text-sm font-medium text-gray-700">{label}</label>
+const EditableField = ({
+  label,
+  name,
+  value,
+  onChange,
+  isEditable,
+  type = "text",
+}) => (
+  <div className="flex flex-col mb-4">
+    <label
+      htmlFor={name}
+      className="mb-1 text-sm font-medium text-gray-700"
+      style={{
+        display: '-webkit-box',
+        WebkitBoxOrient: 'vertical',
+        WebkitLineClamp: 1,
+        overflow: 'hidden',
+      }}
+    >
+      {label}
+    </label>
     {isEditable ? (
       <input
         id={name}

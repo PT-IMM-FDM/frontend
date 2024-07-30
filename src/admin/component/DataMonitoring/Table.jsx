@@ -21,12 +21,11 @@ import { FaRegCircleCheck } from "react-icons/fa6";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { PiWarningCircleBold } from "react-icons/pi";
 import { Badge, Tooltip } from "flowbite-react";
-import useAuthStore from "../../stores/useAuthStore";
 
 const CACHE_KEY = "dataMonitoring";
 
 export default function EnhancedTable({ token }) {
-  const [order, setOrder] = React.useState("asc");
+  const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("timestamp");
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
@@ -50,14 +49,7 @@ export default function EnhancedTable({ token }) {
       }
 
       try {
-        const body = {
-          dateFilter: "7",
-          // customDateFrom: filters?.customDateFrom,
-          // customDateTo: filters?.customDateTo,
-          // user_id: filters?.user_id,
-          // attendance_health_result_id: filters?.attendance_health_result_id
-        }
-        const data = await getFdm(token, body);
+        const data = await getFdm(token, filters);
 
         if (!cachedData || JSON.stringify(data) !== cachedData) {
           setRows(data);
@@ -287,7 +279,7 @@ export default function EnhancedTable({ token }) {
                         -
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        <EditUserButton attendance_health_result_id={row.attendance_health_result_id} />
+                        <EditUserButton user_id={row.user_id} attendance_health_result_id={row.attendance_health_result_id} />
                       </TableCell>
                     </TableRow>
                   );

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getUserById, updateUser } from "../../api/data-user";
+import { Spinner } from "flowbite-react";
 import useAuthStore from "../../stores/useAuthStore";
 import useDataUsersStore from "../../stores/useDataUsersStore";
 import UserForm from "./UserForm";
 import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
+import { getFDMResponseDetails } from "../../api/fdm";
 
-export default function DetailDataMonitoring() {
+export default function DetailDataMonitoring({ user_id, attendance_health_result_id}) {
   const { token } = useAuthStore((state) => ({ token: state.token }));
   const { rows, setRows } = useDataUsersStore((state) => ({
     rows: state.rows,
@@ -18,7 +19,6 @@ export default function DetailDataMonitoring() {
   const [jobPositions, setJobPositions] = useState([]);
   const [employmentStatuses, setEmploymentStatuses] = useState([]);
   const [companies, setCompanies] = useState([]);
-  const { attendance_health_result_id } = useParams();
   const [userData, setUserData] = useState({});
   const [originalUserData, setOriginalUserData] = useState({})
   const [loading, setLoading] = useState(true);
@@ -26,14 +26,8 @@ export default function DetailDataMonitoring() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const dataUser = await getUserById(token, attendance_health_result_id);
-        const formattedBirthDate = new Date(dataUser.data[0].birth_date)
-          .toISOString()
-          .split("T")[0];
-        setUserData({
-          ...dataUser.data[0],
-          birth_date: formattedBirthDate,
-        });
+        const dataUser = await getFDMResponseDetails(token, user_id, attendance_health_result_id);
+        setUserData(dataUser);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -115,8 +109,9 @@ export default function DetailDataMonitoring() {
   return (
     <>
       {loading ? (
-        <Box sx={{ width: '100%' }}>
-          <Skeleton sx={{borderRadius: '5px', bgcolor: 'grey.200'}} variant="rectangular" width="100%" height={500} />
+        <Box sx={{position: 'relative', width: '100%' }}>
+          <Spinner className="absolute top-[45%] left-[50%] z-10" size="xl" color="purple" aria-label="Purple spinner example" />
+          <Skeleton sx={{borderRadius: '5px', bgcolor: 'grey.200'}} variant="rectangular" width="100%" height={550} />
         </Box>
       ) : (
         <UserForm

@@ -73,7 +73,6 @@ const QuestionItem = ({ question, onEdit, onDelete, onSave }) => {
 
     try {
       const updatedData = await updateQuestion(token, updatedQuestion);
-      console.log(updatedData);
       onEdit(updatedData);
       onSave()
       setIsEditing(false);
