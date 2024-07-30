@@ -18,7 +18,7 @@ const headCells = [
   { id: "company.name", numeric: false, disablePadding: false, label: "Nama Perusahaan" },
   { id: "hasil", numeric: false, disablePadding: false, label: "Hasil" },
   { id: "attachment", numeric: false, disablePadding: false, label: "Attachment" },
-  { id: "action", numeric: false, disablePadding: false, label: "Action", width: "5px" },
+  { id: "action", numeric: false, disablePadding: false, label: "Detail", width: "5px" },
 ];
 
 function EnhancedTableHead(props) {
