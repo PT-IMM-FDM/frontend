@@ -22,8 +22,6 @@ export default function FilterButton() {
   const { filters, setFilters } = useDataFDM(); // Get filters and setFilters from store
   // const navigate = useNavigate();
 
-  console.log(filters)
-
   useEffect(() => {
     const fetchDataFromAPI = async () => {
       try {

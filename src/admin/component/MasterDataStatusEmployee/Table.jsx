@@ -17,6 +17,7 @@ import { stableSort, getComparator } from "../../utils/sorting";
 import { getAllStatusEmployment } from "../../api/data-company";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
 import { EditStatusButton } from "./EditStatusButton";
+import useAuthStore from "../../stores/useAuthStore";
 
 const CACHE_KEY = "dataStatus";
 
@@ -29,6 +30,8 @@ export default function EnhancedTable({ token }) {
   const [searchQuery, setSearchQuery] = React.useState("");
   const { rowsStatus, selected, setRowsStatus, setSelected } =
     useDataCompanyStore();
+  const { user } = useAuthStore((state) => ({ user: state.user }));
+  const isAdmin = user.role.name === "Admin";
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -171,33 +174,40 @@ export default function EnhancedTable({ token }) {
                       key={row.employment_status_id}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
+                      {isAdmin && (
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              "aria-labelledby": labelId,
+                            }}
+                          />
+                        </TableCell>
+                      )}
                       <TableCell
                         component="th"
                         id={labelId}
                         scope="row"
-                        padding="none"
+                        padding={isAdmin === true ? "none" : "normal"}
                         sx={{ fontSize: "12px", width: "10px" }}
                       >
                         {index + 1}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
+                      <TableCell sx={{ fontSize: "12px", paddingY: "10px" }} align="left">
                         {row.name}
                       </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", pl: "1.5rem" }}
-                        align="left"
-                      >
-                        <EditStatusButton employment_status_id={row.employment_status_id} employment_status_name={row.name}/>
-                      </TableCell>
+                      {isAdmin && (
+                        <TableCell
+                          sx={{ fontSize: "12px", pl: "1.5rem" }}
+                          align="left"
+                        >
+                          <EditStatusButton
+                            employment_status_id={row.employment_status_id}
+                            employment_status_name={row.name}
+                          />
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}

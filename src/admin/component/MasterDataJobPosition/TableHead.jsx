@@ -8,38 +8,75 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
-  
-const headCells = [
-  { id: 'number', numeric: true, disablePadding: true, label: 'No.', width: '10px'},
-  { id: "name", numeric: false, disablePadding: false, label: "Nama Posisi" },
-  { id: "action", numeric: false, disablePadding: false, label: "Action", width: 100 }, // Added width here
-];
-
-
+import useAuthStore from "../../stores/useAuthStore";
 
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
+  const { user } = useAuthStore((state) => ({ user: state.user }));
+  const isAdmin = user.role.name === "Admin";
+
+  const headCells = [
+    {
+      id: "number",
+      numeric: true,
+      disablePadding: isAdmin,
+      label: "No.",
+      width: "10px",
+    },
+    {
+      id: "name",
+      numeric: false,
+      disablePadding: false,
+      label: "Nama Posisi",
+    },
+    ...(isAdmin
+      ? [
+          {
+            id: "action",
+            numeric: false,
+            disablePadding: false,
+            label: "Edit",
+            width: 100,
+          },
+        ]
+      : []),
+  ];
 
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all rows" }}
-          />
-        </TableCell>
+        {isAdmin && (
+          <TableCell padding="checkbox">
+            <Checkbox
+              color="primary"
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+              inputProps={{ "aria-label": "select all rows" }}
+            />
+          </TableCell>
+        )}
         {headCells.map((headCell) => (
           <TableCell
             sx={{ fontSize: "12px", fontWeight: 600 }}
             key={headCell.id}
-            align={headCell.id === 'action' ? 'center' : (headCell.numeric ? "right" : "left")}
+            align={
+              headCell.id === "action"
+                ? "center"
+                : headCell.numeric
+                ? "right"
+                : "left"
+            }
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
             style={{ width: headCell.width }}
@@ -53,7 +90,9 @@ function EnhancedTableHead(props) {
                 {headCell.label}
                 {orderBy === headCell.id ? (
                   <Box component="span" sx={visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
                   </Box>
                 ) : null}
               </TableSortLabel>

@@ -16,6 +16,7 @@ import { stableSort, getComparator } from "../../utils/sorting";
 import { getAllDepartments } from "../../api/data-company";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
 import { EditDepartmentButton } from "./EditDepartmentButton";
+import useAuthStore from "../../stores/useAuthStore";
 
 const CACHE_KEY = "dataDepartments";
 
@@ -28,6 +29,8 @@ export default function EnhancedTable({ token }) {
   const [searchQuery, setSearchQuery] = React.useState("");
   const { rowsDepartment, selected, setRowsDepartment, setSelected } =
     useDataCompanyStore();
+  const { user } = useAuthStore((state) => ({ user: state.user }));
+  const isAdmin = user?.role.name === "Admin";
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -177,40 +180,49 @@ export default function EnhancedTable({ token }) {
                       key={row.department_id}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                          onClick={(event) => handleCheckboxClick(event, row.department_id)} // Menangani klik pada checkbox
-                        />
-                      </TableCell>
+                      {isAdmin && (
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              "aria-labelledby": labelId,
+                            }}
+                            onClick={(event) =>
+                              handleCheckboxClick(event, row.department_id)
+                            } // Menangani klik pada checkbox
+                          />
+                        </TableCell>
+                      )}
                       <TableCell
                         component="th"
                         id={labelId}
                         scope="row"
-                        padding="none"
+                        padding={isAdmin == true ? "none" : "normal"}
                         sx={{ fontSize: "12px", width: "10px" }}
                       >
                         {index + 1}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
+                      <TableCell sx={{ fontSize: "12px", paddingY: "10px" }} align="left">
                         {row.name}
                       </TableCell>
-                      <TableCell
-                        sx={{
-                          fontSize: "12px",
-                          pl: "1.5rem",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                        align="left"
-                      >
-                        <EditDepartmentButton department_id={row.department_id} department_name={row.name}/>
-                      </TableCell>
+                      {isAdmin && (
+                        <TableCell
+                          sx={{
+                            fontSize: "12px",
+                            pl: "1.5rem",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                          align="left"
+                        >
+                          <EditDepartmentButton
+                            department_id={row.department_id}
+                            department_name={row.name}
+                          />
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}

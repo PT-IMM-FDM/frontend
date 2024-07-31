@@ -9,6 +9,7 @@ import LineChart from "../../component/DashboardMenu/ChartLine";
 import useAuthStore from "../../stores/useAuthStore";
 import { getCurrentLogin } from "../../api/auth";
 import { Skeleton } from "@mui/material";
+import { LuUser } from "react-icons/lu";
 
 const Dashboard = () => {
   const { user, setUser, token } = useAuthStore((state) => ({
@@ -39,21 +40,64 @@ const Dashboard = () => {
         <div className="grid grid-row-2 gap-4">
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-2">
-              <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={180} className="mb-4" />
+              <Skeleton
+                animation="wave"
+                sx={{ bgcolor: "grey.200" }}
+                variant="rounded"
+                height={180}
+                className="mb-4"
+              />
               <div className="grid grid-cols-3 gap-4">
-                <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={60} />
-                <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={60} />
-                <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={60} />
+                <Skeleton
+                  animation="wave"
+                  sx={{ bgcolor: "grey.200" }}
+                  variant="rounded"
+                  height={60}
+                />
+                <Skeleton
+                  animation="wave"
+                  sx={{ bgcolor: "grey.200" }}
+                  variant="rounded"
+                  height={60}
+                />
+                <Skeleton
+                  animation="wave"
+                  sx={{ bgcolor: "grey.200" }}
+                  variant="rounded"
+                  height={60}
+                />
               </div>
             </div>
             <div className="flex">
-              <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={255} width="100%" />
+              <Skeleton
+                animation="wave"
+                sx={{ bgcolor: "grey.200" }}
+                variant="rounded"
+                height={255}
+                width="100%"
+              />
             </div>
           </div>
           <div className="grid grid-cols-4 gap-4">
-            <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={300} />
-            <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={300} />
-            <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={300} className="col-span-2" />
+            <Skeleton
+              animation="wave"
+              sx={{ bgcolor: "grey.200" }}
+              variant="rounded"
+              height={300}
+            />
+            <Skeleton
+              animation="wave"
+              sx={{ bgcolor: "grey.200" }}
+              variant="rounded"
+              height={300}
+            />
+            <Skeleton
+              animation="wave"
+              sx={{ bgcolor: "grey.200" }}
+              variant="rounded"
+              height={300}
+              className="col-span-2"
+            />
           </div>
         </div>
       </>
@@ -62,20 +106,46 @@ const Dashboard = () => {
 
   return (
     <>
-      <MenuHeader title={"Dashboard FDM"} name={user.full_name} email={user.email} />
+      <MenuHeader
+        role={user.role.name}
+        title={"Dashboard FDM"}
+        name={user.full_name}
+        email={user.email}
+      />
       <div className="grid grid-row-2 gap-4">
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2">
             <CardHero name={user.full_name} />
-            <CardJumlahStats />
+            <div className="grid grid-cols-4 gap-2">
+              <CardJumlahStats
+                label={"Total Karyawan"}
+                value={100}
+                icon={LuUser}
+              />
+              <CardJumlahStats
+                label={"Total Karyawan"}
+                value={100}
+                icon={LuUser}
+              />
+              <CardJumlahStats
+                label={"Total Respondent"}
+                value={100}
+                icon={LuUser}
+              />
+              <CardJumlahStats
+                label={"Unsubmitted Respond"}
+                value={100}
+                icon={LuUser}
+              />
+            </div>
           </div>
           <div className="flex">
             <DateRangePicker />
           </div>
         </div>
         <div className="grid grid-cols-4 gap-4">
+          <DoughnutChart name={"Departemen"} />
           <DoughnutChart name={"Today"} />
-          <DoughnutChart name={"Today"}/>
           <div className="col-span-2">
             <LineChart className="min-h-full" />
           </div>

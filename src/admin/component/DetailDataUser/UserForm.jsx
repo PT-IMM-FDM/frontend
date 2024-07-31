@@ -4,6 +4,7 @@ import SelectField from "./SelectField";
 import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
+import useAuthStore from "../../stores/useAuthStore";
 
 const UserForm = ({
   userData,
@@ -26,6 +27,9 @@ const UserForm = ({
     setIsEditable(false);
   };
 
+  const { user } = useAuthStore((state) => ({ user: state.user }));
+  const isAdmin = user.role.name === "Admin";
+
   return (
     <div className="p-4 pb-8 border rounded-md shadow-md bg-white">
       <div className="flex justify-between mb-4">
@@ -40,22 +44,20 @@ const UserForm = ({
             <Button className="p-0" onClick={handleSubmit} color="purple">
               <p className="text-[12px]">Save Changes</p>
             </Button>
-            <Button
-              className="p-0"
-              onClick={handleCancel} // Call handleCancel on Cancel button click
-              color="light"
-            >
+            <Button className="p-0" onClick={handleCancel} color="light">
               <p className="text-[12px]">Cancel</p>
             </Button>
           </div>
         ) : (
-          <Button
-            color="purple"
-            className="p-0"
-            onClick={() => setIsEditable(true)}
-          >
-            <p className="text-[12px]">Edit</p>
-          </Button>
+          isAdmin && (
+            <Button
+              color="purple"
+              className="p-0"
+              onClick={() => setIsEditable(true)}
+            >
+              <p className="text-[12px]">Edit</p>
+            </Button>
+          )
         )}
       </div>
       <form

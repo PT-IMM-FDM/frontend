@@ -2,6 +2,12 @@ import { Button, Modal, Select, TextInput } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { LuUser } from "react-icons/lu";
 import { createUser } from "../../api/data-user";
+import {
+  getAllCompany,
+  getAllDepartments,
+  getAllPositions,
+  getAllStatusEmployment,
+} from "../../api/data-company";
 import useAuthStore from "../../stores/useAuthStore";
 import useDataUsersStore from "../../stores/useDataUsersStore";
 
@@ -31,27 +37,70 @@ export function AddUserButton() {
   });
 
   useEffect(() => {
-    // Get data from localStorage if available
+    const fetchDataFromAPI = async () => {
+      try {
+        const fetchedCompanies = await getAllCompany(token);
+        setCompanies(fetchedCompanies);
+        localStorage.setItem("dataCompany", JSON.stringify(fetchedCompanies));
+      } catch (error) {
+        console.error("Error fetching companies:", error);
+        setCompanies([]);
+      }
+
+      try {
+        const fetchedDepartments = await getAllDepartments(token);
+        setDepartments(fetchedDepartments);
+        localStorage.setItem(
+          "dataDepartments",
+          JSON.stringify(fetchedDepartments)
+        );
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+        setDepartments([]);
+      }
+
+      try {
+        const fetchedPositions = await getAllPositions(token);
+        setJobPositions(fetchedPositions);
+        localStorage.setItem(
+          "dataJobPositions",
+          JSON.stringify(fetchedPositions)
+        );
+      } catch (error) {
+        console.error("Error fetching job positions:", error);
+        setJobPositions([]);
+      }
+
+      try {
+        const fetchedStatuses = await getAllStatusEmployment(token);
+        setEmploymentStatuses(fetchedStatuses);
+        localStorage.setItem("dataStatus", JSON.stringify(fetchedStatuses));
+      } catch (error) {
+        console.error("Error fetching employment statuses:", error);
+        setEmploymentStatuses([]);
+      }
+    };
+
     const storedDepartments = localStorage.getItem("dataDepartments");
-    if (storedDepartments) {
-      setDepartments(JSON.parse(storedDepartments));
-    }
-
     const storedJobPositions = localStorage.getItem("dataJobPositions");
-    if (storedJobPositions) {
-      setJobPositions(JSON.parse(storedJobPositions));
-    }
-
     const storedStatuses = localStorage.getItem("dataStatus");
-    if (storedStatuses) {
-      setEmploymentStatuses(JSON.parse(storedStatuses));
-    }
-
     const storedCompanies = localStorage.getItem("dataCompany");
-    if (storedCompanies) {
+
+    if (
+      !storedDepartments ||
+      !storedJobPositions ||
+      !storedStatuses ||
+      !storedCompanies
+    ) {
+      fetchDataFromAPI();
+    } else {
+      setDepartments(JSON.parse(storedDepartments));
+      setJobPositions(JSON.parse(storedJobPositions));
+      setEmploymentStatuses(JSON.parse(storedStatuses));
       setCompanies(JSON.parse(storedCompanies));
     }
-  }, []);
+  }, [token]);
+  
 
   function onCloseModal() {
     setOpenModal(false);

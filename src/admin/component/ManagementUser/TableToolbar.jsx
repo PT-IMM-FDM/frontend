@@ -9,9 +9,44 @@ import { AddUserButton } from "./AddUserButton";
 import SearchBar from "./SearchBar";
 import ImportButton from "./ImportButton";
 import DownloadTemplateButton from "./DownloadTemplateButton";
+import useAuthStore from "../../stores/useAuthStore";
+import { useState, useEffect } from "react";
 
 function EnhancedTableToolbar(props) {
   const { numSelected, onSearch, selected } = props;
+  const { user, token } = useAuthStore((state) => ({ user: state.user, token: state.token}));
+  const isAdmin = user.role.name === "Admin";
+  const [departments, setDepartments] = useState([]);
+  const [jobPositions, setJobPositions] = useState([]);
+  const [employmentStatuses, setEmploymentStatuses] = useState([]);
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    // Get data from localStorage if available
+    const fetchData = () => {
+      const storedDepartments = localStorage.getItem("dataDepartments");
+      if (storedDepartments) {
+        setDepartments(JSON.parse(storedDepartments));
+      }
+
+      const storedJobPositions = localStorage.getItem("dataJobPositions");
+      if (storedJobPositions) {
+        setJobPositions(JSON.parse(storedJobPositions));
+      }
+
+      const storedStatuses = localStorage.getItem("dataStatus");
+      if (storedStatuses) {
+        setEmploymentStatuses(JSON.parse(storedStatuses));
+      }
+
+      const storedCompanies = localStorage.getItem("dataCompany");
+      if (storedCompanies) {
+        setCompanies(JSON.parse(storedCompanies));
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <Toolbar
@@ -34,13 +69,32 @@ function EnhancedTableToolbar(props) {
               <div className="p-2 text-[12px]">
                 <p>{numSelected} rows selected</p>
               </div>
-              <DeleteButton className="right-0" numSelected={numSelected} selected={selected} />
+              {isAdmin && (
+                <DeleteButton
+                  className="right-0"
+                  numSelected={numSelected}
+                  selected={selected}
+                />
+              )}
             </div>
           ) : (
             <div className="flex gap-2">
-              <AddUserButton />
-              <ImportButton/>
-              <DeleteButton className="right-0" numSelected={numSelected} selected={selected} />
+              {isAdmin && (
+                <>
+                  <AddUserButton
+                    departments={departments}
+                    jobPositions={jobPositions}
+                    employmentStatuses={employmentStatuses}
+                    companies={companies}
+                  />
+                  <ImportButton />
+                  <DeleteButton
+                    className="right-0"
+                    numSelected={numSelected}
+                    selected={selected}
+                  />
+                </>
+              )}
             </div>
           )}
         </div>
@@ -48,7 +102,7 @@ function EnhancedTableToolbar(props) {
           <SearchBar onSearch={onSearch} />
           <FilterButton />
           <ExportButton />
-          <DownloadTemplateButton/>
+          {isAdmin && <DownloadTemplateButton />}
         </div>
       </div>
     </Toolbar>

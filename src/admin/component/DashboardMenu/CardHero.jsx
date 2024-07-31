@@ -1,7 +1,12 @@
 import React from "react";
 import { Button } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
 
 const CardHero = ({name}) => {
+  const navigate = useNavigate()
+  const handleNavigate = () => {
+    navigate("/admin/data-monitoring")
+  }
   return (
     <>
       <div className="flex bg-purple-900 w-full p-3 rounded-[10px] text-white my-4 shadow-md relative">
@@ -16,6 +21,7 @@ const CardHero = ({name}) => {
             className="rounded-[5px] text-black bg-white hover:bg-gray-300 hover:text-purple-900 transition-all ease-in-out duration-200"
             size="md"
             color=""
+            onClick={handleNavigate}
           >
             Lihat Data Monitoring
           </Button>
