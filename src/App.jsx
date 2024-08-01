@@ -53,10 +53,10 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route element={<ProtectedRoute allowedRoles={["Admin", "Viewer"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["Admin", "Viewer", "Full Viewer"]} />}>
           <Route path="/admin/*" element={<LayoutPages />} />
         </Route>
-        <Route element={<ProtectedRoute allowedRoles={["User", "Admin", "Viewer"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["User", "Admin", "Viewer", "Full Viewer"]} />}>
           <Route exact path="/" element={<Navigate to="/login" />} />
           <Route path="/fdm-form" element={<FDM />} />
           <Route path="/fdm-form/hasil" element={<ResultU />} />

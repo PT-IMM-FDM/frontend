@@ -4,10 +4,10 @@ import {
   Radio,
   Button,
   HR,
-  Card,
   Select,
   TextInput,
   Alert,
+  Progress,
 } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import axios from "axios";
@@ -31,7 +31,7 @@ export function Component() {
   const [shift, setShift] = useState("");
   const [isDriver, setIsDriver] = useState("");
   const [licensePlate, setLicensePlate] = useState("");
-  const [showAlert, setShowAlert] = useState(false); // State untuk mengatur tampilan alert
+  const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,15 +42,13 @@ export function Component() {
         });
         const result = response.data;
         if (result.message === "Form has been filled today") {
-          setShowAlert(true); // Menampilkan alert
+          setShowAlert(true);
           console.log(response.data);
           setTimeout(() => {
-            // Menggunakan setTimeout untuk mengarahkan setelah beberapa detik
             navigate("/fdm-form/hasil", { state: response.data });
-          }, 3000); // Mengarahkan setelah 3 detik
+          }, 3000);
         } else {
           setQuestions(result.data);
-          console.log(response);
 
           const initialAnswers = {};
           result.data.forEach((question) => {
@@ -60,7 +58,6 @@ export function Component() {
         }
       } catch (error) {
         console.error("Error fetching questions:", error);
-        // alert("Terjadi kesalahan saat mendapatkan data.");
       }
     };
 
@@ -110,6 +107,10 @@ export function Component() {
       }
     }
   };
+
+  // Calculate the progress percentage based on the number of answered questions
+  const answeredQuestionsCount = Object.values(answers).filter(answer => answer !== "").length;
+  const progressPercentage = (answeredQuestionsCount / questions.length) * 100;
 
   return (
     <>
@@ -244,10 +245,14 @@ export function Component() {
             <HR />
           </div>
         ))}
-        <Button color="purple" className="mb-8 w-full" type="submit">
+        <Button gradientMonochrome="purple" className="mb-8 w-full" type="submit">
           Submit
         </Button>
       </form>
+      <div className="mt-2">
+        <div className="text-base font-medium dark:text-white"></div>
+        <Progress progress={progressPercentage} size="sm" color="purple" />
+      </div>
     </>
   );
 }

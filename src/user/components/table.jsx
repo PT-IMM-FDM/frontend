@@ -140,9 +140,9 @@ export default function EnhancedTable() {
 
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/fdm`,
+          `${import.meta.env.VITE_API_URL}/fdm/me`,
           {
-            params: { startDate: formattedStartDate, endDate: formattedEndDate, uid: user.user_id },
+            params: { startDate: formattedStartDate, endDate: formattedEndDate },
             headers: { Authorization: `Bearer ${token}` },
           }
         );

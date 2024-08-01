@@ -9,13 +9,15 @@ export function Component() {
   const getLinkClass = (path) =>
     location.pathname === path ? "font-normal text-purple-500 hover:text-purple-500" : "hover:text-purple-500";
 
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
+
+  const showDashboardLink = user?.role.name === "Admin" || user?.role.name === "Viewer" || user?.role.name === "Full Viewer";
 
   return (
     <Navbar fluid rounded className="mb-4 sticky top-0 z-50 bg-white">
@@ -43,6 +45,11 @@ export function Component() {
         <Navbar.Link href="/profile" className={getLinkClass("/profile")}>
           Profile
         </Navbar.Link>
+        {showDashboardLink && (
+          <Navbar.Link href="/admin/dashboard" className={getLinkClass("/admin/dashboard")}>
+            Dashboard
+          </Navbar.Link>
+        )}
         <Navbar.Link
           className={`text-red-600 ${getLinkClass("/logout")} cursor-pointer`}
           onClick={handleLogout}
