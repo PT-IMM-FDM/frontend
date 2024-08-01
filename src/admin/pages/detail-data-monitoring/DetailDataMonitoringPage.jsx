@@ -5,21 +5,25 @@ import DetailDataMonitoring from "../../component/DetailDataMonitoring/DetailDat
 import { useParams } from "react-router-dom";
 
 const DetailDataMonitoringPage = () => {
-    const { user } = useAuthStore((state) => ({ user: state.user }));
-    const { user_id, attendance_health_result_id } = useParams()
+  const { user } = useAuthStore((state) => ({ user: state.user }));
+  const { user_id, attendance_health_result_id } = useParams();
 
   return (
     <>
       <MenuHeader
+        role={user.role.name}
         title={"Data Pengguna"}
         name={user?.full_name}
         email={user?.email}
       />
       <div className="mt-2">
-        <DetailDataMonitoring user_id={user_id} attendance_health_result_id={attendance_health_result_id}/>
+        <DetailDataMonitoring
+          user_id={user_id}
+          attendance_health_result_id={attendance_health_result_id}
+        />
       </div>
     </>
-  )
+  );
 };
 
 export default DetailDataMonitoringPage;

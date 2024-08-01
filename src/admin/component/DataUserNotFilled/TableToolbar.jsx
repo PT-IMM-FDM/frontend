@@ -3,18 +3,21 @@ import PropTypes from "prop-types";
 import Toolbar from "@mui/material/Toolbar";
 import { alpha } from "@mui/material/styles";
 import FilterButton from "./FilterButton";
-import { DeleteButton } from "./DeleteButton";
-import { ExportButton } from "./ExportButton";
-import { AddUserButton } from "./AddUserButton";
+// import { DeleteButton } from "./DeleteButton";
+// import { ExportButton } from "./ExportButton";
+// import { AddUserButton } from "./AddUserButton";
 import SearchBar from "./SearchBar";
-import ImportButton from "./ImportButton";
-import DownloadTemplateButton from "./DownloadTemplateButton";
+// import ImportButton from "./ImportButton";
+// import DownloadTemplateButton from "./DownloadTemplateButton";
 import useAuthStore from "../../stores/useAuthStore";
 import { useState, useEffect } from "react";
 
 function EnhancedTableToolbar(props) {
   const { numSelected, onSearch, selected } = props;
-  const { user, token } = useAuthStore((state) => ({ user: state.user, token: state.token}));
+  const { user, token } = useAuthStore((state) => ({
+    user: state.user,
+    token: state.token,
+  }));
   const isAdmin = user.role.name === "Admin";
   const [departments, setDepartments] = useState([]);
   const [jobPositions, setJobPositions] = useState([]);
@@ -63,7 +66,7 @@ function EnhancedTableToolbar(props) {
       }}
     >
       <div className="flex justify-between items-center w-full">
-        <div className="flex">
+        {/* <div className="flex">
           {numSelected > 0 ? (
             <div className="flex items-center">
               <div className="p-2 text-[12px]">
@@ -97,12 +100,12 @@ function EnhancedTableToolbar(props) {
               )}
             </div>
           )}
-        </div>
+        </div> */}
         <div className="flex items-center gap-2">
           <SearchBar onSearch={onSearch} />
           <FilterButton />
-          <ExportButton />
-          {isAdmin && <DownloadTemplateButton />}
+          {/* <ExportButton />
+          {isAdmin && <DownloadTemplateButton />}  */}
         </div>
       </div>
     </Toolbar>

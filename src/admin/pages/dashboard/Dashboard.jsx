@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../component/Layout";
 import MenuHeader from "../../component/MenuHeader";
 import CardHero from "../../component/DashboardMenu/CardHero";
@@ -8,7 +8,13 @@ import DateRangePicker from "../../component/DashboardMenu/DateRangePicker";
 import LineChart from "../../component/DashboardMenu/ChartLine";
 import useAuthStore from "../../stores/useAuthStore";
 import { getCurrentLogin } from "../../api/auth";
-import { Skeleton } from "@mui/material";
+import { LuUser } from "react-icons/lu";
+import { getTotalResponden, getUserNotFilled, resultFDMCount } from "../../api/fdm";
+import SkeletonDashboard from "./SkeletonDashboard";
+import { getAllUser } from "../../api/data-user";
+import { DrawerUserUnfilled } from "../../component/DataUserNotFilled/DrawerUserUnfilled";
+import CardUserUnfilled from "../../component/DashboardMenu/CardUserUnfilled";
+import useDataFDM from "../../stores/useDataFDM";
 
 const Dashboard = () => {
   const { user, setUser, token } = useAuthStore((state) => ({
@@ -16,6 +22,14 @@ const Dashboard = () => {
     setUser: state.setUser,
     token: state.token,
   }));
+  const [fdmResult, setFdmResult] = useState(0)
+  const [totalResponden, setTotalResponden] = useState(0)
+  const [totalKaryawan, setTotalKaryawan] = useState(0)
+  const [userNotFilled, setUserNotFilled] = useState([])
+  const [isOpen, setIsOpen] = useState(false)
+  const { filtersDashboard, setFiltersDashboard } = useDataFDM()
+
+  console.log("ini filter", filtersDashboard)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,54 +46,81 @@ const Dashboard = () => {
     fetchUser();
   }, [user, token, setUser]);
 
+  const handleDrawerOpen = () => {
+    setIsOpen(true);
+  };
+
+  useEffect(() => {
+    const fetchFdmResult = async () => {
+      // const filter = {}
+      const dataResult = await resultFDMCount(token, filtersDashboard)
+      const dataResponden = await getTotalResponden(token, filtersDashboard)
+      console.log('dataResponden', dataResponden)
+      const dataTotalKaryawan = await getAllUser(token)
+      const dataUserNotFilled = await getUserNotFilled(token, filtersDashboard)
+      
+      setFdmResult(dataResult)
+      setTotalResponden(dataResponden)
+      setTotalKaryawan(dataTotalKaryawan.data.length)
+      setUserNotFilled(dataUserNotFilled)
+    };
+    fetchFdmResult();
+  }, [])
+
   if (!user) {
     return (
-      <>
-        <MenuHeader title={"Dashboard FDM"} />
-        <div className="grid grid-row-2 gap-4">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-2">
-              <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={180} className="mb-4" />
-              <div className="grid grid-cols-3 gap-4">
-                <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={60} />
-                <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={60} />
-                <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={60} />
-              </div>
-            </div>
-            <div className="flex">
-              <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={255} width="100%" />
-            </div>
-          </div>
-          <div className="grid grid-cols-4 gap-4">
-            <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={300} />
-            <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={300} />
-            <Skeleton animation="wave" sx={{bgcolor: "grey.200"}} variant="rounded" height={300} className="col-span-2" />
-          </div>
-        </div>
-      </>
+      <SkeletonDashboard/>
     );
   }
 
   return (
     <>
-      <MenuHeader title={"Dashboard FDM"} name={user.full_name} email={user.email} />
+      <MenuHeader
+        role={user.role.name}
+        title={"Dashboard FDM"}
+        name={user.full_name}
+        email={user.email}
+      />
       <div className="grid grid-row-2 gap-4">
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2">
             <CardHero name={user.full_name} />
-            <CardJumlahStats />
+            <div className="grid grid-cols-4 gap-2">
+              <CardJumlahStats
+                label={"Total Karyawan"}
+                value={totalKaryawan}
+                icon={LuUser}
+              />
+              <CardJumlahStats
+                label={"Total Fit"}
+                value={fdmResult?.resultFit || 0}
+                icon={LuUser}
+              />
+              <CardJumlahStats
+                label={"Total Responden"}
+                value={totalResponden}
+                icon={LuUser}
+              />
+              <CardUserUnfilled
+                label={"Unsubmitted Respond"}
+                value={userNotFilled?.length}
+                icon={LuUser}
+                handleClick={handleDrawerOpen}
+              />
+            </div>
           </div>
           <div className="flex">
             <DateRangePicker />
           </div>
         </div>
         <div className="grid grid-cols-4 gap-4">
-          <DoughnutChart name={"Today"} />
-          <DoughnutChart name={"Today"}/>
+          <DoughnutChart name={"Departemen"} />
+          <DoughnutChart name={"FDM Result Today"} dataResult={fdmResult} />
           <div className="col-span-2">
             <LineChart className="min-h-full" />
           </div>
         </div>
+        <DrawerUserUnfilled userNotFilled={userNotFilled} isOpen={isOpen} setIsOpen={setIsOpen}/>
       </div>
     </>
   );

@@ -8,7 +8,7 @@ const Monitoring = () => {
 
   return (
     <>
-      <MenuHeader title={"Data Monitoring"} name={user.full_name} email={user.email}/>
+      <MenuHeader role={user.role.name} title={"Data Monitoring"} name={user.full_name} email={user.email}/>
       <div className='mt-2'>
         <EnhancedTable token={token}/>
       </div>
