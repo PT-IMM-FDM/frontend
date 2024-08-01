@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { getCurrentLogin, loginApi, logoutApi } from "../api/auth";
+import { loginApi, logoutApi } from "../api/auth";
 
 const useAuthStore = create(
   persist(
@@ -16,7 +16,6 @@ const useAuthStore = create(
       login: async (email_or_phone_number, password) => {
           set({ loading: true, error: null });
           const { token } = await loginApi(email_or_phone_number, password);
-          // const dataUser = await getCurrentLogin(token);
           set({ token: token});
       },
       logout: () => {

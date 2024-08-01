@@ -4,22 +4,27 @@ import { Chart, ArcElement, Title, Legend, Tooltip } from "chart.js";
 
 Chart.register(ArcElement, Legend, Title, Tooltip);
 
-const DoughnutChart = ({name}) => {
+const DoughnutChart = ({name, dataResult}) => {
+
+  // console.log(dataResult)
   const data = {
-    labels: ["UNFIT", "FIT", "FIT FOLLOW UP"],
+    labels: ["FIT", "FIT FOLLOW UP", "UNFIT"],
     datasets: [
       {
-        label: "My First Dataset",
-        data: [12, 19, 3],
+        data: [
+          dataResult?.resultFit || 0,
+          dataResult?.resultFitFollowUp || 0,
+          dataResult?.resultUnfit || 0,
+        ],
         backgroundColor: [
-          "rgba(255, 99, 132, 0.6)",
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(255, 206, 86, 0.6)",
+          "rgba(167, 243, 208, 0.6)", // Green color
+          "rgba(254, 240, 138, 0.6)", // Yellow color
+          "rgba(254, 202, 202, 0.6)", // Red color
         ],
         borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
+          "rgba(167, 243, 208, 1)", // Green color
+          "rgba(254, 240, 138, 1)", // Yellow color
+          "rgba(254, 202, 202, 1)", // Red color
         ],
         borderWidth: 1,
         hoverOffset: 10,

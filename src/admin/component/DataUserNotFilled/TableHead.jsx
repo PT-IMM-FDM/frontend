@@ -11,12 +11,12 @@ import { visuallyHidden } from "@mui/utils";
 
 const headCells = [
   { id: "full_name", numeric: false, disablePadding: true, label: "Nama Lengkap" },
-  { id: "phone_number", numeric: false, disablePadding: false, label: "No. Handphone" },
+  // { id: "phone_number", numeric: false, disablePadding: false, label: "No. Handphone" },
   { id: "department.name", numeric: false, disablePadding: false, label: "Departemen" },
   { id: "job_position.name", numeric: false, disablePadding: false, label: "Posisi" },
   { id: "employment_status.name", numeric: false, disablePadding: false, label: "Status" },
   { id: "company.name", numeric: false, disablePadding: false, label: "Nama Perusahaan" },
-  { id: "action", numeric: false, disablePadding: false, label: "Edit" },
+  // { id: "action", numeric: false, disablePadding: false, label: "Edit" },
 ];
 
 function EnhancedTableHead(props) {

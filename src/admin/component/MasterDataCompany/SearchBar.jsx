@@ -17,7 +17,7 @@ export default function SearchBar({ onSearch }) {
         type="search"
         name="search2"
         id="search2"
-        placeholder="Search"
+        placeholder="Search Name"
         onChange={handleSearch}
       />
     </div>

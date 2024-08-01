@@ -1,8 +1,9 @@
 import React from "react";
 import { LuUserCircle2 } from "react-icons/lu";
 import { format } from "date-fns";
+import { Tooltip, Badge } from "flowbite-react";
 
-const MenuHeader = ({ title, name, email }) => {
+const MenuHeader = ({ role, title, name, email }) => {
   const tanggalHariIni = formatDate();
 
   return (
@@ -14,9 +15,16 @@ const MenuHeader = ({ title, name, email }) => {
       <div className="flex items-center gap-2">
         <div className="text-right">
           <p className="bold">{name}</p>
-          <p className="text-[12px] thin">{email}</p>
+          <p className="text-[12px] thin">
+            {email || "Email hasn't been added"}
+          </p>
         </div>
-        <LuUserCircle2 className="text-[2.5rem]" />
+        <div className="flex flex-col items-center justify-center">
+          <LuUserCircle2 className="text-[2rem]" />
+          <Badge color="purple" className="w-fit px-2 text-[10px]">
+            {role}
+          </Badge>
+        </div>
       </div>
     </div>
   );

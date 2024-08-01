@@ -2,8 +2,9 @@ import axios from "axios";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export const getFdm = async (token, filters) => {
+const buildParams = (filters) => {
   const params = {};
+
   if (filters) {
     const {
       name,
@@ -36,8 +37,64 @@ export const getFdm = async (token, filters) => {
     if (endDate) params.endDate = endDate;
   }
 
+  return params;
+};
+
+export const getFdm = async (token, filters) => {
   try {
+    const params = buildParams(filters);
     const response = await axios.get(`${apiUrl}/fdm`, {
+      params: params,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch users: ${error}`);
+  }
+};
+
+export const resultFDMCount = async (token, filters) => {
+  try {
+    const params = buildParams(filters);
+    // console.log(params)
+    if (params) {
+      // console.log("test")
+      params.startDate = new Date()
+      params.endDate = new Date()
+      // console.log(params)
+    }
+    // console.log(params)
+    const response = await axios.get(`${apiUrl}/fdm/countResult`, {
+      params: params,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch users: ${error}`);
+  }
+};
+
+export const getTotalResponden = async (token, filters) => {
+  try {
+    const params = buildParams(filters);
+    console.log(params)
+    const response = await axios.get(`${apiUrl}/fdm/countFilledToday`, {
+      params: params,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch users: ${error}`);
+  }
+};
+
+export const getUserNotFilled = async (token, filters) => {
+  try {
+    const params = buildParams(filters);
+    const response = await axios.get(`${apiUrl}/fdm/usersNotFilledToday`, {
       params: params,
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -54,9 +111,12 @@ export const getFDMResponseDetails = async (
   attendance_health_result_id
 ) => {
   try {
-    const response = await axios.get(`${apiUrl}/fdm/response/${user_id}/${attendance_health_result_id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    const response = await axios.get(
+      `${apiUrl}/fdm/response/${user_id}/${attendance_health_result_id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     return response.data.data;
   } catch (error) {

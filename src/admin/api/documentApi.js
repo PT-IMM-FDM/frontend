@@ -72,13 +72,10 @@ export const exportDocumentFDM = async (token, data) => {
     if (endDate) body.endDate = endDate;
   }
 
-  console.log(body)
-
   try {
     const response = await axios.post(`${apiUrl}/document/export-fdm`, body, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(response.data)
     return response.data.data
   } catch (error) {
     console.error("Failed to export document FDM:", error);

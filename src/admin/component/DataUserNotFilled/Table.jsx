@@ -13,25 +13,23 @@ import EnhancedTableHead from "./TableHead";
 import EnhancedTableToolbar from "./TableToolbar";
 import { theme } from "./TableTheme";
 import { stableSort, getComparator } from "../../utils/sorting";
-import { formatDate, toCamelCase } from "../../utils/stringUtils";
-import { EditUserButton } from "./EditUserButton";
+import { getAllUser } from "../../api/data-user";
+import useDataUsersStore from "../../stores/useDataUsersStore";
+import { toCamelCase } from "../../utils/stringUtils";
 import useDataFDM from "../../stores/useDataFDM";
-import { getFdm } from "../../api/fdm";
-import { FaRegCircleCheck } from "react-icons/fa6";
-import { FaRegCircleXmark } from "react-icons/fa6";
-import { PiWarningCircleBold } from "react-icons/pi";
-import { Badge, Tooltip } from "flowbite-react";
+import { getUserNotFilled } from "../../api/fdm";
+// import { EditUserButton } from "./EditUserButton";
 
-const CACHE_KEY = "dataMonitoring";
+const CACHE_KEY = "dataNotFilled";
 
 export default function EnhancedTable({ token }) {
-  const [order, setOrder] = React.useState("desc");
-  const [orderBy, setOrderBy] = React.useState("timestamp");
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("full_name");
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const { rows, selected, setRows, setSelected, filters } = useDataFDM();
+  const { rowsNotFilled, selected, setRowsNotFilled, setSelected, filters } = useDataFDM();
 
   // Function to handle sorting
   const handleRequestSort = (event, property) => {
@@ -45,15 +43,17 @@ export default function EnhancedTable({ token }) {
     const fetchData = async () => {
       const cachedData = localStorage.getItem(CACHE_KEY);
       if (cachedData) {
-        setRows(JSON.parse(cachedData));
+        setRowsNotFilled(JSON.parse(cachedData));
       }
 
       try {
-        const data = await getFdm(token, filters);
+        const data = await getUserNotFilled(token, filters);
+        console.log(filters)
+        const newData = data.map((row) => ({ ...row }));
 
-        if (!cachedData || JSON.stringify(data) !== cachedData) {
-          setRows(data);
-          localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        if (!cachedData || JSON.stringify(newData) !== cachedData) {
+          setRowsNotFilled(newData);
+          localStorage.setItem(CACHE_KEY, JSON.stringify(newData));
         }
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -61,12 +61,12 @@ export default function EnhancedTable({ token }) {
     };
 
     fetchData();
-  }, [token, filters, setRows]);
+  }, [token, filters, setRowsNotFilled]);
 
   // Function to handle selecting all rows
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      setSelected(rows.map((row) => row.user_id));
+      setSelected(rowsNotFilled.map((row) => row.user_id));
     } else {
       setSelected([]);
     }
@@ -117,35 +117,31 @@ export default function EnhancedTable({ token }) {
 
   // Filter rows based on filters and search query
   const filterRows = React.useMemo(() => {
-    return rows.filter((row) => {
+    return rowsNotFilled.filter((row) => {
       return (
         (!filters.company.length ||
           filters.company.some(
-            (item) => item.name === row.user.company?.name
+            (item) => item.id === row.company?.company_id
           )) &&
         (!filters.department.length ||
           filters.department.some(
-            (item) => item.name === row.user.department?.name
+            (item) => item.id === row.department?.department_id
           )) &&
         (!filters.jobPosition.length ||
           filters.jobPosition.some(
-            (item) => item.name === row.user.job_position?.name
+            (item) => item.id === row.job_position?.job_position_id
           )) &&
         (!filters.employmentStatus.length ||
           filters.employmentStatus.some(
-            (item) => item.name === row.user.employment_status?.name
-          )) &&
-        (!filters.fdm_result.length ||
-          filters.fdm_result.some((item) => item.name === row.result))
+            (item) => item.id === row.employment_status?.employment_status_id
+          ))
       );
     });
-  }, [rows, filters]);
+  }, [rowsNotFilled, filters]);
 
   const visibleRows = React.useMemo(() => {
     const filteredRows = filterRows.filter((row) =>
-      String(row.user.full_name)
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
+      String(row.full_name).toLowerCase().includes(searchQuery.toLowerCase())
     );
     return stableSort(filteredRows, getComparator(order, orderBy)).slice(
       page * rowsPerPage,
@@ -155,40 +151,6 @@ export default function EnhancedTable({ token }) {
 
   // Calculate empty rows for pagination
   const emptyRows = Math.max(0, (1 + page) * rowsPerPage - filterRows.length);
-
-  function formatResult(result) {
-    if (result == "UNFIT") {
-      return (
-        <Tooltip content="Unfit" className="text-[10px]">
-          <Badge
-            color="failure"
-            className="w-fit px-2"
-            icon={FaRegCircleXmark}
-          ></Badge>
-        </Tooltip>
-      );
-    } else if (result == "FIT_FOLLOW_UP") {
-      return (
-        <Tooltip content="Fit Follow Up" className="text-[10px]">
-          <Badge
-            color="warning"
-            className="w-fit px-2"
-            icon={PiWarningCircleBold}
-          ></Badge>
-        </Tooltip>
-      );
-    } else {
-      return (
-        <Tooltip content="Fit" className="text-[10px]">
-          <Badge
-            color="success"
-            className="w-fit px-2"
-            icon={FaRegCircleCheck}
-          ></Badge>
-        </Tooltip>
-      );
-    }
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -220,7 +182,7 @@ export default function EnhancedTable({ token }) {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={rowsNotFilled.length}
               />
               <TableBody>
                 {visibleRows.map((row, index) => {
@@ -234,7 +196,7 @@ export default function EnhancedTable({ token }) {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.attendance_health_result_id}
+                      key={row.user_id}
                       selected={isItemSelected}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
@@ -253,45 +215,32 @@ export default function EnhancedTable({ token }) {
                         padding="none"
                         sx={{ fontSize: "12px" }}
                       >
-                        {row.created_at ? formatDate(row.created_at) : "-"}
+                        {row.full_name ? toCamelCase(row.full_name) : "-"}
                       </TableCell>
-                      <TableCell>
-                        {row.user.full_name
-                          ? toCamelCase(row.user.full_name)
-                          : "-"}
+                      {/* <TableCell sx={{ fontSize: "12px" }} align="left">
+                        {row.phone_number || "-"}
+                      </TableCell> */}
+                      <TableCell sx={{ fontSize: "12px" }} align="left">
+                        {row.department?.name || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.user.department?.name || "-"}
+                        {row.job_position?.name || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.user.job_position?.name || "-"}
+                        {row.employment_status?.name || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.user.employment_status?.name || "-"}
+                        {row.company?.name || "-"}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.user.company?.name || "-"}
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {formatResult(row.result) || "-"}
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        <EditUserButton user_id={row.user_id} attendance_health_result_id={row.attendance_health_result_id} />
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        -
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        -
-                      </TableCell>
+                      {/* <TableCell sx={{ fontSize: "12px" }} align="left">
+                        <EditUserButton user_id={row.user_id} />
+                      </TableCell> */}
                     </TableRow>
                   );
                 })}
                 {emptyRows > 0 && (
-                  <TableRow
-                    style={{ maxHeight: (dense ? 33 : 53) * emptyRows }}
-                  >
-                    <TableCell colSpan={12} />
+                  <TableRow style={{ maxHeight: (dense ? 33 : 53) * emptyRows }}>
+                    <TableCell colSpan={8} />
                   </TableRow>
                 )}
               </TableBody>
