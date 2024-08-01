@@ -155,8 +155,9 @@ const UserForm = ({
           isEditable={isEditable}
           options={[
             { value: 1, label: "Admin" },
-            { value: 2, label: "Monitoring" },
-            { value: 3, label: "User" },
+            { value: 2, label: "Full Viewer" },
+            { value: 3, label: "Viewer" },
+            { value: 4, label: "User" },
           ]}
         />
       </form>

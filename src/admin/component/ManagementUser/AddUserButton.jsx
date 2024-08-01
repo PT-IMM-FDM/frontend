@@ -362,8 +362,9 @@ export function AddUserButton() {
               >
                 <option value="">Select Role</option>
                 <option value="1">Admin</option>
-                <option value="2">Monitoring</option>
-                <option value="3">User</option>
+                <option value="2">Full Viewer</option>
+                <option value="3">Viewer</option>
+                <option value="4">User</option>
               </select>
             </div>
             <div className="col-span-2 flex gap-2 justify-end">

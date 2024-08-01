@@ -139,7 +139,7 @@ export function Component() {
               // href="#"
               onClick={() => navigate("/admin/data-status")}
             >
-              Status Pekerjaan
+              Status
             </Sidebar.Item>
           </Sidebar.Collapse>
         </Sidebar.ItemGroup>
