@@ -2,8 +2,9 @@ import axios from "axios";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export const getFdm = async (token, filters) => {
+const buildParams = (filters) => {
   const params = {};
+
   if (filters) {
     const {
       name,
@@ -36,8 +37,105 @@ export const getFdm = async (token, filters) => {
     if (endDate) params.endDate = endDate;
   }
 
+  return params;
+};
+
+export const getFdm = async (token, filters) => {
   try {
+    const params = buildParams(filters);
     const response = await axios.get(`${apiUrl}/fdm`, {
+      params: params,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch users: ${error}`);
+  }
+};
+
+export const countResultDepartemen = async (token, filters) => {
+  try {
+    let params = buildParams(filters);
+
+    // Destructure params
+    const { did, startDate, endDate } = params;
+
+    // Set default values for startDate and endDate if not provided
+    const today = new Date().toISOString().split("T")[0];
+    const defaultParams = {
+      startDate: today,
+      endDate: today,
+    };
+
+    // Override default values with provided values
+    if (startDate && endDate) {
+      defaultParams.startDate = startDate;
+      defaultParams.endDate = endDate;
+    }
+
+    // If did is provided, include it in the params
+    const finalParams = {
+      ...defaultParams,
+      did: did || undefined, // Include did only if it's provided
+    };
+
+    // Fetch data from API
+    const response = await axios.get(`${apiUrl}/fdm/countResult`, {
+      params: finalParams,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch data: ${error}`);
+  }
+};
+
+export const countResult = async (token, filters) => {
+  try {
+    let params = buildParams(filters);
+
+    // Filter out only startDate and endDate
+    const { startDate, endDate } = params;
+
+    // If startDate or endDate is not provided, set both to today's date
+    if (!startDate || !endDate) {
+      const today = new Date().toISOString().split("T")[0];
+      params = { startDate: today, endDate: today };
+    } else {
+      params = { startDate, endDate };
+    }
+
+    const response = await axios.get(`${apiUrl}/fdm/countResult`, {
+      params: params,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch users: ${error}`);
+  }
+};
+
+export const countFilledToday = async (token, filters) => {
+  try {
+    const params = buildParams(filters);
+    const response = await axios.get(`${apiUrl}/fdm/countFilledToday`, {
+      params: params,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch users: ${error}`);
+  }
+};
+
+export const getUserNotFilled = async (token, filters) => {
+  try {
+    const params = buildParams(filters);
+    const response = await axios.get(`${apiUrl}/fdm/usersNotFilledToday`, {
       params: params,
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -54,9 +152,12 @@ export const getFDMResponseDetails = async (
   attendance_health_result_id
 ) => {
   try {
-    const response = await axios.get(`${apiUrl}/fdm/response/${user_id}/${attendance_health_result_id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    const response = await axios.get(
+      `${apiUrl}/fdm/response/${user_id}/${attendance_health_result_id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     return response.data.data;
   } catch (error) {

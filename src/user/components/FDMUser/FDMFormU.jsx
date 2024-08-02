@@ -11,7 +11,6 @@ function FDMFormU() {
   const { user } = useAuthStore((state) => ({
     user: state.user,
   }));
-  console.log(user)
 
   
   return (

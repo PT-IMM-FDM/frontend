@@ -4,10 +4,11 @@ import useAuthStore from "../../stores/useAuthStore";
 import MenuHeader from "../../component/MenuHeader";
 
 const DetailDataUserPage = () => {
-    const { user } = useAuthStore((state) => ({ user: state.user }));
+  const { user } = useAuthStore((state) => ({ user: state.user }));
   return (
     <>
       <MenuHeader
+        role={user.role.name}
         title={"Data Pengguna"}
         name={user?.full_name}
         email={user?.email}

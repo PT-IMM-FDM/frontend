@@ -13,6 +13,7 @@ const MasterDataJobPositions = () => {
   return (
     <>
       <MenuHeader
+        role={user.role.name}
         title={"Master Data Job Positions"}
         name={user?.full_name}
         email={user?.email}

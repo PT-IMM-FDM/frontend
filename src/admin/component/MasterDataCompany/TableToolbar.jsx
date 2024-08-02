@@ -5,9 +5,12 @@ import { alpha } from "@mui/material/styles";
 import { DeleteButton } from "./DeleteButton";
 import { AddCompanyButton } from "./AddCompanyButton";
 import SearchBar from "./SearchBar";
+import useAuthStore from "../../stores/useAuthStore";
 
 function EnhancedTableToolbar(props) {
   const { numSelected, onSearch, selected } = props;
+  const { user } = useAuthStore((state) => ({ user: state.user }));
+  const isAdmin = user.role.name === "Admin";
 
   return (
     <Toolbar
@@ -30,13 +33,25 @@ function EnhancedTableToolbar(props) {
               <div className="p-2 text-[12px]">
                 <p>{numSelected} rows selected</p>
               </div>
-              <DeleteButton className="right-0" numSelected={numSelected} selected={selected} />
+              <DeleteButton
+                className="right-0"
+                numSelected={numSelected}
+                selected={selected}
+              />
             </div>
           ) : (
             <div className="flex gap-2">
-              <AddCompanyButton />
-              {/* <ImportButton/> */}
-              <DeleteButton className="right-0" numSelected={numSelected} selected={selected} />
+              {isAdmin && (
+                <>
+                  <AddCompanyButton />
+                  {/* <ImportButton/> */}
+                  <DeleteButton
+                    className="right-0"
+                    numSelected={numSelected}
+                    selected={selected}
+                  />
+                </>
+              )}
             </div>
           )}
         </div>

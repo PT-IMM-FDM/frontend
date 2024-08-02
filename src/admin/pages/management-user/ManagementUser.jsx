@@ -9,7 +9,7 @@ const ManagementUser = () => {
     
   return (
     <>
-      <MenuHeader title={"Data Pengguna"} name={user?.full_name} email={user?.email}/>
+      <MenuHeader role={user.role.name} title={"Data Pengguna"} name={user?.full_name} email={user?.email}/>
       <div className='mt-2'>
         <EnhancedTable token={token}/>
       </div>

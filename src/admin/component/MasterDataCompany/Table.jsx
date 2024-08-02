@@ -18,8 +18,9 @@ import { getAllCompany } from "../../api/data-company";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
 import { Tooltip } from "@mui/material";
 import { styled } from "@mui/material";
-import {tooltipClasses} from "@mui/material";
+import { tooltipClasses } from "@mui/material";
 import { EditCompanyButton } from "./EditCompanyButton";
+import useAuthStore from "../../stores/useAuthStore";
 
 const CACHE_KEY = "dataCompany";
 
@@ -31,6 +32,8 @@ export default function EnhancedTable({ token }) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searchQuery, setSearchQuery] = React.useState("");
   const { rows, selected, setRows, setSelected } = useDataCompanyStore();
+  const { user } = useAuthStore((state) => ({ user: state.user }));
+  const isAdmin = user.role.name === "Admin";
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -125,7 +128,6 @@ export default function EnhancedTable({ token }) {
     },
   }));
 
-
   const visibleRows = React.useMemo(() => {
     const filteredRows = rows.filter((row) =>
       String(row.name).toLowerCase().includes(searchQuery.toLowerCase())
@@ -187,34 +189,43 @@ export default function EnhancedTable({ token }) {
                       selected={isItemSelected}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                          onClick={(event) => handleClick(event, row.company_id)}
-                        />
-                      </TableCell>
+                      {isAdmin && (
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              "aria-labelledby": labelId,
+                            }}
+                            onClick={(event) =>
+                              handleClick(event, row.company_id)
+                            }
+                          />
+                        </TableCell>
+                      )}
                       <TableCell
                         component="th"
                         id={labelId}
                         scope="row"
-                        padding="none"
+                        padding={isAdmin == true ? "none" : "normal"}
                         sx={{ fontSize: "12px", width: "10px" }}
                       >
                         {index + 1}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
+                      <TableCell sx={{ fontSize: "12px", paddingY: "10px" }} align="left">
                         {row.name}
                       </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", pl: "1.5rem" }}
-                        align="left"
-                      >
-                        <EditCompanyButton company_id={row.company_id} company_name={row.name} />
-                      </TableCell>
+                      {isAdmin && (
+                        <TableCell
+                          sx={{ fontSize: "12px", pl: "1.5rem" }}
+                          align="left"
+                        >
+                          <EditCompanyButton
+                            company_id={row.company_id}
+                            company_name={row.name}
+                          />
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}

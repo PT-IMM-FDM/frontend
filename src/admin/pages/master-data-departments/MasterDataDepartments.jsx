@@ -13,6 +13,7 @@ const MasterDataDepartments = () => {
   return (
     <>
       <MenuHeader
+        role={user.role.name}
         title={"Master Data Departemen"}
         name={user?.full_name}
         email={user?.email}

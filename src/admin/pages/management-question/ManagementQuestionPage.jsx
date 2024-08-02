@@ -7,7 +7,7 @@ const ManagementQuestionPage = () => {
   const { user, token } = useAuthStore((state) => ({user: state.user, token: state.token}))
   return (
     <>
-      <MenuHeader title={"Kelola Pertanyaan"} name={user?.full_name} email={user?.email}/>
+      <MenuHeader role={user.role.name} title={"Kelola Pertanyaan"} name={user?.full_name} email={user?.email}/>
       <div>
         <QuestionList token={token}/>
       </div>
