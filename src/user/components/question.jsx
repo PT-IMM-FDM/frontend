@@ -43,14 +43,12 @@ export function Component() {
         const result = response.data;
         if (result.message === "Form has been filled today") {
           setShowAlert(true); // Menampilkan alert
-          console.log(response.data);
           setTimeout(() => {
             // Menggunakan setTimeout untuk mengarahkan setelah beberapa detik
             navigate("/fdm-form/hasil", { state: response.data });
           }, 3000); // Mengarahkan setelah 3 detik
         } else {
           setQuestions(result.data);
-          console.log(response);
 
           const initialAnswers = {};
           result.data.forEach((question) => {
@@ -102,7 +100,6 @@ export function Component() {
         const response = await axios.post(apiCreateResponseURL, requestBody, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log("Jawaban terkirim:", response.data);
         navigate("/fdm-form/hasil", { state: response.data });
       } catch (error) {
         console.error("Error submitting answers:", error);
