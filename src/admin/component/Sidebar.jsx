@@ -11,6 +11,7 @@ import AssignmentIndRoundedIcon from "@mui/icons-material/AssignmentIndRounded";
 import DomainAddRoundedIcon from "@mui/icons-material/DomainAddRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import AccountTreeRoundedIcon from "@mui/icons-material/AccountTreeRounded";
+import { FaFileWaveform } from "react-icons/fa6";
 import { useState, useEffect } from "react";
 
 export function Component() {
@@ -37,6 +38,17 @@ export function Component() {
       </div>
       <Sidebar.Items className="flex flex-col">
         <Sidebar.ItemGroup className="">
+          <Sidebar.Item
+            // href="/admin/dashboard"
+            onClick={() => navigate("/fdm-form")}
+            icon={FaFileWaveform}
+            className={`cursor-pointer normal text-sm hover:text-purple-800 hover:bg-gray-100 pr-2
+                ? "text-purple-800 bg-gray-100"
+                : ""
+            }`}
+          >
+            FDM Form
+          </Sidebar.Item>
           <Sidebar.Item
             // href="/admin/dashboard"
             onClick={() => navigate("/admin/dashboard")}

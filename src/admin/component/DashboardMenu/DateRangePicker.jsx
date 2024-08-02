@@ -13,13 +13,13 @@ const DateRangePicker = () => {
 
   return (
     <>
-      <div className="mb-4">
-        <p className="text-[14px] medium">Filter Date</p>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
+      <div className="bg-white p-4 rounded-[10px] shadow-md">
+        <p className="text-[16px] medium mb-2">Filter Date</p>
+        <div className="grid grid-cols-1 gap-4">
+          <div className="flex flex-col gap-2">
             <label
               htmlFor="startDate"
-              className="text-[12px] leading-none text-gray-500"
+              className="text-[14px] leading-none text-gray-500"
             >
               Start Date
             </label>
@@ -34,10 +34,10 @@ const DateRangePicker = () => {
               }
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-2">
             <label
               htmlFor="endDate"
-              className="text-[12px] leading-none text-gray-500"
+              className="text-[14px] leading-none text-gray-500"
             >
               End Date
             </label>

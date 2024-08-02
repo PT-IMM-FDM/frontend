@@ -34,6 +34,10 @@ export default function DetailDataUser() {
           ...dataUser.data[0],
           birth_date: formattedBirthDate,
         });
+        setOriginalUserData({
+          ...dataUser.data[0],
+          birth_date: formattedBirthDate,
+        });
         setLoading(false);
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -47,76 +51,58 @@ export default function DetailDataUser() {
   }, [token, user_id]);
 
   useEffect(() => {
-    setOriginalUserData(userData);
-  }, [])
-
-  useEffect(() => {
     const storedDepartments = localStorage.getItem("dataDepartments");
     if (storedDepartments) {
       setDepartments(JSON.parse(storedDepartments));
     }
-
     const storedJobPositions = localStorage.getItem("dataJobPositions");
     if (storedJobPositions) {
       setJobPositions(JSON.parse(storedJobPositions));
     }
-
-    const storedStatuses = localStorage.getItem("dataStatus");
-    if (storedStatuses) {
-      setEmploymentStatuses(JSON.parse(storedStatuses));
+    const storedEmploymentStatuses = localStorage.getItem("dataStatus");
+    if (storedEmploymentStatuses) {
+      setEmploymentStatuses(JSON.parse(storedEmploymentStatuses));
     }
-
     const storedCompanies = localStorage.getItem("dataCompany");
     if (storedCompanies) {
       setCompanies(JSON.parse(storedCompanies));
     }
   }, []);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setUserData((prevUserData) => {
-      if (name === "company_id") {
-        return { ...prevUserData, company_id: value, company: companies.find(c => c.company_id === parseInt(value)) };
-      }
-      if (name === "department_id") {
-        return { ...prevUserData, department_id: value, department: departments.find(d => d.department_id === parseInt(value)) };
-      }
-      if (name === "job_position_id") {
-        return { ...prevUserData, job_position_id: value, job_position: jobPositions.find(p => p.job_position_id === parseInt(value)) };
-      }
-      if (name === "employment_status_id") {
-        return { ...prevUserData, employment_status_id: value, employment_status: employmentStatuses.find(s => s.employment_status_id === parseInt(value)) };
-      }
-      if (name === "role_id") {
-        return { ...prevUserData, role_id: value, role: { role_id: parseInt(value), name: ["Admin", "Monitoring", "User"][parseInt(value) - 1] } };
-      }
-      return { ...prevUserData, [name]: value };
-    });
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
     try {
-      await updateUser(token, userData);
-
-      setRows(rows.map(row => row.user_id === userData.user_id ? userData : row));
-
-      const updatedUsers = JSON.parse(localStorage.getItem("usersData") || "[]").map(user => 
-        user.user_id === userData.user_id ? userData : user
-      );
-      localStorage.setItem("usersData", JSON.stringify(updatedUsers));
-
-      setIsEditable(false);
+      const { data, error } = await updateUser(token, userData);
+      if (error) {
+        console.error("Error updating user:", error);
+      } else {
+        const updatedRows = rows.map((row) =>
+          row.user_id === userData.user_id ? userData : row
+        );
+        setRows(updatedRows);
+        setIsEditable(false);
+      }
     } catch (error) {
       console.error("Error updating user:", error);
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      [name]: value,
+    }));
+  };
+
   return (
-    <>
+    <div className="container mx-auto p-4">
       {loading ? (
-        <Box sx={{ width: '100%' }}>
-          <Skeleton sx={{borderRadius: '5px', bgcolor: 'grey.200'}} variant="rectangular" width="100%" height={500} />
+        <Box sx={{ width: 300 }}>
+          <Skeleton animation="wave" />
+          <Skeleton animation="wave" />
+          <Skeleton animation="wave" />
         </Box>
       ) : (
         <UserForm
@@ -133,6 +119,6 @@ export default function DetailDataUser() {
           originalUserData={originalUserData}
         />
       )}
-    </>
+    </div>
   );
 }
