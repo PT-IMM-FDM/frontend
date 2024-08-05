@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -24,13 +24,21 @@ function App() {
     setUser: state.setUser,
   }));
 
+  // const [redirectToLogin, setRedirectToLogin] = useState(false);
+
   useEffect(() => {
     const fetchUser = async () => {
       if (token) {
         try {
           const dataUser = await getCurrentLogin(token);
-          setUser(dataUser);
+          // console.log("test");
+          setUser(dataUser.data);
         } catch (error) {
+          // console.log("ini eror", error.response.data.code);
+          // if (error.response.data.code === 401) {
+          //   setRedirectToLogin(true);
+          //   return;
+          // }
           console.error("Error fetching current user:", error);
         }
       }
@@ -42,9 +50,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<Navigate to={token ? '/admin/dashboard' : '/login'} />} />
-        <Route path="/login" element={!token ? <Login /> : <Navigate to="/admin/dashboard" replace />} /> */}
-        <Route path="/" element={<Navigate to={"/login"} />} />
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route
           path="/login"
           element={
@@ -53,11 +59,20 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route element={<ProtectedRoute allowedRoles={["Admin", "Full Viewer", "Viewer"]} />}>
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={["Admin", "Full Viewer", "Viewer"]} />
+          }
+        >
           <Route path="/admin/*" element={<LayoutPages />} />
         </Route>
-        <Route element={<ProtectedRoute allowedRoles={["User", "Admin", "Viewer", "Full Viewer"]} />}>
-          <Route exact path="/" element={<Navigate to="/login" />} />
+        <Route
+          element={
+            <ProtectedRoute
+              allowedRoles={["User", "Admin", "Viewer", "Full Viewer"]}
+            />
+          }
+        >
           <Route path="/fdm-form" element={<FDM />} />
           <Route path="/fdm-form/hasil" element={<ResultU />} />
           <Route path="/riwayat-user" element={<HistoryU />} />

@@ -30,7 +30,8 @@ const LoginForm = () => {
         await login(email, password);
         const newToken = Cookies.get('token');
         const dataUser = await getCurrentLogin(newToken)
-        if (dataUser.role.name !== 'User') {
+
+        if (dataUser.data.role.name !== 'User') {
           navigate("/admin/dashboard");
         } else {
           navigate('/fdm-form')

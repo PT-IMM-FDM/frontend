@@ -21,6 +21,8 @@ import { DrawerUserUnfilled } from "../../component/DataUserNotFilled/DrawerUser
 import CardUserUnfilled from "../../component/DashboardMenu/CardUserUnfilled";
 import useDataFDM from "../../stores/useDataFDM";
 import FilterButton from "../../component/DashboardMenu/FilterButton";
+import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
 
 const Dashboard = () => {
   const { user, setUser, token } = useAuthStore((state) => ({
@@ -35,7 +37,8 @@ const Dashboard = () => {
   const [totalKaryawan, setTotalKaryawan] = useState(0);
   const [userNotFilled, setUserNotFilled] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const { filtersDashboard, setFiltersDashboard } = useDataFDM();
+  const { filtersDashboard } = useDataFDM();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -57,36 +60,65 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    setLoading(true); // Start loading
     const fetchFdmResult = async () => {
-      // const filter = {}
-      const dataTotalFitToday = await countResult(token);
-      const dataResult = await countResult(token, filtersDashboard);
-      const dataResponden = await countFilledToday(token, filtersDashboard);
-      const dataTotalKaryawan = await getAllUser(token);
-      const dataUserNotFilled = await getUserNotFilled(token);
-      const dataDepartmentResult = await countResultDepartemen(
-        token,
-        filtersDashboard
-      );
-
-      setTotalFitToday(dataTotalFitToday);
-      setFdmResult(dataResult);
-      setTotalResponden(dataResponden);
-      setTotalKaryawan(dataTotalKaryawan.data.length);
-      setUserNotFilled(dataUserNotFilled);
-      setDepartementResult(dataDepartmentResult);
+      try {
+        const dataTotalFitToday = await countResult(token);
+        const dataResult = await countResult(token, filtersDashboard);
+        const dataResponden = await countFilledToday(token, filtersDashboard);
+        const dataTotalKaryawan = await getAllUser(token);
+        const dataUserNotFilled = await getUserNotFilled(token);
+        let dataDepartmentResult = null;
+        if (filtersDashboard.department.length > 0) {
+          dataDepartmentResult = await countResultDepartemen(
+            token,
+            filtersDashboard
+          );
+        }
+        setTotalFitToday(dataTotalFitToday);
+        setFdmResult(dataResult);
+        setTotalResponden(dataResponden);
+        setTotalKaryawan(dataTotalKaryawan.data.length);
+        setUserNotFilled(dataUserNotFilled);
+        setDepartementResult(dataDepartmentResult);
+      } catch (error) {
+        console.error("Failed to fetch FDM results", error);
+      } finally {
+        setLoading(false); // Stop loading
+      }
     };
-    fetchFdmResult();
-  }, [filtersDashboard]);
 
-  const isDepartmentFilterApplied = filtersDashboard.department.length; // Replace with the actual condition for checking if department filter is applied
+    fetchFdmResult();
+  }, [filtersDashboard, token]);
+
+  console.log(totalFitToday)
+
+  const isDepartmentFilterApplied = filtersDashboard.department.length > 0;
 
   if (!user) {
     return <SkeletonDashboard />;
   }
 
   return (
-    <>
+    <div className="relative">
+      {loading && (
+        <Box
+          sx={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            zIndex: 999,
+            top: 0,
+            left: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(243, 244, 246, 0.7)",
+          }}
+        >
+          <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
+        </Box>
+      )}
       <MenuHeader
         role={user.role.name}
         title={"Dashboard FDM"}
@@ -155,7 +187,7 @@ const Dashboard = () => {
           setIsOpen={setIsOpen}
         />
       </div>
-    </>
+    </div>
   );
 };
 

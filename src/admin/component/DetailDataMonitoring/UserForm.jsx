@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import EditableField from "./EditableField";
-import SelectField from "./SelectField";
 import { toCamelCase } from "../../utils/stringUtils";
-import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
+import ImportButton from "./ImportButton";
 
 const UserForm = ({
-  userData,
+  userData = [], // Initialize as an empty array
   setUserData,
-  handleChange,
   handleSubmit,
   isEditable,
   setIsEditable,
@@ -17,14 +15,58 @@ const UserForm = ({
   jobPositions,
   employmentStatuses,
   companies,
-  originalUserData, // New prop to pass originalUserData
+  originalUserData,
 }) => {
   const navigate = useNavigate();
+  const [isFollowUpEditable, setIsFollowUpEditable] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState("");
+  const [followUpData, setFollowUpData] = useState(userData[0]?.note || "");
 
-  // Handle Cancel function to reset userData to originalUserData
-  const handleCancel = () => {
-    setUserData(originalUserData);
-    setIsEditable(false);
+  // Update follow-up data state when userData or isFollowUpEditable changes
+  useEffect(() => {
+    if (!isFollowUpEditable) {
+      setFollowUpData(userData[0]?.note || "");
+    }
+  }, [userData, isFollowUpEditable]);
+
+  const handleFollowUpChange = (e) => {
+    setFollowUpData(e.target.value);
+  };
+
+  const handleFollowUpCancel = () => {
+    setFollowUpData(originalUserData[0]?.note || "");
+    setIsFollowUpEditable(false);
+    setUploadedFileName(""); // Clear file name on cancel
+  };
+
+  const handleFollowSubmit = () => {
+    setUserData(prevData => {
+      // Update the follow-up note in the userData
+      const updatedUserData = [...prevData];
+      updatedUserData[0] = {
+        ...updatedUserData[0],
+        note: followUpData,
+      };
+      return updatedUserData;
+    });
+    setIsFollowUpEditable(false);
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setUploadedFileName(file.name);
+      // You can implement further logic to handle the file if needed
+    }
+  };
+
+  const handleFileRemove = () => {
+    setUploadedFileName("");
+    // Implement further logic to remove the file if needed
+  };
+
+  const formatBoolean = (value) => {
+    return value ? "Yes" : "No";
   };
 
   return (
@@ -36,118 +78,147 @@ const UserForm = ({
           </button>
           <h2 className="text-md ml-2 font-medium">Detail Data Monitoring</h2>
         </div>
-        {/* {isEditable ? (
-          <div className="flex space-x-2">
-            <Button className="p-0" onClick={handleSubmit} color="purple">
-              <p className="text-[12px]">Save Changes</p>
-            </Button>
-            <Button
-              className="p-0"
-              onClick={handleCancel} // Call handleCancel on Cancel button click
-              color="light"
-            >
-              <p className="text-[12px]">Cancel</p>
-            </Button>
-          </div>
-        ) : (
-          <Button
-            color="purple"
-            className="p-0"
-            onClick={() => setIsEditable(true)}
-          >
-            <p className="text-[12px]">Edit</p>
-          </Button>
-        )} */}
       </div>
       <form
         className="h-[62vh] overflow-y-auto px-2"
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={(e) => handleSubmit(e)}
       >
+        <section className="mb-4">
+          <div className="flex justify-between items-center">
+            <h1 className="text-sm mb-2 text-gray-400">Data Follow Up</h1>
+            {isFollowUpEditable ? (
+              <div className="flex space-x-2">
+                <button
+                  className="bg-purple-500 text-white px-2 py-1 text-sm rounded"
+                  onClick={handleFollowSubmit}
+                >
+                  Save Changes
+                </button>
+                <button
+                  className="bg-gray-300 text-black px-2 py-1 text-sm rounded"
+                  onClick={handleFollowUpCancel}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button
+                className="bg-purple-500 text-white px-2 py-1 text-sm rounded"
+                onClick={() => setIsFollowUpEditable(true)}
+              >
+                Edit
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-2 gap-x-6">
+            <div>
+              <EditableField
+                label="Follow Up"
+                name="follow_up"
+                value={followUpData}
+                onChange={handleFollowUpChange}
+                isEditable={isFollowUpEditable}
+                type="text"
+              />
+            </div>
+            <div>
+              <p className="text-sm mb-2">Upload Attachment</p>
+              {isFollowUpEditable ? (
+                <>
+                  <ImportButton onChange={handleFileChange}/>
+                  {uploadedFileName && (
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-500">{uploadedFileName}</span>
+                      <button
+                        type="button"
+                        className="text-sm text-red-500"
+                        onClick={handleFileRemove}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p className="text-sm text-gray-500">Attachment Uploaded: {uploadedFileName}</p>
+              )}
+            </div>
+          </div>
+        </section>
         <h1 className="text-sm mb-2 text-gray-400">Data Responden</h1>
         <section className="grid grid-cols-2 gap-y-2 gap-x-6 mb-5">
           <EditableField
             label="Nama Lengkap"
             name="full_name"
-            value={userData?.[0]?.user?.full_name || ""}
-            onChange={handleChange}
+            value={userData[0]?.user?.full_name || ""}
             isEditable={isEditable}
           />
           <EditableField
             label="No. Telepon"
             name="phone_number"
-            value={userData?.[0].user.phone_number || ""}
-            onChange={handleChange}
+            value={userData[0]?.user?.phone_number || ""}
             isEditable={isEditable}
             type="tel"
           />
           <EditableField
             label="Email"
             name="email"
-            value={userData?.[0].user.email || ""}
-            onChange={handleChange}
+            value={userData[0]?.user?.email || ""}
             isEditable={isEditable}
             type="email"
           />
           <EditableField
             label="Nama Perusahaan"
             name="company_id"
-            value={userData?.[0].user.company?.name || ""}
-            onChange={handleChange}
+            value={userData[0]?.user?.company?.name || ""}
             isEditable={isEditable}
             type="text"
           />
           <EditableField
             label="Departemen"
             name="department_id"
-            value={userData?.[0].user.department?.name || ""}
-            onChange={handleChange}
+            value={userData[0]?.user?.department?.name || ""}
             isEditable={isEditable}
           />
           <EditableField
             label="Posisi"
             name="job_position_id"
-            value={userData?.[0].user.job_position.name}
-            onChange={handleChange}
+            value={userData[0]?.user?.job_position?.name || ""}
             isEditable={isEditable}
           />
           <EditableField
             label="Status Pekerjaan"
             name="employment_status_id"
-            value={userData?.[0].user.employment_status?.name}
-            onChange={handleChange}
+            value={userData[0]?.user?.employment_status?.name || ""}
             isEditable={isEditable}
           />
           <EditableField
             label="Status Kehadiran"
             name="attendance_status"
             value={
-              userData?.[0].attendance_health_result.attendance_status || ""
+              userData[0]?.attendance_health_result?.attendance_status || ""
             }
-            onChange={handleChange}
             isEditable={isEditable}
           />
           <EditableField
             label="Bekerja Shift/Non-Shift"
             name="shift"
-            value={userData?.[0].attendance_health_result.shift || ""}
-            onChange={handleChange}
+            value={userData[0]?.attendance_health_result?.shift || ""}
             isEditable={isEditable}
             type="email"
           />
           <EditableField
             label="Apakah Driver?"
             name="is_driver"
-            value={userData?.[0].attendance_health_result.is_driver || ""}
-            onChange={handleChange}
+            value={formatBoolean(userData[0]?.attendance_health_result?.is_driver)}
             isEditable={isEditable}
           />
           <EditableField
             label="Nomor Lambung Kendaraan"
             name="vehicle_hull_number"
             value={
-              userData?.[0].attendance_health_result.vehicle_hull_num || "-"
+              userData[0]?.attendance_health_result?.vehicle_hull_number || "-"
             }
-            onChange={handleChange}
             isEditable={isEditable}
             type="text"
           />
@@ -155,37 +226,31 @@ const UserForm = ({
             label="Durasi Kerja"
             name="work_duration_plan"
             value={
-              userData?.[0].attendance_health_result.work_duration_plan || ""
+              userData[0]?.attendance_health_result?.work_duration_plan || ""
             }
-            onChange={handleChange}
             isEditable={isEditable}
           />
           <EditableField
             label="Hasil Fit Daily Monitoring"
             name="result"
-            value={userData?.[0].attendance_health_result.result || ""}
-            onChange={handleChange}
+            value={userData[0]?.attendance_health_result?.result || ""}
             isEditable={isEditable}
           />
           <EditableField
             label="Rekomendasi"
             name="recomendation"
-            value={userData?.[0].attendance_health_result.recomendation || ""}
-            onChange={handleChange}
+            value={userData[0]?.attendance_health_result?.recomendation || ""}
             isEditable={isEditable}
           />
-          {userData.map((data, index) => {
-            return (
-              <EditableField
-                key={index}
-                label={toCamelCase(data.question.question)}
-                name={`question_answers[${index}].answer`}
-                value={data.question_answer.question_answer}
-                onChange={handleChange}
-                isEditable={isEditable}
-              />
-            );
-          })}
+          {userData.map((data, index) => (
+            <EditableField
+              key={index}
+              label={toCamelCase(data.question?.question || '')}
+              name={`question_answers[${index}].answer`}
+              value={data.question_answer?.question_answer || ''}
+              isEditable={isEditable}
+            />
+          ))}
         </section>
       </form>
     </div>
