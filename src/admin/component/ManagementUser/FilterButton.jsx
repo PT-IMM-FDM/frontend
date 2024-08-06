@@ -134,7 +134,7 @@ export default function FilterButton() {
         <Modal.Body className="h-[50vh]">
           {/* Nama Perusahaan */}
           <div className="mb-4">
-            <p className="mb-2 text-[14px] medium">Nama Perusahaan</p>
+            <p className="mb-2 text-[14px] font-semibold">Nama Perusahaan</p>
             <div className="grid grid-cols-3 grid-flow-row gap-1">
               {companies.map((company) => (
                 <div
@@ -168,7 +168,7 @@ export default function FilterButton() {
 
           {/* Filter Departemen */}
           <div className="mb-4">
-            <p className="mb-2 text-[14px] medium">Departemen</p>
+            <p className="mb-2 text-[14px] font-semibold">Departemen</p>
             <div className="grid grid-cols-3 grid-flow-row gap-1">
               {departments.map((department) => (
                 <div
@@ -202,7 +202,7 @@ export default function FilterButton() {
 
           {/* Filter Posisi */}
           <div className="mb-4">
-            <p className="mb-2 text-[14px] medium">Posisi</p>
+            <p className="mb-2 text-[14px] font-semibold">Posisi</p>
             <div className="grid grid-cols-3 grid-flow-row gap-1">
               {jobPositions.map((position) => (
                 <div
@@ -236,7 +236,7 @@ export default function FilterButton() {
 
           {/* Status Pekerjaan */}
           <div className="mb-4">
-            <p className="mb-2 text-[14px] medium">Status Pekerjaan</p>
+            <p className="mb-2 text-[14px] font-semibold">Status Pekerjaan</p>
             <div className="grid grid-rows-3 grid-flow-col gap-1">
               {employmentStatuses.map((status) => (
                 <div

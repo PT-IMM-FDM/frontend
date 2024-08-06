@@ -1,29 +1,29 @@
 "use client";
 
 import { Button, Modal } from "flowbite-react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import { deleteUsers } from "../../api/data-user";
 import useAuthStore from "../../stores/useAuthStore";
 import useDataUsersStore from "../../stores/useDataUsersStore";
+import { Box } from "@mui/material";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CACHE_KEY = "usersData";
+
 export function DeleteButton({ numSelected, selected }) {
-  // State variable to control the visibility of the modal
   const [openModal, setOpenModal] = useState(false);
-
-  // Retrieve the user token from the authentication store
   const { token } = useAuthStore((state) => ({ token: state.token }));
-
-  // Retrieve the user data rows and the setter function from the data users store
   const { rows, setRows, setSelected } = useDataUsersStore((state) => ({
     rows: state.rows,
     setRows: state.setRows,
     setSelected: state.setSelected,
   }));
 
-  // Function to handle the delete button click event
+  const [loading, setLoading] = useState(false);
+
   const handleDeleteClick = () => {
     if (numSelected <= 0) {
       setOpenModal(false);
@@ -32,38 +32,61 @@ export function DeleteButton({ numSelected, selected }) {
     }
   };
 
-  // Function to handle the confirmation of the delete action
-  const handleConfimDeleteClick = async (token) => {
+  const handleConfimDeleteClick = useCallback(async () => {
+    setLoading(true);
     try {
-      // Call the API to delete the selected user data
       await deleteUsers(token, selected);
-
-      // Filter out the deleted user data from the rows
       const updatedRows = rows.filter((row) => !selected.includes(row.user_id));
-
-      // Update the rows in the data users store
       setRows(updatedRows);
-      setSelected([])
-
-      // Update the local storage with the updated rows
+      setSelected([]);
       localStorage.setItem(CACHE_KEY, JSON.stringify(updatedRows));
       localStorage.setItem(`${CACHE_KEY}_timestamp`, new Date().getTime());
-
-      // Close the modal
       setOpenModal(false);
+      toast.success("User deleted successfully.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
     } catch (error) {
-      console.error('Failed to delete users:', error);
-      // Handle error state or display error message
+      console.error("Failed to delete users:", error);
+      toast.error("Failed to delete users.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [token, selected, rows, setRows, setSelected]);
 
   return (
     <>
+      {/* <ToastContainer /> */}
+      {loading && (
+        <Box
+          sx={{
+            position: "fixed",
+            width: "100%",
+            height: "100%",
+            zIndex: 999,
+            top: 0,
+            left: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(240, 240, 240, 0.7)",
+          }}
+        >
+          <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
+        </Box>
+      )}
       <Button
         color="light"
         className="border-gray-300 h-[2.5rem] bg-transparent text-red-500 hover:bg-gray-400"
         onClick={handleDeleteClick}
-        disabled={selected.length <= 0} // Check length of selected array
+        disabled={selected.length <= 0}
       >
         <DeleteRoundedIcon sx={{ fontSize: "large" }} />
         <p className="ml-2 text-[12px]">Delete</p>
@@ -82,10 +105,7 @@ export function DeleteButton({ numSelected, selected }) {
               Are you sure you want to delete this data?
             </h3>
             <div className="flex justify-center gap-4">
-              <Button
-                color="failure"
-                onClick={() => handleConfimDeleteClick(token)}
-              >
+              <Button color="failure" onClick={handleConfimDeleteClick}>
                 {"Yes, I'm sure"}
               </Button>
               <Button color="gray" onClick={() => setOpenModal(false)}>

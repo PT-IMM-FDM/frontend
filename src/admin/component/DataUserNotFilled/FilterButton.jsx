@@ -139,7 +139,7 @@ export default function FilterButton() {
         <Modal.Header>Filter</Modal.Header>
         <Modal.Body className="h-[50vh]">
           <div className="mb-4">
-            <p className="text-[14px] medium">Filter Date</p>
+            <p className="text-[14px] font-semibold">Filter Date</p>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
@@ -180,7 +180,7 @@ export default function FilterButton() {
           </div>
           {/* FDM Result */}
           <div className="mb-4">
-            <p className="mb-2 text-[14px] medium">Status FDM</p>
+            <p className="mb-2 text-[14px] font-semibold">Status FDM</p>
             <div className="flex gap-4">
               {[
                 { id: 1, value: "FIT", name: "FIT" },
@@ -215,7 +215,7 @@ export default function FilterButton() {
 
           {/* Nama Perusahaan */}
           <div className="mb-4">
-            <p className="mb-2 text-[14px] medium">Nama Perusahaan</p>
+            <p className="mb-2 text-[14px] font-semibold">Nama Perusahaan</p>
             <div className="grid grid-cols-3 grid-flow-row gap-1">
               {companies.map((company) => (
                 <div
@@ -249,7 +249,7 @@ export default function FilterButton() {
 
           {/* Filter Departemen */}
           <div className="mb-4">
-            <p className="mb-2 text-[14px] medium">Departemen</p>
+            <p className="mb-2 text-[14px] font-semibold">Departemen</p>
             <div className="grid grid-cols-3 grid-flow-row gap-1">
               {departments.map((department) => (
                 <div
@@ -283,7 +283,7 @@ export default function FilterButton() {
 
           {/* Filter Posisi */}
           <div className="mb-4">
-            <p className="mb-2 text-[14px] medium">Posisi</p>
+            <p className="mb-2 text-[14px] font-semibold">Posisi</p>
             <div className="grid grid-cols-3 grid-flow-row gap-1">
               {jobPositions.map((position) => (
                 <div
@@ -317,7 +317,7 @@ export default function FilterButton() {
 
           {/* Status Pekerjaan */}
           <div className="mb-4">
-            <p className="mb-2 text-[14px] medium">Status Pekerjaan</p>
+            <p className="mb-2 text-[14px] font-semibold">Status Pekerjaan</p>
             <div className="grid grid-rows-3 grid-flow-col gap-1">
               {employmentStatuses.map((status) => (
                 <div

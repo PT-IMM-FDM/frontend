@@ -15,7 +15,7 @@ const DateRangePicker = () => {
   return (
     <>
       <div className="bg-white p-4 rounded-[10px] shadow-md">
-        <p className="text-[14px] medium mb-2">Filter Date</p>
+        <p className="text-[14px] font-semibold mb-2">Filter Date</p>
         <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col gap-2">
             <label

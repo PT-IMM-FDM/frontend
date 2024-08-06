@@ -107,8 +107,6 @@ export const countResult = async (token, filters) => {
     // Construct the params object
     const params = { startDate, endDate };
 
-    console.log(params)
-
     const response = await axios.get(`${apiUrl}/fdm/countResult`, {
       params: params,
       headers: { Authorization: `Bearer ${token}` },

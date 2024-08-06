@@ -17,6 +17,8 @@ import PublicRoute from "./admin/pages/PublicRoute";
 import HistoryU from "./user/pages/History-user/HistoryU";
 import ResultU from "./user/pages/Result-user/ResultU";
 import ManageUser from "./user/pages/Manage-user/Manage-user";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const { token, setUser } = useAuthStore((state) => ({
@@ -31,14 +33,8 @@ function App() {
       if (token) {
         try {
           const dataUser = await getCurrentLogin(token);
-          // console.log("test");
           setUser(dataUser.data);
         } catch (error) {
-          // console.log("ini eror", error.response.data.code);
-          // if (error.response.data.code === 401) {
-          //   setRedirectToLogin(true);
-          //   return;
-          // }
           console.error("Error fetching current user:", error);
         }
       }
@@ -49,6 +45,7 @@ function App() {
 
   return (
     <Router>
+      <ToastContainer/>
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route

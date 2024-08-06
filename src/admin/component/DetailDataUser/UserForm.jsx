@@ -38,13 +38,15 @@ const UserForm = ({
       toast.success("Password has been reset to default.", {
         autoClose: 3000, // 3 seconds
         pauseOnHover: false, // Do not pause on hover
-        position: "bottom-right"
+        position: "bottom-right",
+        theme: "colored"
       });
     } catch (error) {
       toast.error("Failed to reset password.", {
         autoClose: 3000, // 3 seconds
         pauseOnHover: false, // Do not pause on hover
-        position: "bottom-right"
+        position: "bottom-right",
+        theme: "colored"
       });
     }
     setShowResetModal(false);

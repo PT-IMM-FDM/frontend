@@ -9,11 +9,11 @@ const CardUserUnfilled = ({ label, value, icon: Icon, handleClick }) => {
           <Icon className="xl:text-[2rem]" />
         </div>
         <div>
-          <p className="xl:text-[0.7rem] text-gray-500 thin mb-[2px] leading-none">
+          <p className="xl:text-[0.7rem] text-gray-500 mb-[2px] leading-none">
             {label}
           </p>
           <div className="flex items-center gap-2">
-            <p className="xl:text-[1.2rem] leading-none medium">{value}</p>
+            <p className="xl:text-[1.2rem] leading-none font-semibold">{value}</p>
             {/* <GrView onClick={handleClick} className="hover:text-purple-700 cursor-pointer"/> */}
           </div>
         </div>

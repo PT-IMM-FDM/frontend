@@ -27,7 +27,6 @@ export const getCurrentLogin = async (token) => {
 
     return response.data;
   } catch (error) {
-    console.log("ini eror", error)
     if (error.response && error.response.status === 401) {
       localStorage.clear();
       window.location.href = '/login';

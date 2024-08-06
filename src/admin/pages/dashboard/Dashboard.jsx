@@ -75,6 +75,7 @@ const Dashboard = () => {
             filtersDashboard
           );
         }
+
         setTotalFitToday(dataTotalFitToday);
         setFdmResult(dataResult);
         setTotalResponden(dataResponden);
@@ -90,8 +91,6 @@ const Dashboard = () => {
 
     fetchFdmResult();
   }, [filtersDashboard, token]);
-
-  console.log(totalFitToday)
 
   const isDepartmentFilterApplied = filtersDashboard.department.length > 0;
 

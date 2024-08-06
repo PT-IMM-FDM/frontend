@@ -59,7 +59,7 @@ const LoginForm = () => {
         <h2 className="mt-2 text-center text-md medium text-gray-900">
           Fit Daily Monitoring
         </h2>
-        <p className="mt-4 text-center thin text-sm text-gray-900">
+        <p className="mt-4 text-center text-sm text-gray-900">
           Welcome, Please Sign In to Continue
         </p>
       </div>
@@ -94,7 +94,7 @@ const LoginForm = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="rounded-[5px] thin w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              className="rounded-[5px] w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Password"
             />
           </div>

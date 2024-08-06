@@ -53,7 +53,7 @@ const DoughnutChart = ({ name, dataResult, position, noDataText, noDepartmentFil
 
   return (
     <div className="bg-white p-4 rounded-[10px] h-[18rem] shadow-md">
-      <h1 className="bold text-left leading-none">{name}</h1>
+      <h1 className="font-semibold text-left leading-none">{name}</h1>
       <div className="flex h-[15rem] items-center justify-center p-2">
         {checkDepartmentFilter && isDepartmentFilterApplied <= 0 ? (
           <p className="text-gray-500">{noDepartmentFilterText}</p>

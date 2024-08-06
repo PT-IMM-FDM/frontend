@@ -46,13 +46,9 @@ export default function DetailDataUser() {
     };
 
     if (user_id) {
-      console.log("tes");
       fetchData();
     }
   }, [token, user_id]);
-
-  console.log(user_id);
-  console.log(originalUserData);
 
   useEffect(() => {
     const storedDepartments = localStorage.getItem("dataDepartments");
