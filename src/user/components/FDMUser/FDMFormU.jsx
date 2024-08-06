@@ -25,7 +25,7 @@ function FDMFormU() {
           Selamat datang {user.full_name}
         </h5>
         <p className="font-normal text-gray-700 dark:text-gray-400">
-          Mohon mengisi informasi keadaan anda hari ini sebelum bekerja dan memasuki area lapangan kerja.
+          Mohon mengisi informasi keadaan kesehatan Anda hari ini sebelum Anda bekerja atau sebelum memasuki area PT. Indominco Mandiri
         </p>
         <a
           href="#"
