@@ -1,25 +1,26 @@
 import React from "react";
-import { useState } from "react";
-// import { DateRange } from "react-date-range";
-// import "react-date-range/dist/styles.css"; // main css file
-// import "react-date-range/dist/theme/default.css"; // theme css file
-// import "./theme-style.css";
-// import "./default-style.css";
-// import FilterButton from "./FilterButton";
 import useDataFDM from "../../stores/useDataFDM";
 
 const DateRangePicker = () => {
   const { filtersDashboard, setFiltersDashboard } = useDataFDM();
 
+  const handleReset = () => {
+    setFiltersDashboard({
+      ...filtersDashboard,
+      startDate: "",
+      endDate: "",
+    });
+  };
+
   return (
     <>
       <div className="bg-white p-4 rounded-[10px] shadow-md">
-        <p className="text-[16px] medium mb-2">Filter Date</p>
-        <div className="grid grid-cols-1 gap-4">
+        <p className="text-[14px] font-semibold mb-2">Filter Date</p>
+        <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col gap-2">
             <label
               htmlFor="startDate"
-              className="text-[14px] leading-none text-gray-500"
+              className="text-[12px] leading-none text-gray-500"
             >
               Start Date
             </label>
@@ -27,7 +28,7 @@ const DateRangePicker = () => {
               className="text-[12px] rounded-lg border-gray-200 h-[2rem] w-full placeholder:text-[10px]"
               type="date"
               name="startDate"
-              value={filtersDashboard.startDate}
+              value={filtersDashboard.startDate || ""}
               placeholder="YYYY-MM-DD"
               onChange={(event) =>
                 setFiltersDashboard({ ...filtersDashboard, startDate: event.target.value })
@@ -37,7 +38,7 @@ const DateRangePicker = () => {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="endDate"
-              className="text-[14px] leading-none text-gray-500"
+              className="text-[12px] leading-none text-gray-500"
             >
               End Date
             </label>
@@ -46,16 +47,20 @@ const DateRangePicker = () => {
               type="date"
               name="endDate"
               placeholder="YYYY-MM-DD"
-              
-              value={filtersDashboard.endDate}
+              value={filtersDashboard.endDate || ""}
               onChange={(event) =>
                 setFiltersDashboard({ ...filtersDashboard, endDate: event.target.value })
               }
             />
           </div>
         </div>
+        <button
+          onClick={handleReset}
+          className="mt-2 bg-white border rounded-[5px] w-full py-1 px-4 text-[12px]"
+        >
+          Reset Filter
+        </button>
       </div>
-      {/* <FilterButton /> */}
     </>
   );
 };

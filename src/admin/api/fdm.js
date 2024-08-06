@@ -62,7 +62,7 @@ export const countResultDepartemen = async (token, filters) => {
     const { did, startDate, endDate } = params;
 
     // Set default values for startDate and endDate if not provided
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date();
     const defaultParams = {
       startDate: today,
       endDate: today,
@@ -75,10 +75,13 @@ export const countResultDepartemen = async (token, filters) => {
     }
 
     // If did is provided, include it in the params
-    const finalParams = {
-      ...defaultParams,
-      did: did || undefined, // Include did only if it's provided
-    };
+    let finalParams = {}
+    if (did) {
+      finalParams = {
+        ...defaultParams,
+        did: did || undefined, // Include did only if it's provided
+      };
+    }
 
     // Fetch data from API
     const response = await axios.get(`${apiUrl}/fdm/countResult`, {
@@ -94,18 +97,15 @@ export const countResultDepartemen = async (token, filters) => {
 
 export const countResult = async (token, filters) => {
   try {
-    let params = buildParams(filters);
-
-    // Filter out only startDate and endDate
-    const { startDate, endDate } = params;
+    let { startDate, endDate } = buildParams(filters);
 
     // If startDate or endDate is not provided, set both to today's date
-    if (!startDate || !endDate) {
-      const today = new Date().toISOString().split("T")[0];
-      params = { startDate: today, endDate: today };
-    } else {
-      params = { startDate, endDate };
-    }
+    const today = new Date();
+    if (!startDate) startDate = today;
+    if (!endDate) endDate = today;
+
+    // Construct the params object
+    const params = { startDate, endDate };
 
     const response = await axios.get(`${apiUrl}/fdm/countResult`, {
       params: params,
@@ -117,6 +117,7 @@ export const countResult = async (token, filters) => {
     throw new Error(`Failed to fetch users: ${error}`);
   }
 };
+
 
 export const countFilledToday = async (token, filters) => {
   try {

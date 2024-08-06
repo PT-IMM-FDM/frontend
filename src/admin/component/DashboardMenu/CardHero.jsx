@@ -11,8 +11,8 @@ const CardHero = ({name}) => {
     <>
       <div className="flex bg-purple-900 w-full p-3 rounded-[10px] text-white my-4 shadow-md relative">
         <div className="relative z-10">
-          <h1 className="mb-1 medium">Hello, {name}!</h1>
-          <p className="lg:w-[32rem] text-[13px] text-justify xl:mb-5 thin">
+          <h1 className="mb-1 font-semibold">Hello, {name}!</h1>
+          <p className="lg:w-[32rem] text-[13px] text-justify xl:mb-5">
             Selamat datang di Dashboard Fit Daily Monitoring PT IMM. Semoga hari
             Anda produktif dan menyenangkan. Ingatlah untuk rutin memantau dan
             mengelola data kesehatan pengguna dengan teliti.

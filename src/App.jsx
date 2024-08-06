@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,6 +17,8 @@ import PublicRoute from "./admin/pages/PublicRoute";
 import HistoryU from "./user/pages/History-user/HistoryU";
 import ResultU from "./user/pages/Result-user/ResultU";
 import ManageUser from "./user/pages/Manage-user/Manage-user";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const { token, setUser } = useAuthStore((state) => ({
@@ -24,12 +26,14 @@ function App() {
     setUser: state.setUser,
   }));
 
+  // const [redirectToLogin, setRedirectToLogin] = useState(false);
+
   useEffect(() => {
     const fetchUser = async () => {
       if (token) {
         try {
           const dataUser = await getCurrentLogin(token);
-          setUser(dataUser);
+          setUser(dataUser.data);
         } catch (error) {
           console.error("Error fetching current user:", error);
         }
@@ -41,10 +45,9 @@ function App() {
 
   return (
     <Router>
+      <ToastContainer/>
       <Routes>
-        {/* <Route path="/" element={<Navigate to={token ? '/admin/dashboard' : '/login'} />} />
-        <Route path="/login" element={!token ? <Login /> : <Navigate to="/admin/dashboard" replace />} /> */}
-        <Route path="/" element={<Navigate to={"/login"} />} />
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route
           path="/login"
           element={
@@ -53,11 +56,20 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route element={<ProtectedRoute allowedRoles={["Admin", "Full Viewer", "Viewer"]} />}>
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={["Admin", "Full Viewer", "Viewer"]} />
+          }
+        >
           <Route path="/admin/*" element={<LayoutPages />} />
         </Route>
-        <Route element={<ProtectedRoute allowedRoles={["User", "Admin", "Viewer", "Full Viewer"]} />}>
-          <Route exact path="/" element={<Navigate to="/login" />} />
+        <Route
+          element={
+            <ProtectedRoute
+              allowedRoles={["User", "Admin", "Viewer", "Full Viewer"]}
+            />
+          }
+        >
           <Route path="/fdm-form" element={<FDM />} />
           <Route path="/fdm-form/hasil" element={<ResultU />} />
           <Route path="/riwayat-user" element={<HistoryU />} />

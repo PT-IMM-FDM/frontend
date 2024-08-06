@@ -8,7 +8,7 @@ const ManagementQuestionPage = () => {
   return (
     <>
       <MenuHeader role={user.role.name} title={"Kelola Pertanyaan"} name={user?.full_name} email={user?.email}/>
-      <div>
+      <div className='h-[35rem] rounded-[10px] bg-white'>
         <QuestionList token={token}/>
       </div>
     </>

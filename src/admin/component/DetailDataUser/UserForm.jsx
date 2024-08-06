@@ -5,8 +5,13 @@ import { Button, Modal } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import useAuthStore from "../../stores/useAuthStore";
+import { resetPasswordToDefault } from "../../api/data-user";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserForm = ({
+  token,
+  user_id,
   userData,
   setUserData,
   handleChange,
@@ -27,12 +32,25 @@ const UserForm = ({
     setIsEditable(false);
   };
 
-  const handleResetPassword = () => {
-    // Logic to reset the password to the default one
-    console.log("Password has been reset to the default password.");
+  const handleResetPassword = async () => {
+    try {
+      await resetPasswordToDefault(token, user_id);
+      toast.success("Password has been reset to default.", {
+        autoClose: 3000, // 3 seconds
+        pauseOnHover: false, // Do not pause on hover
+        position: "bottom-right",
+        theme: "colored"
+      });
+    } catch (error) {
+      toast.error("Failed to reset password.", {
+        autoClose: 3000, // 3 seconds
+        pauseOnHover: false, // Do not pause on hover
+        position: "bottom-right",
+        theme: "colored"
+      });
+    }
     setShowResetModal(false);
   };
-
   const { user } = useAuthStore((state) => ({ user: state.user }));
   const isAdmin = user.role.name === "Admin";
 
@@ -188,19 +206,23 @@ const UserForm = ({
         <Modal.Body>
           <div className="text-center">
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Are you sure you want to reset this user's password to the default password?
+              Are you sure you want to reset this user's password to the default
+              password?
             </h3>
             <div className="flex justify-center gap-4">
-              <Button color="green" onClick={handleResetPassword}>
+              <Button color="red" onClick={handleResetPassword}>
                 Yes, I'm sure
               </Button>
-              <Button color="red" onClick={() => setShowResetModal(false)}>
+              <Button color="gray" onClick={() => setShowResetModal(false)}>
                 No, cancel
               </Button>
             </div>
           </div>
         </Modal.Body>
       </Modal>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

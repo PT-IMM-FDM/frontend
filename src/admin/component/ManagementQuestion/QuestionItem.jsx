@@ -90,6 +90,15 @@ const QuestionItem = ({ question, onEdit, onDelete, onSave }) => {
     setIsEditing(false);
   };
 
+  const handleDelete = async (questionId) => {
+    try {
+      await deleteQuestion(token, questionId);
+      onDelete(questionId);
+    } catch (error) {
+      console.error("Failed to delete question:", error);
+    }
+  };
+
   return (
     <div className="border p-4 mb-4 bg-white shadow-md rounded-lg">
       {isEditing ? (

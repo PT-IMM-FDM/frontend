@@ -10,6 +10,8 @@ import {
 } from "../../api/data-company";
 import useAuthStore from "../../stores/useAuthStore";
 import useDataUsersStore from "../../stores/useDataUsersStore";
+import { Box } from "@mui/material";
+import { toast } from "react-toastify";
 
 const CACHE_KEY = "usersData";
 
@@ -35,6 +37,7 @@ export function AddUserButton() {
     role_id: "",
     email: "",
   });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchDataFromAPI = async () => {
@@ -100,7 +103,6 @@ export function AddUserButton() {
       setCompanies(JSON.parse(storedCompanies));
     }
   }, [token]);
-  
 
   function onCloseModal() {
     setOpenModal(false);
@@ -127,20 +129,46 @@ export function AddUserButton() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+    setLoading(true);
     try {
       const newDataUser = await createUser(token, formData);
       setRows([...rows, newDataUser]);
       localStorage.setItem(CACHE_KEY, JSON.stringify([...rows, newDataUser]));
       localStorage.setItem(`${CACHE_KEY}_timestamp`, new Date().getTime());
       onCloseModal();
+      console.log("Success toast triggered"); // Debugging line
+      toast.success("User created successfully.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored"
+      });
     } catch (error) {
       console.error("Error creating user:", error);
+      console.log("Error toast triggered"); // Debugging line
+      if (error.response) {
+        toast.error(error.response.data.message, {
+          autoClose: 3000,
+          pauseOnHover: false,
+          position: "bottom-right",
+          theme: "colored"
+        });
+      } else {
+        toast.error(error.message, {
+          autoClose: 3000,
+          pauseOnHover: false,
+          position: "bottom-right",
+          theme: "colored"
+        });
+      }
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   return (
-    <>
+    <div>
       <Button
         color="purple"
         className="h-[2.5rem] bg-purple-700 text-white border-[1px]"
@@ -151,6 +179,24 @@ export function AddUserButton() {
       </Button>
 
       <Modal dismissible show={openModal} size="2xl" onClose={onCloseModal}>
+        {loading && (
+          <Box
+            sx={{
+              position: "fixed",
+              width: "100%",
+              height: "100%",
+              zIndex: 999,
+              top: 0,
+              left: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(240, 240, 240, 0.7)",
+            }}
+          >
+            <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
+          </Box>
+        )}
         <Modal.Header style={{ fontSize: "12px" }}>
           Tambah Pengguna
         </Modal.Header>
@@ -263,7 +309,10 @@ export function AddUserButton() {
               >
                 <option value="">Select Department</option>
                 {departments.map((department) => (
-                  <option key={department.department_id} value={department.department_id}>
+                  <option
+                    key={department.department_id}
+                    value={department.department_id}
+                  >
                     {department.name}
                   </option>
                 ))}
@@ -289,7 +338,10 @@ export function AddUserButton() {
               >
                 <option value="">Select Job Position</option>
                 {jobPositions.map((position) => (
-                  <option key={position.job_position_id} value={position.job_position_id}>
+                  <option
+                    key={position.job_position_id}
+                    value={position.job_position_id}
+                  >
                     {position.name}
                   </option>
                 ))}
@@ -315,7 +367,10 @@ export function AddUserButton() {
               >
                 <option value="">Select Employment Status</option>
                 {employmentStatuses.map((status) => (
-                  <option key={status.employment_status_id} value={status.employment_status_id}>
+                  <option
+                    key={status.employment_status_id}
+                    value={status.employment_status_id}
+                  >
                     {status.name}
                   </option>
                 ))}
@@ -386,6 +441,6 @@ export function AddUserButton() {
           </form>
         </Modal.Body>
       </Modal>
-    </>
+    </div>
   );
 }

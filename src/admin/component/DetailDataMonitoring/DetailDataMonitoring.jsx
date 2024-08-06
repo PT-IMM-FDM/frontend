@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Spinner } from "flowbite-react";
 import useAuthStore from "../../stores/useAuthStore";
 import useDataUsersStore from "../../stores/useDataUsersStore";
 import UserForm from "./UserForm";
@@ -28,6 +27,7 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
       try {
         const dataUser = await getFDMResponseDetails(token, user_id, attendance_health_result_id);
         setUserData(dataUser);
+        setOriginalUserData(dataUser);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -39,10 +39,6 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
       fetchData();
     }
   }, [token, user_id]);
-
-  useEffect(() => {
-    setOriginalUserData(userData);
-  }, [])
 
   useEffect(() => {
     const storedDepartments = localStorage.getItem("dataDepartments");
@@ -65,34 +61,12 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
       setCompanies(JSON.parse(storedCompanies));
     }
   }, []);
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setUserData((prevUserData) => {
-      if (name === "company_id") {
-        return { ...prevUserData, company_id: value, company: companies.find(c => c.company_id === parseInt(value)) };
-      }
-      if (name === "department_id") {
-        return { ...prevUserData, department_id: value, department: departments.find(d => d.department_id === parseInt(value)) };
-      }
-      if (name === "job_position_id") {
-        return { ...prevUserData, job_position_id: value, job_position: jobPositions.find(p => p.job_position_id === parseInt(value)) };
-      }
-      if (name === "employment_status_id") {
-        return { ...prevUserData, employment_status_id: value, employment_status: employmentStatuses.find(s => s.employment_status_id === parseInt(value)) };
-      }
-      if (name === "role_id") {
-        return { ...prevUserData, role_id: value, role: { role_id: parseInt(value), name: ["Admin", "Monitoring", "User"][parseInt(value) - 1] } };
-      }
-      return { ...prevUserData, [name]: value };
-    });
-  };
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await updateUser(token, userData);
-
+      // Simulate updating data locally without API call
       setRows(rows.map(row => row.user_id === userData.user_id ? userData : row));
 
       const updatedUsers = JSON.parse(localStorage.getItem("usersData") || "[]").map(user => 
@@ -110,14 +84,14 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
     <>
       {loading ? (
         <Box sx={{position: 'relative', width: '100%' }}>
-          <Spinner className="absolute top-[45%] left-[50%] z-10" size="xl" color="purple" aria-label="Purple spinner example" />
-          <Skeleton sx={{borderRadius: '5px', bgcolor: 'grey.200'}} variant="rectangular" width="100%" height={550} />
+          <img src="/Loader-1.gif" alt="loader" className="h-[5rem] absolute top-[40%] left-[45%] z-10" />
+          <Skeleton sx={{borderRadius: '5px', bgcolor: 'grey.300'}} variant="rectangular" width="100%" height={550} />
         </Box>
       ) : (
         <UserForm
           userData={userData}
           setUserData={setUserData}
-          handleChange={handleChange}
+          // handleChange={handleChange}
           handleSubmit={handleSubmit}
           isEditable={isEditable}
           setIsEditable={setIsEditable}

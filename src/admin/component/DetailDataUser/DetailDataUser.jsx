@@ -20,7 +20,7 @@ export default function DetailDataUser() {
   const [companies, setCompanies] = useState([]);
   const { user_id } = useParams();
   const [userData, setUserData] = useState({});
-  const [originalUserData, setOriginalUserData] = useState({})
+  const [originalUserData, setOriginalUserData] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -55,57 +55,111 @@ export default function DetailDataUser() {
     if (storedDepartments) {
       setDepartments(JSON.parse(storedDepartments));
     }
+
     const storedJobPositions = localStorage.getItem("dataJobPositions");
     if (storedJobPositions) {
       setJobPositions(JSON.parse(storedJobPositions));
     }
-    const storedEmploymentStatuses = localStorage.getItem("dataStatus");
-    if (storedEmploymentStatuses) {
-      setEmploymentStatuses(JSON.parse(storedEmploymentStatuses));
+
+    const storedStatuses = localStorage.getItem("dataStatus");
+    if (storedStatuses) {
+      setEmploymentStatuses(JSON.parse(storedStatuses));
     }
+
     const storedCompanies = localStorage.getItem("dataCompany");
     if (storedCompanies) {
       setCompanies(JSON.parse(storedCompanies));
     }
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const { data, error } = await updateUser(token, userData);
-      if (error) {
-        console.error("Error updating user:", error);
-      } else {
-        const updatedRows = rows.map((row) =>
-          row.user_id === userData.user_id ? userData : row
-        );
-        setRows(updatedRows);
-        setIsEditable(false);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setUserData((prevUserData) => {
+      if (name === "company_id") {
+        return {
+          ...prevUserData,
+          company_id: value,
+          company: companies.find((c) => c.company_id === parseInt(value)),
+        };
       }
+      if (name === "department_id") {
+        return {
+          ...prevUserData,
+          department_id: value,
+          department: departments.find(
+            (d) => d.department_id === parseInt(value)
+          ),
+        };
+      }
+      if (name === "job_position_id") {
+        return {
+          ...prevUserData,
+          job_position_id: value,
+          job_position: jobPositions.find(
+            (p) => p.job_position_id === parseInt(value)
+          ),
+        };
+      }
+      if (name === "employment_status_id") {
+        return {
+          ...prevUserData,
+          employment_status_id: value,
+          employment_status: employmentStatuses.find(
+            (s) => s.employment_status_id === parseInt(value)
+          ),
+        };
+      }
+      if (name === "role_id") {
+        return {
+          ...prevUserData,
+          role_id: value,
+          role: {
+            role_id: parseInt(value),
+            name: ["Admin", "Full Viewer", "Viewer", "User"][
+              parseInt(value) - 1
+            ],
+          },
+        };
+      }
+      return { ...prevUserData, [name]: value };
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await updateUser(token, userData);
+
+      setRows(
+        rows.map((row) => (row.user_id === userData.user_id ? userData : row))
+      );
+
+      const updatedUsers = JSON.parse(
+        localStorage.getItem("usersData") || "[]"
+      ).map((user) => (user.user_id === userData.user_id ? userData : user));
+      localStorage.setItem("usersData", JSON.stringify(updatedUsers));
+
+      setIsEditable(false);
     } catch (error) {
       console.error("Error updating user:", error);
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData((prevUserData) => ({
-      ...prevUserData,
-      [name]: value,
-    }));
-  };
-
   return (
-    <div className="container mx-auto p-4">
+    <>
       {loading ? (
-        <Box sx={{ width: 300 }}>
-          <Skeleton animation="wave" />
-          <Skeleton animation="wave" />
-          <Skeleton animation="wave" />
+        <Box sx={{ width: "100%" }}>
+          <Skeleton
+            sx={{ borderRadius: "5px", bgcolor: "grey.200" }}
+            variant="rectangular"
+            width="100%"
+            height={500}
+          />
         </Box>
       ) : (
         <UserForm
+          token={token}
+          user_id={user_id}
           userData={userData}
           setUserData={setUserData}
           handleChange={handleChange}
@@ -119,6 +173,6 @@ export default function DetailDataUser() {
           originalUserData={originalUserData}
         />
       )}
-    </div>
+    </>
   );
 }

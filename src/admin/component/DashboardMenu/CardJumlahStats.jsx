@@ -8,8 +8,8 @@ const CardJumlahStats = ({label, value, icon : Icon}) => {
           <Icon className="xl:text-[2rem]" />
         </div>
         <div>
-          <p className="xl:text-[0.7rem] text-gray-500 thin mb-[2px] leading-none">{label}</p>
-          <p className="xl:text-[1.2rem] leading-none medium">{value}</p>
+          <p className="xl:text-[0.7rem] text-gray-500 mb-[2px] leading-none">{label}</p>
+          <p className="xl:text-[1.2rem] leading-none font-semibold">{value}</p>
         </div>
       </div>
     </div>

@@ -93,3 +93,15 @@ export const deleteUsers = async (token, dataBody) => {
 
   return response.data.data;
 };
+
+export const resetPasswordToDefault = async (token, user_id) => {
+  const response = await axios.put(
+    `${apiUrl}/user/resetPassword/${user_id}`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return response.data;
+}

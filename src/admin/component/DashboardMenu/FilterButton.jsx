@@ -15,7 +15,10 @@ export default function FilterButton() {
       try {
         const fetchedDepartments = await getAllDepartments(token);
         setDepartments(fetchedDepartments);
-        localStorage.setItem("dataDepartments", JSON.stringify(fetchedDepartments));
+        localStorage.setItem(
+          "dataDepartments",
+          JSON.stringify(fetchedDepartments)
+        );
       } catch (error) {
         console.error("Error fetching departments:", error);
         setDepartments([]);
@@ -34,93 +37,45 @@ export default function FilterButton() {
   const handleSelectChange = (selectedOptions) => {
     const updatedFilters = {
       ...filtersDashboard,
-      department: selectedOptions ? selectedOptions.map(option => ({ id: option.value, name: option.label })) : []
+      department: selectedOptions
+        ? selectedOptions.map((option) => ({
+            id: option.value,
+            name: option.label,
+          }))
+        : [],
     };
     setFiltersDashboard(updatedFilters);
   };
 
-  const departmentOptions = departments.map(department => ({
+  const departmentOptions = departments.map((department) => ({
     value: department.department_id,
-    label: department.name
+    label: department.name,
   }));
-
-  const customStyles = {
-    option: (provided) => ({
-      ...provided,
-      fontSize: '12px',
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      fontSize: '12px',
-    }),
-    placeholder: (provided) => ({
-      ...provided,
-      fontSize: '12px',
-    }),
-    input: (provided) => ({
-      ...provided,
-      fontSize: '12px',
-    }),
-    control: (provided) => ({
-      ...provided,
-      fontSize: '12px',
-      minHeight: '38px',
-      borderRadius: '4px',
-      boxShadow: 'none',
-      border: '1px solid #d1d5db',
-    }),
-    menu: (provided) => ({
-      ...provided,
-      zIndex: 9999,
-    }),
-    multiValue: (provided) => ({
-      ...provided,
-      borderRadius: '4px',
-      backgroundColor: '#e5e7eb',
-      padding: '0 8px',
-      margin: '2px',
-      whiteSpace: 'nowrap',
-      overflow: 'auto',
-      textOverflow: 'ellipsis',
-    }),
-    multiValueLabel: (provided) => ({
-      ...provided,
-      fontSize: '12px',
-      overflow: 'auto',
-      textOverflow: 'ellipsis',
-    }),
-    multiValueRemove: (provided) => ({
-      ...provided,
-      fontSize: '12px',
-      ':hover': {
-        backgroundColor: '#f3f4f6',
-        color: '#9ca3af',
-      }
-    }),
-    valueContainer: (provided) => ({
-      ...provided,
-      overflowY: 'auto', // Enable horizontal scrolling
-      whiteSpace: 'nowrap', // Prevent wrapping
-      padding: '4px',
-      height: '38px', // Ensure the container height remains constant
-    }),
-  };
 
   return (
     <div className="flex items-center bg-white shadow-md rounded-lg">
       <div className="flex-grow">
         <Select
           isMulti
+          // unstyled
           options={departmentOptions}
           onChange={handleSelectChange}
-          value={filtersDashboard.department.map(department => ({
+          value={filtersDashboard.department.map((department) => ({
             value: department.id,
-            label: department.name
+            label: department.name,
           }))}
           className="basic-multi-select text-[12px]"
           classNamePrefix="select"
           placeholder="Select Departments..."
-          styles={customStyles}
+          // styles={customStyles}
+          styles={{
+            input: (base) => ({
+              ...base,
+              "input:focus": {
+                boxShadow: "none",
+              },
+            }),
+          }}
         />
       </div>
     </div>

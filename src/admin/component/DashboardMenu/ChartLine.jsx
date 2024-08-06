@@ -71,8 +71,6 @@ const LineChart = () => {
           // Calculate endDate as the last day of the month
           const endDate = new Date(year, monthIndex + 1, 1).toISOString().split("T")[0];
 
-          console.log(`Fetching data from ${startDate} to ${endDate}`);
-
           try {
             const response = await axios.get(`${apiUrl}/fdm/countResult`, {
               params: { startDate, endDate },
@@ -131,7 +129,7 @@ const LineChart = () => {
     const labels = [];
     for (let i = 0; i < 12; i++) {
       const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      labels.unshift(month.toLocaleString("default", { month: "long", year: "numeric" }));
+      labels.unshift(month.toLocaleString("default", { month: "short", year: "numeric" }));
     }
     return labels;
   };
@@ -148,11 +146,9 @@ const LineChart = () => {
     },
   };
 
-  console.log("Chart data:", chartData);
-
   return (
     <div className="bg-white p-4 rounded-[10px] h-[18rem] shadow-md">
-      <h1 className="bold text-left leading-none">Monthly FDM Report</h1>
+      <h1 className="font-semibold text-left leading-none">Monthly FDM Report</h1>
       <div className="flex h-[15rem] items-center justify-center">
         <Line data={chartData} options={options} />
       </div>
