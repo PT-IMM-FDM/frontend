@@ -48,7 +48,6 @@ export default function EnhancedTable({ token }) {
 
       try {
         const data = await getUserNotFilled(token, filters);
-        console.log(filters)
         const newData = data.map((row) => ({ ...row }));
 
         if (!cachedData || JSON.stringify(newData) !== cachedData) {

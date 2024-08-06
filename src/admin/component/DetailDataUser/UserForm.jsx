@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import EditableField from "./EditableField";
 import SelectField from "./SelectField";
-import { Button } from "flowbite-react";
+import { Button, Modal } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import useAuthStore from "../../stores/useAuthStore";
+import { resetPasswordToDefault } from "../../api/data-user";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserForm = ({
+  token,
+  user_id,
   userData,
   setUserData,
   handleChange,
@@ -17,16 +22,35 @@ const UserForm = ({
   jobPositions,
   employmentStatuses,
   companies,
-  originalUserData, // New prop to pass originalUserData
+  originalUserData,
 }) => {
   const navigate = useNavigate();
+  const [showResetModal, setShowResetModal] = useState(false);
 
-  // Handle Cancel function to reset userData to originalUserData
   const handleCancel = () => {
     setUserData(originalUserData);
     setIsEditable(false);
   };
 
+  const handleResetPassword = async () => {
+    try {
+      await resetPasswordToDefault(token, user_id);
+      toast.success("Password has been reset to default.", {
+        autoClose: 3000, // 3 seconds
+        pauseOnHover: false, // Do not pause on hover
+        position: "bottom-right",
+        theme: "colored"
+      });
+    } catch (error) {
+      toast.error("Failed to reset password.", {
+        autoClose: 3000, // 3 seconds
+        pauseOnHover: false, // Do not pause on hover
+        position: "bottom-right",
+        theme: "colored"
+      });
+    }
+    setShowResetModal(false);
+  };
   const { user } = useAuthStore((state) => ({ user: state.user }));
   const isAdmin = user.role.name === "Admin";
 
@@ -50,13 +74,22 @@ const UserForm = ({
           </div>
         ) : (
           isAdmin && (
-            <Button
-              color="purple"
-              className="p-0"
-              onClick={() => setIsEditable(true)}
-            >
-              <p className="text-[12px]">Edit</p>
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                color="purple"
+                className="p-0"
+                onClick={() => setIsEditable(true)}
+              >
+                <p className="text-[12px]">Edit</p>
+              </Button>
+              <Button
+                color="light"
+                className="p-0 border-red-500 text-red-500"
+                onClick={() => setShowResetModal(true)}
+              >
+                <p className="text-[12px]">Reset Password</p>
+              </Button>
+            </div>
           )
         )}
       </div>
@@ -161,6 +194,35 @@ const UserForm = ({
           ]}
         />
       </form>
+
+      {/* Reset Password Modal */}
+      <Modal
+        show={showResetModal}
+        onClose={() => setShowResetModal(false)}
+        size="md"
+        popup={true}
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Are you sure you want to reset this user's password to the default
+              password?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="red" onClick={handleResetPassword}>
+                Yes, I'm sure
+              </Button>
+              <Button color="gray" onClick={() => setShowResetModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

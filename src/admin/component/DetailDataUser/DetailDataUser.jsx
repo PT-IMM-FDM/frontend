@@ -20,7 +20,7 @@ export default function DetailDataUser() {
   const [companies, setCompanies] = useState([]);
   const { user_id } = useParams();
   const [userData, setUserData] = useState({});
-  const [originalUserData, setOriginalUserData] = useState({})
+  const [originalUserData, setOriginalUserData] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,6 +31,10 @@ export default function DetailDataUser() {
           .toISOString()
           .split("T")[0];
         setUserData({
+          ...dataUser.data[0],
+          birth_date: formattedBirthDate,
+        });
+        setOriginalUserData({
           ...dataUser.data[0],
           birth_date: formattedBirthDate,
         });
@@ -45,10 +49,6 @@ export default function DetailDataUser() {
       fetchData();
     }
   }, [token, user_id]);
-
-  useEffect(() => {
-    setOriginalUserData(userData);
-  }, [])
 
   useEffect(() => {
     const storedDepartments = localStorage.getItem("dataDepartments");
@@ -76,19 +76,50 @@ export default function DetailDataUser() {
     const { name, value } = event.target;
     setUserData((prevUserData) => {
       if (name === "company_id") {
-        return { ...prevUserData, company_id: value, company: companies.find(c => c.company_id === parseInt(value)) };
+        return {
+          ...prevUserData,
+          company_id: value,
+          company: companies.find((c) => c.company_id === parseInt(value)),
+        };
       }
       if (name === "department_id") {
-        return { ...prevUserData, department_id: value, department: departments.find(d => d.department_id === parseInt(value)) };
+        return {
+          ...prevUserData,
+          department_id: value,
+          department: departments.find(
+            (d) => d.department_id === parseInt(value)
+          ),
+        };
       }
       if (name === "job_position_id") {
-        return { ...prevUserData, job_position_id: value, job_position: jobPositions.find(p => p.job_position_id === parseInt(value)) };
+        return {
+          ...prevUserData,
+          job_position_id: value,
+          job_position: jobPositions.find(
+            (p) => p.job_position_id === parseInt(value)
+          ),
+        };
       }
       if (name === "employment_status_id") {
-        return { ...prevUserData, employment_status_id: value, employment_status: employmentStatuses.find(s => s.employment_status_id === parseInt(value)) };
+        return {
+          ...prevUserData,
+          employment_status_id: value,
+          employment_status: employmentStatuses.find(
+            (s) => s.employment_status_id === parseInt(value)
+          ),
+        };
       }
       if (name === "role_id") {
-        return { ...prevUserData, role_id: value, role: { role_id: parseInt(value), name: ["Admin", "Monitoring", "User"][parseInt(value) - 1] } };
+        return {
+          ...prevUserData,
+          role_id: value,
+          role: {
+            role_id: parseInt(value),
+            name: ["Admin", "Full Viewer", "Viewer", "User"][
+              parseInt(value) - 1
+            ],
+          },
+        };
       }
       return { ...prevUserData, [name]: value };
     });
@@ -99,11 +130,13 @@ export default function DetailDataUser() {
     try {
       await updateUser(token, userData);
 
-      setRows(rows.map(row => row.user_id === userData.user_id ? userData : row));
-
-      const updatedUsers = JSON.parse(localStorage.getItem("usersData") || "[]").map(user => 
-        user.user_id === userData.user_id ? userData : user
+      setRows(
+        rows.map((row) => (row.user_id === userData.user_id ? userData : row))
       );
+
+      const updatedUsers = JSON.parse(
+        localStorage.getItem("usersData") || "[]"
+      ).map((user) => (user.user_id === userData.user_id ? userData : user));
       localStorage.setItem("usersData", JSON.stringify(updatedUsers));
 
       setIsEditable(false);
@@ -115,11 +148,18 @@ export default function DetailDataUser() {
   return (
     <>
       {loading ? (
-        <Box sx={{ width: '100%' }}>
-          <Skeleton sx={{borderRadius: '5px', bgcolor: 'grey.200'}} variant="rectangular" width="100%" height={500} />
+        <Box sx={{ width: "100%" }}>
+          <Skeleton
+            sx={{ borderRadius: "5px", bgcolor: "grey.200" }}
+            variant="rectangular"
+            width="100%"
+            height={500}
+          />
         </Box>
       ) : (
         <UserForm
+          token={token}
+          user_id={user_id}
           userData={userData}
           setUserData={setUserData}
           handleChange={handleChange}

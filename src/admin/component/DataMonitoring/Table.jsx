@@ -73,15 +73,15 @@ export default function EnhancedTable({ token }) {
   };
 
   // Function to handle individual row click
-  const handleClick = (event, user_id) => {
+  const handleClick = (event, attendance_health_result_id) => {
     // Ensure only checkboxes trigger this function
     if (event.target.type !== "checkbox") return;
 
-    const selectedIndex = selected.indexOf(user_id);
+    const selectedIndex = selected.indexOf(attendance_health_result_id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, user_id);
+      newSelected = newSelected.concat(selected, attendance_health_result_id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -107,7 +107,7 @@ export default function EnhancedTable({ token }) {
   };
 
   // Function to check if a row is selected
-  const isSelected = (user_id) => selected.includes(user_id);
+  const isSelected = (attendance_health_result_id) => selected.includes(attendance_health_result_id);
 
   // Search function
   const handleSearch = (query) => {
@@ -224,7 +224,7 @@ export default function EnhancedTable({ token }) {
               />
               <TableBody>
                 {visibleRows.map((row, index) => {
-                  const isItemSelected = isSelected(row.user_id);
+                  const isItemSelected = isSelected(row.attendance_health_result_id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
@@ -243,7 +243,7 @@ export default function EnhancedTable({ token }) {
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
-                          onClick={(event) => handleClick(event, row.user_id)}
+                          onClick={(event) => handleClick(event, row.attendance_health_result_id)}
                         />
                       </TableCell>
                       <TableCell

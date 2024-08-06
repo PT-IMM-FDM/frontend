@@ -42,8 +42,7 @@ export function Component() {
         });
         const result = response.data;
         if (result.message === "Form has been filled today") {
-          setShowAlert(true);
-          console.log(response.data);
+          setShowAlert(true); // Menampilkan alert
           setTimeout(() => {
             navigate("/fdm-form/hasil", { state: response.data });
           }, 3000);
@@ -99,7 +98,6 @@ export function Component() {
         const response = await axios.post(apiCreateResponseURL, requestBody, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log("Jawaban terkirim:", response.data);
         navigate("/fdm-form/hasil", { state: response.data });
       } catch (error) {
         console.error("Error submitting answers:", error);

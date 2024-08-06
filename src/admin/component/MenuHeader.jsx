@@ -9,13 +9,13 @@ const MenuHeader = ({ role, title, name, email }) => {
   return (
     <div className="flex py-1 justify-between items-center">
       <div>
-        <div className="text-[1.5rem] text-purple-800 medium">{title}</div>
-        <p className="text-[14px] text-gray-500 normal">{tanggalHariIni}</p>
+        <div className="text-[1.5rem] text-purple-800 font-semibold">{title}</div>
+        <p className="text-[14px] text-gray-500 font-medium">{tanggalHariIni}</p>
       </div>
       <div className="flex items-center gap-2">
         <div className="text-right">
-          <p className="bold">{name}</p>
-          <p className="text-[12px] thin">
+          <p className="font-semibold">{name}</p>
+          <p className="text-[12px]">
             {email || "Email hasn't been added"}
           </p>
         </div>
