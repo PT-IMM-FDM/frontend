@@ -17,8 +17,6 @@ import PublicRoute from "./admin/pages/PublicRoute";
 import HistoryU from "./user/pages/History-user/HistoryU";
 import ResultU from "./user/pages/Result-user/ResultU";
 import ManageUser from "./user/pages/Manage-user/Manage-user";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const { token, setUser } = useAuthStore((state) => ({
@@ -45,7 +43,6 @@ function App() {
 
   return (
     <Router>
-      <ToastContainer/>
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route

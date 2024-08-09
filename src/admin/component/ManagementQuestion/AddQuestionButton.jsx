@@ -4,6 +4,8 @@ import { LuUser } from "react-icons/lu";
 import { AiOutlinePlus, AiOutlineDelete } from "react-icons/ai";
 import useAuthStore from "../../stores/useAuthStore";
 import { createQuestion } from "../../api/question-fdm";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export function AddQuestionButton({ onAddQuestion }) {
   const { token } = useAuthStore((state) => ({ token: state.token }));
@@ -54,8 +56,20 @@ export function AddQuestionButton({ onAddQuestion }) {
       await createQuestion(token, questionData);
       onAddQuestion(); // Call the function to add the new question to the list
       onCloseModal();
+      toast.success("Question Created successfully.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored"
+      });
     } catch (error) {
       console.error("Failed to add new question:", error);
+      toast.error("Failed to add new question.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored"
+      });
     }
   };
 

@@ -22,9 +22,10 @@ export function Component() {
   return (
     <Navbar fluid rounded className="mb-4 sticky top-0 z-50 bg-white">
       <Navbar.Brand className="px-3 lg:px-[]">
-        <div className="flex flex-col justify-center gap-1">
+        <div className="flex items-end justify-center gap-1">
           <img src="/IMM.svg" className="mr-3 h-6 sm:h-8" alt="Logo IMM" />
-          <span className="whitespace-nowrap text-[12px] font-semibold dark:text-white">
+          <div className="h-[2rem] w-[3px] rounded-full bg-black"></div>
+          <span className="ml-1 whitespace-nowrap text-[20px] leading-0 font-semibold text-[#482f92] dark:text-white">
             Fit Daily Monitoring
           </span>
         </div>

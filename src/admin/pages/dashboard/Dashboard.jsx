@@ -120,7 +120,7 @@ const Dashboard = () => {
       )}
       <MenuHeader
         role={user.role.name}
-        title={"Dashboard FDM"}
+        title={"Dashboard Fit Daily Monitoring"}
         name={user.full_name}
         email={user.email}
       />

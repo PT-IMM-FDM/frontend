@@ -3,12 +3,15 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { getCurrentLogin } from "../../api/auth";
 import { Button, Spinner } from "flowbite-react";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
+import { Modal } from "flowbite-react";
+import { HiOutlinePhone } from "react-icons/hi";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
   const { setError, setLoading, error, loading, login, token, user, setUser } =
@@ -22,45 +25,41 @@ const LoginForm = () => {
       user: state.user,
     }));
 
-    const handleLogin = async (e) => {
-      e.preventDefault();
-      setLoading(true);
-      
-      try {
-        await login(email, password);
-        const newToken = Cookies.get('token');
-        const dataUser = await getCurrentLogin(newToken)
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-        if (dataUser.data.role.name !== 'User') {
-          navigate("/admin/dashboard");
-        } else {
-          navigate('/fdm-form')
-        }
-        setError(null);
-        setLoading(false)
-      } catch (error) {
-        let errorMessage = "An error occurred";
-        if (error.response?.data?.status === "VALIDATION_ERROR") {
-          errorMessage = error.response.data.errors[0].password;
-        } else {
-          errorMessage = error.response?.data?.message || errorMessage;
-        }
-        setError(errorMessage);
-      } finally {
-        setLoading(false);
+    try {
+      await login(email, password);
+      const newToken = Cookies.get("token");
+      const dataUser = await getCurrentLogin(newToken);
+
+      if (dataUser.data.role.name !== "User") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/fdm-form");
       }
-    };
-    
+      setError(null);
+      setLoading(false);
+    } catch (error) {
+      let errorMessage = "An error occurred";
+      if (error.response?.data?.status === "VALIDATION_ERROR") {
+        errorMessage = error.response.data.errors[0].password;
+      } else {
+        errorMessage = error.response?.data?.message || errorMessage;
+      }
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="max-w-md w-full bg-white shadow-md rounded-[10px] p-6">
       <div className="flex flex-col">
         <img src="IMM.svg" alt="Logo IMM" className="h-14" />
-        <h2 className="mt-2 text-center text-md medium text-gray-900">
-          Fit Daily Monitoring
-        </h2>
-        <p className="mt-4 text-center text-sm text-gray-900">
-          Welcome, Please Sign In to Continue
+        <p className="mt-8 text-center text-md text-gray-900 font-bold">
+          Welcome to IMM Fit Daily Monitoring
         </p>
       </div>
       <form className="mt-4" onSubmit={handleLogin}>
@@ -79,7 +78,7 @@ const LoginForm = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="rounded-[5px] w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Email address"
+              placeholder="Nomor Handphone"
             />
           </div>
           <div>
@@ -102,7 +101,7 @@ const LoginForm = () => {
 
         <div className="flex items-center justify-between mb-[3rem]">
           <div className="flex items-center">
-            <input
+            {/* <input
               id="remember-me"
               name="remember-me"
               type="checkbox"
@@ -115,17 +114,53 @@ const LoginForm = () => {
               className="ml-2 block text-sm text-gray-900"
             >
               Remember me
-            </label>
+            </label> */}
           </div>
 
-          <div className="text-sm">
+          <div className="text-sm cursor-pointer">
             <a
-              href="#"
+              onClick={() => setOpenModal(true)}
               className="font-medium text-indigo-600 hover:text-indigo-500"
             >
               Forgot your password?
             </a>
           </div>
+          <Modal
+            show={openModal}
+            size="lg"
+            onClose={() => setOpenModal(false)}
+            popup
+          >
+            <Modal.Header />
+            <Modal.Body>
+              <div className="text-center">
+                {/* <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" /> */}
+                <h3 className="mb-5 text-md text-justify font-normal text-black dark:text-gray-400">
+                  Silahkan hubungi OH OnCall IMM
+                  agar kami dapat memberikan informasi lebih lanjut tentang password anda.
+                </h3>
+                <div className="flex flex-col text-sm">
+                  <div className="flex items-center mb-2">
+                    <HiOutlinePhone className="mr-2 text-xs" />
+                    OH OnCall (Klinik 30): 0812-5511-185
+                  </div>
+                  <div className="flex items-center mb-2">
+                    <HiOutlinePhone className="mr-2 text-xs" />
+                    OH OnCall (Klinik Port): 0812-5511-183
+                  </div>
+                  <div className="flex items-center mb-2">
+                    <HiOutlinePhone className="mr-2 text-xs" />
+                    Abustan: 0852-4717-8478
+                  </div>
+                </div>
+                <div className="flex justify-center gap-4 mt-5">
+                  <Button color="purple" onClick={() => setOpenModal(false)}>
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </Modal.Body>
+          </Modal>
         </div>
         {error ? (
           <p className="text-red-500 mt-2 text-center text-sm mb-2">{error}</p>

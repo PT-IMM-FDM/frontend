@@ -29,7 +29,7 @@ export default function EnhancedTable({ token }) {
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const { rowsNotFilled, selected, setRowsNotFilled, setSelected, filters } = useDataFDM();
+  const { rowsNotFilled, selected, setRowsNotFilled, setSelected, filtersUserNotFilled } = useDataFDM();
 
   // Function to handle sorting
   const handleRequestSort = (event, property) => {
@@ -47,7 +47,7 @@ export default function EnhancedTable({ token }) {
       }
 
       try {
-        const data = await getUserNotFilled(token, filters);
+        const data = await getUserNotFilled(token, filtersUserNotFilled);
         const newData = data.map((row) => ({ ...row }));
 
         if (!cachedData || JSON.stringify(newData) !== cachedData) {
@@ -60,7 +60,7 @@ export default function EnhancedTable({ token }) {
     };
 
     fetchData();
-  }, [token, filters, setRowsNotFilled]);
+  }, [token, filtersUserNotFilled, setRowsNotFilled]);
 
   // Function to handle selecting all rows
   const handleSelectAllClick = (event) => {
@@ -118,25 +118,25 @@ export default function EnhancedTable({ token }) {
   const filterRows = React.useMemo(() => {
     return rowsNotFilled.filter((row) => {
       return (
-        (!filters.company.length ||
-          filters.company.some(
-            (item) => item.id === row.company?.company_id
+        (!filtersUserNotFilled.company.length ||
+          filtersUserNotFilled.company.some(
+            (item) => item.name === row.company?.name
           )) &&
-        (!filters.department.length ||
-          filters.department.some(
-            (item) => item.id === row.department?.department_id
+        (!filtersUserNotFilled.department.length ||
+          filtersUserNotFilled.department.some(
+            (item) => item.name === row.department?.name
           )) &&
-        (!filters.jobPosition.length ||
-          filters.jobPosition.some(
-            (item) => item.id === row.job_position?.job_position_id
+        (!filtersUserNotFilled.jobPosition.length ||
+          filtersUserNotFilled.jobPosition.some(
+            (item) => item.name === row.job_position?.name
           )) &&
-        (!filters.employmentStatus.length ||
-          filters.employmentStatus.some(
-            (item) => item.id === row.employment_status?.employment_status_id
+        (!filtersUserNotFilled.employmentStatus.length ||
+          filtersUserNotFilled.employmentStatus.some(
+            (item) => item.name === row.employment_status?.name
           ))
       );
     });
-  }, [rowsNotFilled, filters]);
+  }, [rowsNotFilled, filtersUserNotFilled]);
 
   const visibleRows = React.useMemo(() => {
     const filteredRows = filterRows.filter((row) =>

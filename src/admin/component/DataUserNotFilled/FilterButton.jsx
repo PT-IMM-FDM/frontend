@@ -18,7 +18,7 @@ export default function FilterButton() {
   const [companies, setCompanies] = useState([]);
   // const [fdm_result, setFdmResults] = useState([]);
   const { token } = useAuthStore((state) => ({ token: state.token }));
-  const { filters, setFilters } = useDataFDM(); // Get filters and setFilters from store
+  const { filtersUserNotFilled, setFiltersUserNotFilled } = useDataFDM(); // Get filters and setFilters from store
 
   useEffect(() => {
     const fetchDataFromAPI = async () => {
@@ -87,7 +87,7 @@ export default function FilterButton() {
 
   const handleCheckboxChange = (event, filterKey, id, name) => {
     const isChecked = event.target.checked;
-    let updatedFilters = { ...filters };
+    let updatedFilters = { ...filtersUserNotFilled };
 
     if (isChecked) {
       if (!updatedFilters[filterKey].some((item) => item.id === id)) {
@@ -102,7 +102,7 @@ export default function FilterButton() {
       );
     }
 
-    setFilters(updatedFilters);
+    setFiltersUserNotFilled(updatedFilters);
     // updateRoute(updatedFilters);
   };
 
@@ -112,11 +112,8 @@ export default function FilterButton() {
       department: [],
       jobPosition: [],
       employmentStatus: [],
-      fdm_result: [],
-      startDate: "",
-      endDate: "",
     };
-    setFilters(newFilters);
+    setFiltersUserNotFilled(newFilters);
     // updateRoute(newFilters);
   };
 
@@ -138,81 +135,6 @@ export default function FilterButton() {
       >
         <Modal.Header>Filter</Modal.Header>
         <Modal.Body className="h-[50vh]">
-          <div className="mb-4">
-            <p className="text-[14px] font-semibold">Filter Date</p>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="startDate"
-                  className="text-[12px] leading-none text-gray-500"
-                >
-                  Start Date
-                </label>
-                <input
-                  className="text-[12px] rounded-lg border-gray-200 h-[2rem] w-full placeholder:text-[10px]"
-                  type="date"
-                  name="startDate"
-                  value={filters.startDate}
-                  onChange={(event) =>
-                    setFilters({ ...filters, startDate: event.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="endDate"
-                  className="text-[12px] leading-none text-gray-500"
-                >
-                  End Date
-                </label>
-                <input
-                  className="text-[12px] rounded-lg border-gray-200 h-[2rem]  w-full"
-                  type="date"
-                  name="endDate"
-                  value={filters.endDate}
-                  onChange={(event) =>
-                    setFilters({ ...filters, endDate: event.target.value })
-                  }
-                />
-              </div>
-              
-            </div>
-          </div>
-          {/* FDM Result */}
-          <div className="mb-4">
-            <p className="mb-2 text-[14px] font-semibold">Status FDM</p>
-            <div className="flex gap-4">
-              {[
-                { id: 1, value: "FIT", name: "FIT" },
-                { id: 2, value: "FIT_FOLLOW_UP", name: "FIT FOLLOW UP" },
-                { id: 3, value: "UNFIT", name: "UNFIT" },
-              ].map((result) => (
-                <div key={result.id} className="flex items-center gap-2">
-                  <Checkbox
-                    id={`result_${result.id}`}
-                    checked={filters.fdm_result.some(
-                      (item) => item.id === result.id
-                    )}
-                    onChange={(event) =>
-                      handleCheckboxChange(
-                        event,
-                        "fdm_result",
-                        result.id,
-                        result.value
-                      )
-                    }
-                  />
-                  <Label
-                    htmlFor={`status_${result.id}`}
-                    className="flex text-[12px]"
-                  >
-                    {result.name}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Nama Perusahaan */}
           <div className="mb-4">
             <p className="mb-2 text-[14px] font-semibold">Nama Perusahaan</p>
@@ -224,7 +146,7 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`company_${company.company_id}`}
-                    checked={filters.company.some(
+                    checked={filtersUserNotFilled.company.some(
                       (item) => item.id === company.company_id
                     )}
                     onChange={(event) =>
@@ -258,7 +180,7 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`department_${department.department_id}`}
-                    checked={filters.department.some(
+                    checked={filtersUserNotFilled.department.some(
                       (item) => item.id === department.department_id
                     )}
                     onChange={(event) =>
@@ -292,7 +214,7 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`position_${position.job_position_id}`}
-                    checked={filters.jobPosition.some(
+                    checked={filtersUserNotFilled.jobPosition.some(
                       (item) => item.id === position.job_position_id
                     )}
                     onChange={(event) =>
@@ -326,7 +248,7 @@ export default function FilterButton() {
                 >
                   <Checkbox
                     id={`status_${status.employment_status_id}`}
-                    checked={filters.employmentStatus.some(
+                    checked={filtersUserNotFilled.employmentStatus.some(
                       (item) => item.id === status.employment_status_id
                     )}
                     onChange={(event) =>

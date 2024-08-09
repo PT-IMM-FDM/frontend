@@ -17,6 +17,16 @@ const useDataFDM = create((set) => ({
     attendance_health_result_id: null,
     is_active: null,
   },
+  filtersUserNotFilled: {
+    name: null,
+    company: [],
+    department: [],
+    jobPosition: [],
+    employmentStatus: [],
+    user_id: [],
+    attendance_health_result_id: null,
+    is_active: null,
+  },
   filtersDashboard: {
     name: null,
     company: [],
@@ -45,6 +55,13 @@ const useDataFDM = create((set) => ({
       filtersDashboard: {
         ...state.filtersDashboard,
         ...filtersDashboard,
+      },
+    })),
+  setFiltersUserNotFilled: (filtersUserNotFilled) =>
+    set((state) => ({
+      filtersUserNotFilled: {
+        ...state.filtersUserNotFilled,
+        ...filtersUserNotFilled,
       },
     })),
 }));

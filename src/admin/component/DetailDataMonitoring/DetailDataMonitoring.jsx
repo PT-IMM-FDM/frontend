@@ -7,7 +7,7 @@ import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 import { getFDMResponseDetails } from "../../api/fdm";
 
-export default function DetailDataMonitoring({ user_id, attendance_health_result_id}) {
+export default function DetailDataMonitoring({ user_id, attendance_health_result_id }) {
   const { token } = useAuthStore((state) => ({ token: state.token }));
   const { rows, setRows } = useDataUsersStore((state) => ({
     rows: state.rows,
@@ -19,25 +19,27 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
   const [employmentStatuses, setEmploymentStatuses] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [userData, setUserData] = useState({});
-  const [originalUserData, setOriginalUserData] = useState({})
+  const [originalUserData, setOriginalUserData] = useState({});
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const dataUser = await getFDMResponseDetails(token, user_id, attendance_health_result_id);
-        setUserData(dataUser);
-        setOriginalUserData(dataUser);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        setLoading(false);
-      }
-    };
-
-    if (user_id) {
-      fetchData();
+  const fetchData = async () => {
+    try {
+      const dataUser = await getFDMResponseDetails(token, user_id, attendance_health_result_id);
+      setUserData(dataUser);
+      setOriginalUserData(dataUser);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      setLoading(false);
     }
+  };
+
+  const refetchUserData = () => {
+    fetchData();
+  };
+
+  useEffect(() => {
+    fetchData();
   }, [token, user_id]);
 
   useEffect(() => {
@@ -61,19 +63,15 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
       setCompanies(JSON.parse(storedCompanies));
     }
   }, []);
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Simulate updating data locally without API call
       setRows(rows.map(row => row.user_id === userData.user_id ? userData : row));
-
       const updatedUsers = JSON.parse(localStorage.getItem("usersData") || "[]").map(user => 
         user.user_id === userData.user_id ? userData : user
       );
       localStorage.setItem("usersData", JSON.stringify(updatedUsers));
-
       setIsEditable(false);
     } catch (error) {
       console.error("Error updating user:", error);
@@ -91,7 +89,8 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
         <UserForm
           userData={userData}
           setUserData={setUserData}
-          // handleChange={handleChange}
+          token={token}
+          attendance_health_result_id={attendance_health_result_id}
           handleSubmit={handleSubmit}
           isEditable={isEditable}
           setIsEditable={setIsEditable}
@@ -100,8 +99,10 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
           employmentStatuses={employmentStatuses}
           companies={companies}
           originalUserData={originalUserData}
+          refetchUserData={refetchUserData} // Pass refetch function
         />
       )}
     </>
   );
 }
+
