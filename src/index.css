@@ -1,3 +1,52 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Gotham";
+  src: url("/font/Gotham-Book.otf") format("opentype");
+}
+@font-face {
+  font-family: "GothamThin";
+  src: url("/font/Gotham-Light.otf") format("opentype");
+}
+@font-face {
+  font-family: "GothamMedium";
+  src: url("/font/Gotham-Medium.otf") format("opentype");
+}
+@font-face {
+  font-family: "GothamBold";
+  src: url("/font/Gotham-Bold.ttf") format("opentype");
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat";
+}
+
+.thin {
+  font-family: "GothamThin";
+  /* font-weight: 300; */
+}
+.normal {
+  font-family: "Gotham";
+  /* font-weight: 500; */
+}
+.medium {
+  font-family: "GothamMedium";
+  /* font-weight: 700; */
+}
+.bold {
+  font-family: "GothamBold";
+  /* font-weight: 900; */
+}
