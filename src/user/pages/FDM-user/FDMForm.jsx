@@ -6,7 +6,7 @@ import { Component as Button } from "../../components/button";
 const FDM = () => {
   return (
     <div
-      className="bg-fixed bg-contain bg-[url('/Work.jpg')] bg-center bg-no-repeat max-w-full min-h-screen"
+      className="bg-fixed bg-cover bg-top bg-[url('/bg-form.jpg')] bg-no-repeat max-w-full min-h-screen"
     >
       <div className="min-h-screen">
       <Navbar />

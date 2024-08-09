@@ -28,5 +28,17 @@ export function formatDate(dateString) {
   return `${formattedDate}, ${formattedTime}`;
 }
 
+export const formatResultFDM = (value) => {
+  if (value === "FIT") {
+    return "FIT";
+  } else if (value === "FIT_FOLLOW_UP") {
+    return "FIT FOLLOW UP";
+  } else {
+    return "UNFIT";
+  }
+}
+
+
+
 
 

@@ -17,10 +17,9 @@ import { formatDate, toCamelCase } from "../../utils/stringUtils";
 import { EditUserButton } from "./EditUserButton";
 import useDataFDM from "../../stores/useDataFDM";
 import { getFdm } from "../../api/fdm";
-import { FaRegCircleCheck } from "react-icons/fa6";
-import { FaRegCircleXmark } from "react-icons/fa6";
-import { PiWarningCircleBold } from "react-icons/pi";
-import { Badge, Tooltip } from "flowbite-react";
+import { formatResult } from "../../utils/formatResult";
+import { Tooltip, tooltipClasses } from "@mui/material";
+import { styled } from '@mui/material/styles';
 
 const CACHE_KEY = "dataMonitoring";
 
@@ -107,7 +106,8 @@ export default function EnhancedTable({ token }) {
   };
 
   // Function to check if a row is selected
-  const isSelected = (attendance_health_result_id) => selected.includes(attendance_health_result_id);
+  const isSelected = (attendance_health_result_id) =>
+    selected.includes(attendance_health_result_id);
 
   // Search function
   const handleSearch = (query) => {
@@ -156,39 +156,16 @@ export default function EnhancedTable({ token }) {
   // Calculate empty rows for pagination
   const emptyRows = Math.max(0, (1 + page) * rowsPerPage - filterRows.length);
 
-  function formatResult(result) {
-    if (result == "UNFIT") {
-      return (
-        <Tooltip content="Unfit" className="text-[10px]">
-          <Badge
-            color="failure"
-            className="w-fit px-2"
-            icon={FaRegCircleXmark}
-          ></Badge>
-        </Tooltip>
-      );
-    } else if (result == "FIT_FOLLOW_UP") {
-      return (
-        <Tooltip content="Fit Follow Up" className="text-[10px]">
-          <Badge
-            color="warning"
-            className="w-fit px-2"
-            icon={PiWarningCircleBold}
-          ></Badge>
-        </Tooltip>
-      );
-    } else {
-      return (
-        <Tooltip content="Fit" className="text-[10px]">
-          <Badge
-            color="success"
-            className="w-fit px-2"
-            icon={FaRegCircleCheck}
-          ></Badge>
-        </Tooltip>
-      );
-    }
-  }
+  const BootstrapTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+      color: theme.palette.common.black,
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: theme.palette.common.black,
+    },
+  }));
 
   return (
     <ThemeProvider theme={theme}>
@@ -207,7 +184,9 @@ export default function EnhancedTable({ token }) {
             onSearch={handleSearch}
             selected={selected}
           />
-          <TableContainer sx={{ maxHeight: 450 }}>
+          <TableContainer
+            sx={{ maxHeight: 450, maxWidth: 1240, overflowX: "scroll" }}
+          >
             <Table
               stickyHeader
               sx={{ minWidth: 750 }}
@@ -224,7 +203,9 @@ export default function EnhancedTable({ token }) {
               />
               <TableBody>
                 {visibleRows.map((row, index) => {
-                  const isItemSelected = isSelected(row.attendance_health_result_id);
+                  const isItemSelected = isSelected(
+                    row.attendance_health_result_id
+                  );
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
@@ -243,7 +224,9 @@ export default function EnhancedTable({ token }) {
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
-                          onClick={(event) => handleClick(event, row.attendance_health_result_id)}
+                          onClick={(event) =>
+                            handleClick(event, row.attendance_health_result_id)
+                          }
                         />
                       </TableCell>
                       <TableCell
@@ -255,7 +238,16 @@ export default function EnhancedTable({ token }) {
                       >
                         {row.created_at ? formatDate(row.created_at) : "-"}
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        sx={{
+                          fontSize: "12px",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          width: "20px",
+                          maxWidth: "20px",
+                        }}
+                      >
                         {row.user.full_name
                           ? toCamelCase(row.user.full_name)
                           : "-"}
@@ -272,17 +264,40 @@ export default function EnhancedTable({ token }) {
                       <TableCell sx={{ fontSize: "12px" }} align="left">
                         {row.user.company?.name || "-"}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {formatResult(row.result) || "-"}
+                      <BootstrapTooltip
+                        title={row.result || "-"}
+                        placement="top"
+                        interactive
+                      >
+                        <TableCell sx={{ fontSize: "12px" }} align="center">
+                          {formatResult(row.result) || "-"}
+                        </TableCell>
+                      </BootstrapTooltip>
+                      <TableCell sx={{ fontSize: "12px" }} align="center">
+                        <EditUserButton
+                          user_id={row.user_id}
+                          attendance_health_result_id={
+                            row.attendance_health_result_id
+                          }
+                        />
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          fontSize: "12px",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          width: "20px",
+                          maxWidth: "20px",
+                        }}
+                        align="left"
+                      >
+                        {row.note || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        <EditUserButton user_id={row.user_id} attendance_health_result_id={row.attendance_health_result_id} />
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        -
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }} align="left">
-                        -
+                        {row.attachment_health_file.length > 0
+                          ? row.attachment_health_file.length
+                          : "-"}
                       </TableCell>
                     </TableRow>
                   );

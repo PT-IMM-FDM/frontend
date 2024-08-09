@@ -1,4 +1,3 @@
-// EnhancedTableHead.js
 import * as React from "react";
 import PropTypes from "prop-types";
 import TableHead from "@mui/material/TableHead";
@@ -10,16 +9,16 @@ import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
 
 const headCells = [
-  { id: "timestamp", numeric: false, disablePadding: true, label: "Timestamp" },
-  { id: "full_name", numeric: false, disablePadding: false, label: "Nama Lengkap" },
-  { id: "department.name", numeric: false, disablePadding: false, label: "Departemen" },
-  { id: "job_position.name", numeric: false, disablePadding: false, label: "Posisi" },
-  { id: "employment_status.name", numeric: false, disablePadding: false, label: "Status" },
-  { id: "company.name", numeric: false, disablePadding: false, label: "Nama Perusahaan" },
-  { id: "hasil", numeric: false, disablePadding: false, label: "Hasil" },
-  { id: "action", numeric: false, disablePadding: false, label: "Detail"},
-  { id: "follow_up", numeric: false, disablePadding: false, label: "Follow Up" },
-  { id: "attachment", numeric: false, disablePadding: false, label: "Attachment" },
+  { id: "timestamp", numeric: false, disablePadding: true, label: "Timestamp", width: 100, align: "left", sortable: true },
+  { id: "full_name", numeric: false, disablePadding: false, label: "Nama Lengkap", width: 200, align: "left", sortable: true },
+  { id: "department.name", numeric: false, disablePadding: false, label: "Departemen", width: 200, align: "left", sortable: true },
+  { id: "job_position.name", numeric: false, disablePadding: false, label: "Posisi", width: 200, align: "left", sortable: true },
+  { id: "employment_status.name", numeric: false, disablePadding: false, label: "Status", width: 100, align: "left", sortable: true },
+  { id: "company.name", numeric: false, disablePadding: false, label: "Nama Perusahaan", width: 170, align: "left", sortable: true },
+  { id: "hasil", numeric: false, disablePadding: false, label: "Hasil", width: 50, align: "center", sortable: false },
+  { id: "action", numeric: false, disablePadding: false, label: "Detail", width: 50, align: "center", sortable: false },
+  { id: "follow_up", numeric: false, disablePadding: false, label: "Follow Up", width: 200, align: "left", sortable: false },
+  { id: "attachment", numeric: false, disablePadding: false, label: "Attachment", width: 50, align: "center", sortable: false },
 ];
 
 function EnhancedTableHead(props) {
@@ -42,24 +41,28 @@ function EnhancedTableHead(props) {
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
-            sx={{ fontSize: "12px", fontWeight: 600, width: headCell.width }}
+            sx={{ fontSize: "12px", fontWeight: 600, minWidth: headCell.width }}
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
+            align={headCell.align} // Use the align property from headCells
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
+            {headCell.sortable ? (
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            ) : (
+              headCell.label
+            )}
           </TableCell>
         ))}
       </TableRow>

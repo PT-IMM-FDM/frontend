@@ -27,6 +27,7 @@ function FDMFormU() {
         <p className="font-normal text-gray-700 dark:text-gray-400">
           Mohon mengisi informasi keadaan kesehatan Anda hari ini sebelum Anda bekerja atau sebelum memasuki area PT. Indominco Mandiri
         </p>
+        <p>Informasi Tanda dan Gejala Fatige Klik Link dibawah ini : </p>
         <a
           href="#"
           onClick={handleLinkClick}
@@ -43,7 +44,7 @@ function FDMFormU() {
       {/* Modal Component */}
       <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Body>
-          <img src="/rekomendasi.svg" alt="Fatigue Symptoms" className="w-full" />
+          <img src="/rekomendasi.png" alt="Fatigue Symptoms" className="w-full" />
         </Modal.Body>
         <Modal.Footer>
           <Button gradientMonochrome="purple" onClick={() => setOpenModal(false)}>Close</Button>

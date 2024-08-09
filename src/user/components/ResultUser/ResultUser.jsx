@@ -57,7 +57,7 @@ const ResultUser = () => {
             </Blockquote>
             <HR className="my-2" />
             <img
-              src="/rekomendasi.svg"
+              src="/rekomendasi.png"
               className="w-full my-4"
               alt="Rekomendasi"
             />

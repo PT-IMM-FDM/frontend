@@ -135,17 +135,15 @@ export function AddUserButton() {
       setRows([...rows, newDataUser]);
       localStorage.setItem(CACHE_KEY, JSON.stringify([...rows, newDataUser]));
       localStorage.setItem(`${CACHE_KEY}_timestamp`, new Date().getTime());
-      onCloseModal();
-      console.log("Success toast triggered"); // Debugging line
       toast.success("User created successfully.", {
         autoClose: 3000,
         pauseOnHover: false,
         position: "bottom-right",
         theme: "colored"
       });
+      onCloseModal();
     } catch (error) {
       console.error("Error creating user:", error);
-      console.log("Error toast triggered"); // Debugging line
       if (error.response) {
         toast.error(error.response.data.message, {
           autoClose: 3000,

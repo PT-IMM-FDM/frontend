@@ -3,8 +3,8 @@ import ResultUser from "../../components/ResultUser/ResultUser";
 
 function ResultU() {
   return (
-    <div className="bg-cover bg-[url('/work.jpg')] bg-center bg-no-repeat max-w-full min-h-screen">
-      <div className="backdrop-blur-sm bg-black/10 min-h-screen">
+    <div className="bg-fixed bg-cover bg-top bg-[url('/bg-form.jpg')] bg-no-repeat max-w-full min-h-screen">
+      <div className="min-h-screen">
       <ResultUser />
       </div>
     </div>

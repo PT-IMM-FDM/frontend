@@ -3,6 +3,9 @@ import { deleteQuestion, updateQuestion } from "../../api/question-fdm";
 import useAuthStore from "../../stores/useAuthStore";
 import { AiOutlinePlus, AiOutlineDelete } from "react-icons/ai";
 import { Button } from "flowbite-react";
+import ModalDelete from "./ModalDelete";
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css";
 
 const QuestionItem = ({ question, onEdit, onDelete, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -12,7 +15,9 @@ const QuestionItem = ({ question, onEdit, onDelete, onSave }) => {
   const [additionalAnswers, setAdditionalAnswers] = useState([]);
   const [deleteAnswers, setDeleteAnswers] = useState([]);
   const [newAnswers, setNewAnswers] = useState([]); // To track answers added during edit
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { token } = useAuthStore((state) => ({ token: state.token }));
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Initialize form state when question prop changes
@@ -74,7 +79,7 @@ const QuestionItem = ({ question, onEdit, onDelete, onSave }) => {
     try {
       const updatedData = await updateQuestion(token, updatedQuestion);
       onEdit(updatedData);
-      onSave()
+      onSave();
       setIsEditing(false);
     } catch (error) {
       console.error("Failed to update question:", error);
@@ -90,12 +95,28 @@ const QuestionItem = ({ question, onEdit, onDelete, onSave }) => {
     setIsEditing(false);
   };
 
-  const handleDelete = async (questionId) => {
+  const handleDelete = async () => {
+    setLoading(true)
     try {
-      await deleteQuestion(token, questionId);
-      onDelete(questionId);
+      await deleteQuestion(token, question.question_id);
+      onDelete(question.question_id);
+      setShowDeleteModal(false);
+      toast.success("Delete Question successfully.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored"
+      });
     } catch (error) {
       console.error("Failed to delete question:", error);
+      toast.error("Failed to delete question.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored"
+      });
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -215,13 +236,13 @@ const QuestionItem = ({ question, onEdit, onDelete, onSave }) => {
             <div className="flex space-x-2">
               <button
                 onClick={handleEditToggle}
-                className="text-blue-500 text-xs"
+                className="text-blue-500 text-xs font-medium"
               >
                 Edit
               </button>
               <button
-                onClick={() => handleDelete(question.question_id)}
-                className="text-red-500 text-xs"
+                onClick={() => setShowDeleteModal(true)}
+                className="text-red-500 text-xs font-medium"
               >
                 Delete
               </button>
@@ -262,6 +283,12 @@ const QuestionItem = ({ question, onEdit, onDelete, onSave }) => {
           </div>
         </div>
       )}
+      <ModalDelete
+        show={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        loading={loading}
+      />
     </div>
   );
 };

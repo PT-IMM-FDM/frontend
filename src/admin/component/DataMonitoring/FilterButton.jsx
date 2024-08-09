@@ -17,10 +17,8 @@ export default function FilterButton() {
   const [jobPositions, setJobPositions] = useState([]);
   const [employmentStatuses, setEmploymentStatuses] = useState([]);
   const [companies, setCompanies] = useState([]);
-  // const [fdm_result, setFdmResults] = useState([]);
   const { token } = useAuthStore((state) => ({ token: state.token }));
   const { filters, setFilters } = useDataFDM(); // Get filters and setFilters from store
-  // const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDataFromAPI = async () => {
@@ -86,37 +84,6 @@ export default function FilterButton() {
       setCompanies(JSON.parse(storedCompanies));
     }
   }, [token]);
-
-  // const updateRoute = (updatedFilters) => {
-  //   const queryParams = new URLSearchParams();
-
-  //   if (updatedFilters.company.length > 0) {
-  //     const sortedCompanies = updatedFilters.company
-  //       .map((item) => item.id)
-  //       .sort((a, b) => a - b);
-  //     queryParams.append("cid", sortedCompanies.join(","));
-  //   }
-  //   if (updatedFilters.department.length > 0) {
-  //     const sortedDepartments = updatedFilters.department
-  //       .map((item) => item.id)
-  //       .sort((a, b) => a - b);
-  //     queryParams.append("did", sortedDepartments.join(","));
-  //   }
-  //   if (updatedFilters.jobPosition.length > 0) {
-  //     const sortedJobPositions = updatedFilters.jobPosition
-  //       .map((item) => item.id)
-  //       .sort((a, b) => a - b);
-  //     queryParams.append("pid", sortedJobPositions.join(","));
-  //   }
-  //   if (updatedFilters.employmentStatus.length > 0) {
-  //     const sortedStatuses = updatedFilters.employmentStatus
-  //       .map((item) => item.id)
-  //       .sort((a, b) => a - b);
-  //     queryParams.append("sid", sortedStatuses.join(","));
-  //   }
-
-  //   navigate(`/admin/data-monitoring?${queryParams.toString()}`);
-  // };
 
   const handleCheckboxChange = (event, filterKey, id, name) => {
     const isChecked = event.target.checked;
