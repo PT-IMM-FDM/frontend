@@ -62,28 +62,27 @@ const ResultUser = () => {
               alt="Rekomendasi"
             />
             <div className="flex flex-col text-sm">
-  <div className="flex items-center mb-2">
-    <HiOutlinePhone className="mr-2 text-xs" />
-    OH OnCall (Klinik 30): 0812-5511-185
-  </div>
-  <div className="flex items-center mb-2">
-    <HiOutlinePhone className="mr-2 text-xs" />
-    OH OnCall (Klinik Port): 0812-5511-183
-  </div>
-  <div className="flex items-center mb-2">
-    <HiOutlinePhone className="mr-2 text-xs" />
-    Rinda Purwanto: 0813-5028-3953
-  </div>
-  <div className="flex items-center mb-2">
-    <HiOutlinePhone className="mr-2 text-xs" />
-    Abustan: 0852-4717-8478
-  </div>
-  <div className="flex items-center mb-2">
-    <HiOutlinePhone className="mr-2 text-xs" />
-    Didik Pranoto: 0821-5553-5458
-  </div>
-</div>
-
+              <div className="flex items-center mb-2">
+                <HiOutlinePhone className="mr-2 text-xs" />
+                OH OnCall (Klinik 30): 0812-5511-185
+              </div>
+              <div className="flex items-center mb-2">
+                <HiOutlinePhone className="mr-2 text-xs" />
+                OH OnCall (Klinik Port): 0812-5511-183
+              </div>
+              <div className="flex items-center mb-2">
+                <HiOutlinePhone className="mr-2 text-xs" />
+                Rinda Purwanto: 0813-5028-3953
+              </div>
+              <div className="flex items-center mb-2">
+                <HiOutlinePhone className="mr-2 text-xs" />
+                Abustan: 0852-4717-8478
+              </div>
+              <div className="flex items-center mb-2">
+                <HiOutlinePhone className="mr-2 text-xs" />
+                Didik Pranoto: 0821-5553-5458
+              </div>
+            </div>
           </div>
         ) : (
           <p>Mohon mengisi FDM terlebih dahulu.</p>
