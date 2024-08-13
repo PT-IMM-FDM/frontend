@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
       <Sidebar />
       <div className="flex flex-col flex-1 bg-gray-100 p-4 overflow-auto">
         <main className="mb-6 xl:mb-0 h-full w-full">{children}</main>
-        <footer className="z-50">
+        <footer className="z-10">
           <Footer className="xl:justify-self-end" />
         </footer>
       </div>

@@ -9,7 +9,7 @@ const ResultUser = () => {
   const { state } = location;
   const { success, message, data } = state || {};
 
-  // Determine the alert color based on formula_health
+  // Determine the alert color based on health status
   const getAlertColor = (healthStatus) => {
     switch (healthStatus) {
       case "FIT":
@@ -26,6 +26,16 @@ const ResultUser = () => {
   // Format the health status text
   const formatHealthStatus = (healthStatus) => {
     return healthStatus.replace(/_/g, " ");
+  };
+
+  // Convert recommendations to HTML
+  const formatRecommendations = (recommendationText) => {
+    // Replace newline characters with HTML line breaks and bullet points with list items
+    return recommendationText
+      .split('\n')
+      .filter(line => line.trim() !== '') // Remove empty lines
+      .map(line => `<li>${line.trim().replace(/^•\t?/, '')}</li>`)
+      .join('');
   };
 
   const currentDate = new Date();
@@ -53,7 +63,10 @@ const ResultUser = () => {
               {formatHealthStatus(data.result)}
             </Alert>
             <Blockquote className="my-4 border-l-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800 text-[16px]">
-              {data.recomendation}
+              <ul
+                className="list-disc pl-5"
+                dangerouslySetInnerHTML={{ __html: formatRecommendations(data.recomendation) }}
+              />
             </Blockquote>
             <HR className="my-2" />
             <img
