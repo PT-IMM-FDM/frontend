@@ -47,10 +47,12 @@ export function Component() {
             navigate("/fdm-form/hasil", { state: response.data });
           }, 3000);
         } else {
-          setQuestions(result.data);
+          // Sort questions by question_id
+          const sortedQuestions = result.data.sort((a, b) => a.question_id - b.question_id);
+          setQuestions(sortedQuestions);
 
           const initialAnswers = {};
-          result.data.forEach((question) => {
+          sortedQuestions.forEach((question) => {
             initialAnswers[question.question_id] = "";
           });
           setAnswers(initialAnswers);
@@ -61,7 +63,7 @@ export function Component() {
     };
 
     fetchQuestions();
-  }, [token, apiGetAllQuestionsURL]);
+  }, [token, apiGetAllQuestionsURL, navigate]);
 
   const handleRadioChange = (e) => {
     setAnswers({ ...answers, [e.target.name]: e.target.value });
@@ -107,14 +109,21 @@ export function Component() {
   };
 
   // Calculate the progress percentage based on the number of answered questions
-  const answeredQuestionsCount = Object.values(answers).filter(answer => answer !== "").length;
+  const answeredQuestionsCount = Object.values(answers).filter(
+    (answer) => answer !== ""
+  ).length;
   const progressPercentage = (answeredQuestionsCount / questions.length) * 100;
 
   return (
     <>
+      <div className="mt-2">
+        <div className="text-base font-medium dark:text-white"></div>
+        <Progress progress={progressPercentage} size="sm" color="purple" />
+      </div>
       {showAlert && (
         <Alert color="success" icon={HiInformationCircle}>
-          <span className="font-medium">Anda sudah mengisi FDM hari ini</span> Silakan kembali besok hari
+          <span className="font-medium">Anda sudah mengisi FDM hari ini</span>{" "}
+          Silakan kembali besok hari
         </Alert>
       )}
       <form onSubmit={handleSubmit}>
@@ -243,14 +252,14 @@ export function Component() {
             <HR />
           </div>
         ))}
-        <Button gradientMonochrome="purple" className="mb-8 w-full" type="submit">
+        <Button
+          gradientMonochrome="purple"
+          className="mb-8 w-full"
+          type="submit"
+        >
           Submit
         </Button>
       </form>
-      <div className="mt-2">
-        <div className="text-base font-medium dark:text-white"></div>
-        <Progress progress={progressPercentage} size="sm" color="purple" />
-      </div>
     </>
   );
 }
