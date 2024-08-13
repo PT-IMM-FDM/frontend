@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useAuthStore from "../../stores/useAuthStore";
 import { updateStatus } from "../../api/data-company";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
@@ -14,18 +14,20 @@ import {
   Tooltip,
   styled,
   tooltipClasses,
+  Box
 } from "@mui/material";
 import { FaRegEdit } from "react-icons/fa";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./TableTheme";
+import { toast } from "react-toastify";
 
 const CACHE_KEY = "dataStatus";
 
-export function EditStatusButton({ employment_status_id, employment_status_name}) {
+export function EditStatusButton({ employment_status_id, employment_status_name }) {
   // Fetch the token from the authentication store
   const { token } = useAuthStore((state) => ({ token: state.token }));
 
-  // Fetch the company data from the data company store
+  // Fetch the status data from the data company store
   const { rowsStatus, setRowsStatus, setSelected } = useDataCompanyStore((state) => ({
     rowsStatus: state.rowsStatus,
     setRowsStatus: state.setRowsStatus,
@@ -38,6 +40,17 @@ export function EditStatusButton({ employment_status_id, employment_status_name}
     employment_status_id: employment_status_id,
     employment_status_name: employment_status_name,
   });
+  const [loading, setLoading] = useState(false);
+
+  // Update formData when modal opens or status data changes
+  useEffect(() => {
+    if (openModal) {
+      setFormData({
+        employment_status_id: employment_status_id,
+        employment_status_name: employment_status_name,
+      });
+    }
+  }, [openModal, employment_status_id, employment_status_name]);
 
   // Function to close the modal and reset the form data
   function onCloseModal() {
@@ -57,26 +70,45 @@ export function EditStatusButton({ employment_status_id, employment_status_name}
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     try {
-      // Call the API to update the company with the provided form data
+      // Call the API to update the status with the provided form data
       const updatedStatus = await updateStatus(token, formData);
 
-      // Update the company data in the store
+      // Update the status data in the store
       const updatedRows = rowsStatus.map((row) =>
         row.employment_status_id === updatedStatus.employment_status_id ? updatedStatus : row
       );
-      setSelected([])
+      setSelected([]);
       setRowsStatus(updatedRows);
 
-      // Cache the updated company data in local storage
+      // Cache the updated status data in local storage
       localStorage.setItem(CACHE_KEY, JSON.stringify(updatedRows));
+      localStorage.setItem(`${CACHE_KEY}_timestamp`, new Date().getTime());
+
+      // Show success toast
+      toast.success("Employment Status Updated.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
 
       // Close the modal after successful submission
       onCloseModal();
     } catch (error) {
-      console.error("Failed to update company:", error);
-      // Handle error state or display error message
+      console.error("Failed to update employment status:", error);
+
+      // Show error toast
+      toast.error("Failed to update employment status.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,22 +127,36 @@ export function EditStatusButton({ employment_status_id, employment_status_name}
     <ThemeProvider theme={theme}>
       {/* Button */}
       <BootstrapTooltip title="Edit" placement="top">
-        <IconButton
-          onClick={() => setOpenModal(true)}
-          className="hover:text-purple-700"
-        >
+        <IconButton onClick={() => setOpenModal(true)} className="hover:text-purple-700">
           <FaRegEdit className="text-[1rem] hover:text-purple-700" />
         </IconButton>
       </BootstrapTooltip>
 
       {/* Modal */}
       <Dialog open={openModal} onClose={onCloseModal} maxWidth="xs" fullWidth>
-        <DialogTitle style={{ fontSize: "20px", marginBottom: '20px' }}>Edit Perusahaan</DialogTitle>
+        {loading && (
+          <Box
+            sx={{
+              position: "fixed",
+              width: "100%",
+              height: "100%",
+              zIndex: 999,
+              top: 0,
+              left: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(243, 244, 246, 0.7)",
+            }}
+          >
+            <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
+          </Box>
+        )}
+        <DialogTitle style={{ fontSize: "20px", marginBottom: '20px' }}>Edit Status</DialogTitle>
         <DialogContent>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <DialogContentText style={{ fontSize: "14px", color: 'black' }}>
-              Nama Posisi
-              {/* nama perusahaan */}
+              Nama Status
               <TextField
                 id="employment_status_name"
                 name="employment_status_name"
@@ -146,7 +192,7 @@ export function EditStatusButton({ employment_status_id, employment_status_name}
                   }
                 }}
               >
-                <p className="text-[12px]">Update Employment Status</p>
+                <p className="text-[12px]">Update Status</p>
               </Button>
               <Button
                 color="error"

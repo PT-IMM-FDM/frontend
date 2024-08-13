@@ -51,7 +51,7 @@ export function ExportButton() {
         )}
       <Button
         color="light"
-        className="h-[2.5rem] text-gray-700 bg-transparent border-gray-300 border-[1px] hover:bg-gray-400"
+        className="h-[2.5rem] text-gray-700 bg-transparent  border-0 md:border  border-gray-300 hover:bg-gray-400"
         onClick={() => handleClick()}
       >
         <PiExportBold className="text-lg"/>

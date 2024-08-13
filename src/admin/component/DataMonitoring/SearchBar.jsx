@@ -13,7 +13,7 @@ export default function SearchBar({ onSearch }) {
         <HiSearch className="h-5 w-5 text-gray-700" />
       </div>
       <input
-        className="h-[2.5rem] text-[14px] bg-transparent placeholder-gray-400 outline-none focus:ring-0 focus:border-gray-400 border-1 border-gray-300 rounded-md pl-10 pr-3 py-2 w-full"
+        className="h-[2.5rem] text-[11px] md:text-[14px] bg-transparent placeholder-gray-400 outline-none focus:ring-0 focus:border-gray-400 border-1 border-gray-300 rounded-md pl-10 pr-2 py-2 w-full"
         type="search"
         name="search2"
         id="search2"

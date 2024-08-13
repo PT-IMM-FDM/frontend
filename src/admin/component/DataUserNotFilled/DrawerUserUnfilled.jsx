@@ -10,7 +10,7 @@ export function DrawerUserUnfilled({ isOpen, setIsOpen, userNotFilled }) {
   return (
     <>
       <Drawer
-        className="w-[50rem] rounded-md"
+        className="w-[85vw] lg:w-[60vw] rounded-md"
         open={isOpen}
         onClose={handleClose}
         position="right"

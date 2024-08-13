@@ -44,7 +44,6 @@ function EnhancedTableToolbar(props) {
               {isAdmin && (
                 <>
                   <AddCompanyButton />
-                  {/* <ImportButton/> */}
                   <DeleteButton
                     className="right-0"
                     numSelected={numSelected}
@@ -55,10 +54,8 @@ function EnhancedTableToolbar(props) {
             </div>
           )}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center ml-2">
           <SearchBar onSearch={onSearch} />
-          {/* <FilterButton /> */}
-          {/* <ExportButton /> */}
         </div>
       </div>
     </Toolbar>

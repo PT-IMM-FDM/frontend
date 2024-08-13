@@ -1,6 +1,6 @@
 import { Button, Modal, Select, TextInput } from "flowbite-react";
 import { useState, useEffect } from "react";
-import { LuUser } from "react-icons/lu";
+import { FaUserPlus } from "react-icons/fa6";
 import { createUser } from "../../api/data-user";
 import {
   getAllCompany,
@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 
 const CACHE_KEY = "usersData";
 
-export function AddUserButton() {
+export function AddUserButton({ isMobile }) {
   const { token } = useAuthStore((state) => ({ token: state.token }));
   const { rows, setRows } = useDataUsersStore((state) => ({
     rows: state.rows,
@@ -139,7 +139,7 @@ export function AddUserButton() {
         autoClose: 3000,
         pauseOnHover: false,
         position: "bottom-right",
-        theme: "colored"
+        theme: "colored",
       });
       onCloseModal();
     } catch (error) {
@@ -149,34 +149,39 @@ export function AddUserButton() {
           autoClose: 3000,
           pauseOnHover: false,
           position: "bottom-right",
-          theme: "colored"
+          theme: "colored",
         });
       } else {
         toast.error(error.message, {
           autoClose: 3000,
           pauseOnHover: false,
           position: "bottom-right",
-          theme: "colored"
+          theme: "colored",
         });
       }
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <div>
       <Button
-        color="purple"
-        className="h-[2.5rem] bg-purple-700 text-white border-[1px]"
+        color={isMobile ? "light" : "purple"}
+        className="h-[2.5rem] border-[1px] flex items-center justify-center space-x-2 px-2"
         onClick={() => setOpenModal(true)}
       >
-        <LuUser className="text-lg" />
-        <p className="ml-1 text-[12px]">Tambah Pengguna</p>
+        <FaUserPlus className="text-lg mr-2" />
+        <div className="text-[10px] whitespace-nowrap">Tambah Pengguna</div>
       </Button>
 
-      <Modal dismissible show={openModal} size="2xl" onClose={onCloseModal}>
+      <Modal
+        className="z-[999]"
+        dismissible
+        show={openModal}
+        size="2xl"
+        onClose={onCloseModal}
+      >
         {loading && (
           <Box
             sx={{
@@ -199,12 +204,15 @@ export function AddUserButton() {
           Tambah Pengguna
         </Modal.Header>
         <Modal.Body>
-          <form className="grid grid-cols-2 gap-6" onSubmit={handleSubmit}>
+          <form
+            className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6"
+            onSubmit={handleSubmit}
+          >
             {/* Nama Lengkap */}
             <div>
               <label
                 htmlFor="full_name"
-                className="block text-[12px] font-medium text-gray-700"
+                className="block w-full text-[12px] font-medium text-gray-700"
               >
                 Nama Lengkap <span className="text-red-500">*</span>
               </label>
@@ -222,10 +230,10 @@ export function AddUserButton() {
             </div>
 
             {/* No. Telepon */}
-            <div>
+            <div className="min-w-full">
               <label
                 htmlFor="phone_number"
-                className="block text-[12px] font-medium text-gray-700"
+                className="block w-full text-[12px] font-medium text-gray-700"
               >
                 No. Telepon <span className="text-red-500">*</span>
               </label>
@@ -420,7 +428,7 @@ export function AddUserButton() {
                 <option value="4">User</option>
               </select>
             </div>
-            <div className="col-span-2 flex gap-2 justify-end">
+            <div className="mt-2 md:col-span-2 flex gap-2 justify-end">
               <Button
                 color="purple"
                 className="h-[2.5rem] bg-purple-700 text-white border-[1px]"

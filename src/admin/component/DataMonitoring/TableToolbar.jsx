@@ -3,15 +3,25 @@ import PropTypes from "prop-types";
 import Toolbar from "@mui/material/Toolbar";
 import { alpha } from "@mui/material/styles";
 import FilterButton from "./FilterButton";
-import { DeleteButton } from "./DeleteButton";
 import { ExportButton } from "./ExportButton";
-import { AddUserButton } from "./AddUserButton";
 import SearchBar from "./SearchBar";
-import ImportButton from "./ImportButton";
-import DownloadTemplateButton from "./DownloadTemplateButton";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, onSearch, selected } = props;
+  const { numSelected, onSearch } = props;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const isMobile = window.innerWidth <= 600;
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Toolbar
@@ -34,21 +44,41 @@ function EnhancedTableToolbar(props) {
               <div className="p-2 text-[12px]">
                 <p>{numSelected} rows selected</p>
               </div>
-              {/* <DeleteButton className="right-0" numSelected={numSelected} selected={selected} /> */}
             </div>
-          ) : (
-            <div className="flex gap-2">
-              {/* <AddUserButton /> */}
-              {/* <ImportButton/> */}
-              {/* <DeleteButton className="right-0" numSelected={numSelected} selected={selected} /> */}
-            </div>
-          )}
+          ) : null}
         </div>
         <div className="flex items-center gap-2">
           <SearchBar onSearch={onSearch} />
-          <FilterButton />
-          <ExportButton />
-          {/* <DownloadTemplateButton/> */}
+          <div className="hidden md:flex gap-2">
+            <FilterButton />
+            <ExportButton />
+          </div>
+
+          <div className="md:hidden">
+            <IconButton
+              aria-label="more"
+              aria-controls="long-menu"
+              aria-haspopup="true"
+              onClick={handleMenuOpen}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="long-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              sx={{ padding: 0 }}
+            >
+              <MenuItem onClick={handleMenuClose}>
+                <FilterButton />
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <ExportButton />
+              </MenuItem>
+            </Menu>
+          </div>
         </div>
       </div>
     </Toolbar>
@@ -57,6 +87,7 @@ function EnhancedTableToolbar(props) {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  onSearch: PropTypes.func.isRequired,
 };
 
 export default EnhancedTableToolbar;

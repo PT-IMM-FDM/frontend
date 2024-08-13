@@ -185,7 +185,7 @@ export default function EnhancedTable({ token }) {
             selected={selected}
           />
           <TableContainer
-            sx={{ maxHeight: 450, maxWidth: 1240, overflowX: "scroll" }}
+            sx={{ maxHeight: 450,  overflowX: "scroll" }}
           >
             <Table
               stickyHeader

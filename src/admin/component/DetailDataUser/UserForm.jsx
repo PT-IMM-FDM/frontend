@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import useAuthStore from "../../stores/useAuthStore";
 import { resetPasswordToDefault } from "../../api/data-user";
+import { FaRegEdit } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -26,6 +27,8 @@ const UserForm = ({
 }) => {
   const navigate = useNavigate();
   const [showResetModal, setShowResetModal] = useState(false);
+  const { user } = useAuthStore((state) => ({ user: state.user }));
+  const isAdmin = user.role.name === "Admin";
 
   const handleCancel = () => {
     setUserData(originalUserData);
@@ -39,20 +42,19 @@ const UserForm = ({
         autoClose: 3000, // 3 seconds
         pauseOnHover: false, // Do not pause on hover
         position: "bottom-right",
-        theme: "colored"
+        theme: "colored",
       });
     } catch (error) {
       toast.error("Failed to reset password.", {
         autoClose: 3000, // 3 seconds
         pauseOnHover: false, // Do not pause on hover
         position: "bottom-right",
-        theme: "colored"
+        theme: "colored",
       });
     }
     setShowResetModal(false);
   };
-  const { user } = useAuthStore((state) => ({ user: state.user }));
-  const isAdmin = user.role.name === "Admin";
+  
 
   return (
     <div className="p-4 pb-8 border rounded-md shadow-md bg-white">
@@ -61,7 +63,7 @@ const UserForm = ({
           <button onClick={() => navigate("/admin/data-pengguna")} className="">
             <IoArrowBack className="text-[20px]" />
           </button>
-          <h2 className="text-md ml-2 font-medium">Detail Data Pengguna</h2>
+          <h2 className="text-[11px] md:text-md ml-2 font-medium">Detail Data Pengguna</h2>
         </div>
         {isEditable ? (
           <div className="flex space-x-2">
@@ -74,27 +76,28 @@ const UserForm = ({
           </div>
         ) : (
           isAdmin && (
-            <div className="flex gap-2">
+            <div className="flex gap-2 ">
               <Button
                 color="purple"
-                className="p-0"
+                className="p-1"
                 onClick={() => setIsEditable(true)}
               >
-                <p className="text-[12px]">Edit</p>
+                <FaRegEdit className="text-lg mx-auto my-auto"/>
+                <p className="ml-2 hidden md:block text-[12px]">Edit</p>
               </Button>
               <Button
                 color="light"
                 className="p-0 border-red-500 text-red-500"
                 onClick={() => setShowResetModal(true)}
               >
-                <p className="text-[12px]">Reset Password</p>
+                <p className="text-[11px] my-auto md:text-xs">Reset Password</p>
               </Button>
             </div>
           )
         )}
       </div>
       <form
-        className="grid grid-cols-2 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
         onSubmit={(e) => e.preventDefault()}
       >
         <EditableField

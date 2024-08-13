@@ -119,7 +119,7 @@ export function Component() {
   return (
     <>
       {/* Hamburger Button for Mobile View */}
-      <div className="flex p-4 lg:hidden">
+      <div className="absolute z-[999] flex p-4 lg:hidden">
         <button
           className="text-xl h-10 focus:outline-none"
           onClick={toggleSidebar}
@@ -144,14 +144,14 @@ export function Component() {
       {/* Overlay */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="fixed inset-0 bg-black bg-opacity-50 z-[999]"
           onClick={toggleSidebar}
         ></div>
       )}
 
       {/* Sidebar */}
       <Sidebar
-        className={`fixed top-0 left-0 h-full bg-white transition-transform transform z-50 ${
+        className={`fixed top-0 left-0 h-full bg-white transition-transform transform z-[9999] ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 lg:static lg:h-auto lg:bg-transparent lg:hidden`}
         aria-label="Sidebar with logo branding example"

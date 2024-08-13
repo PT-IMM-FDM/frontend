@@ -18,7 +18,7 @@ const CardHero = ({name}) => {
             mengelola data kesehatan pengguna dengan teliti.
           </p>
           <Button
-            className="rounded-[5px] text-black bg-white hover:bg-gray-300 hover:text-purple-900 transition-all ease-in-out duration-200"
+            className="mt-4 xl:mt-0 rounded-[5px] text-black bg-white hover:bg-gray-300 hover:text-purple-900 transition-all ease-in-out duration-200"
             size="md"
             color=""
             onClick={handleNavigate}
@@ -26,7 +26,7 @@ const CardHero = ({name}) => {
             Lihat Data Monitoring
           </Button>
         </div>
-        <div className="sm:hidden xl:block absolute z-0 top-[-0.9rem] right-[0rem] xl:h-[11.5rem] min-w-fit">
+        <div className="hidden xl:block absolute z-0 top-[-0.9rem] right-[0rem] xl:h-[11.5rem] min-w-fit">
           <img
             className="w-full h-full object-cover rounded-[10px]"
             src='/Truck.png'
