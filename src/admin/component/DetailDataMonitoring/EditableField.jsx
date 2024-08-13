@@ -13,7 +13,7 @@ const EditableField = ({
   <div className="flex flex-col mb-4 relative">
     <label
       htmlFor={name}
-      className="mb-1 text-sm font-medium text-gray-700"
+      className="mb-1 text-xs md:text-sm font-medium text-gray-700"
       style={{
         display: '-webkit-box',
         WebkitBoxOrient: 'vertical',
@@ -31,7 +31,7 @@ const EditableField = ({
         value={value}
         onChange={onChange}
         disabled={!isEditable}
-        className={`mt-1 block w-full border-gray-300 placeholder-gray-500 text-gray-900 sm:text-[12px] leading-5 rounded-md ${!isEditable ? 'bg-gray-100 text-gray-600' : ''}`}
+        className={`mt-1 block w-full border-gray-300 placeholder-gray-500 text-gray-900 text-xs md:text-sm leading-5 rounded-md ${!isEditable ? 'bg-gray-100 text-gray-600' : ''}`}
       />
       {endIcon && (
         <span

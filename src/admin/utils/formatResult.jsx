@@ -6,35 +6,41 @@ import { Tooltip } from "@mui/material";
 
 
 export function formatResult(result) {
-    if (result == "UNFIT") {
-      return (
-        <Tooltip title="Unfit">
+  if (result === "UNFIT") {
+    return (
+      <Tooltip title="Unfit">
+        <span>
           <Badge
             color="failure"
             className="w-fit mx-auto"
             icon={FaRegCircleXmark}
           ></Badge>
-        </Tooltip>
-      );
-    } else if (result == "FIT_FOLLOW_UP") {
-      return (
-        <Tooltip title="Fit Follow Up">
+        </span>
+      </Tooltip>
+    );
+  } else if (result === "FIT_FOLLOW_UP") {
+    return (
+      <Tooltip title="Fit Follow Up">
+        <span>
           <Badge
             color="warning"
             className="w-fit mx-auto"
             icon={PiWarningCircleBold}
           ></Badge>
-        </Tooltip>
-      );
-    } else {
-      return (
-        <Tooltip title="Fit">
+        </span>
+      </Tooltip>
+    );
+  } else {
+    return (
+      <Tooltip title="Fit">
+        <span>
           <Badge
             color="success"
             className="w-fit mx-auto"
             icon={FaRegCircleCheck}
           ></Badge>
-        </Tooltip>
-      );
-    }
+        </span>
+      </Tooltip>
+    );
   }
+}

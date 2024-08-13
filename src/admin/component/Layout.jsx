@@ -4,14 +4,17 @@ import { Component as Footer } from "./Footer";
 
 const Layout = ({ children }) => {
   return (
-    <div className="flex max-w-[1920px] h-screen min-h-screen ">
+    <div className="flex max-w-[1920px] xl:h-screen min-h-screen overflow-hidden">
       <Sidebar />
-      <div className="flex flex-col max-w-full w-screen bg-gray-100 p-4">
-        <main className="h-full w-full">{children}</main>
-        <Footer className="justify-self-end" />
+      <div className="flex flex-col flex-1 bg-gray-100 p-4 overflow-auto">
+        <main className="mb-6 xl:mb-0 h-full w-full">{children}</main>
+        <footer className="z-50">
+          <Footer className="xl:justify-self-end" />
+        </footer>
       </div>
     </div>
   );
 };
 
 export default Layout;
+

@@ -84,12 +84,12 @@ export function DeleteButton({ numSelected, selected }) {
       )}
       <Button
         color="light"
-        className="border-gray-300 h-[2.5rem] bg-transparent text-red-500 hover:bg-gray-400"
+        className="border-0 md:border border-gray-300 h-[2.5rem] bg-transparent text-red-500 hover:bg-gray-400"
         onClick={handleDeleteClick}
         disabled={selected.length <= 0}
       >
         <DeleteRoundedIcon sx={{ fontSize: "large" }} />
-        <p className="ml-2 text-[12px]">Delete</p>
+        <p className="hidden lg:block ml-2 text-[12px]">Delete</p>
       </Button>
       <Modal
         show={openModal}

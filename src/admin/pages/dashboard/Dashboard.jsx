@@ -103,10 +103,10 @@ const Dashboard = () => {
       {loading && (
         <Box
           sx={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            zIndex: 999,
+            position: "fixed",
+            width: "100vw",
+            height: "100vh",
+            zIndex: 99,
             top: 0,
             left: 0,
             display: "flex",
@@ -125,18 +125,18 @@ const Dashboard = () => {
         email={user.email}
       />
       <div className="grid grid-row-2 gap-4">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-y-4 xl:gap-x-4 xl:gap-y-0">
           <div className="col-span-2">
             <CardHero name={user.full_name} />
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 xl:gap-2">
               <CardJumlahStats
                 label={"Total Karyawan"}
                 value={totalKaryawan}
                 icon={LuUser}
               />
               <CardJumlahStats
-                label={"Total Fit Today"}
-                value={totalFitToday?.resultFit || 0}
+                label={"Total Unfit Today"}
+                value={totalFitToday?.resultUnfit || 0}
                 icon={LuUser}
               />
               <CardJumlahStats
@@ -152,12 +152,12 @@ const Dashboard = () => {
               />
             </div>
           </div>
-          <div className="mt-4 flex flex-col gap-3">
+          <div className="xl:mt-4 flex flex-col w-[100%] gap-3">
             <DateRangePicker />
             <FilterButton />
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
           <DoughnutChart
             name={"Departemen"}
             dataResult={departementResult}
@@ -176,7 +176,7 @@ const Dashboard = () => {
             checkDepartmentFilter={false}
             isDepartmentFilterApplied={isDepartmentFilterApplied}
           />
-          <div className="col-span-2">
+          <div className="xl:col-span-2">
             <LineChart className="min-h-full" />
           </div>
         </div>

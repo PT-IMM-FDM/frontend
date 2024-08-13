@@ -31,10 +31,11 @@ const DownloadTemplateButton = () => {
     <Tooltip content="Download Template File" className="text-[10px]">
       <Button
         color="light"
-        className="h-[2.5rem] text-gray-700 bg-transparent border-gray-300 border-[1px] hover:bg-gray-400"
+        className="h-[2.5rem] text-gray-700 bg-transparent border-gray-300  border-0 md:border  hover:bg-gray-400"
         onClick={handleClick}
       >
-        <FaFileDownload className="text-lg" />
+        <FaFileDownload className="text-lg mx-auto" />
+        <p className="md:hidden text-[12px]">Template</p>
       </Button>
     </Tooltip>
   );

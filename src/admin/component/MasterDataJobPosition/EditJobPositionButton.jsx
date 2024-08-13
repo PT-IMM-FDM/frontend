@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useAuthStore from "../../stores/useAuthStore";
-import { updateCompany, updateDepartment, updatePosition } from "../../api/data-company";
+import { updatePosition } from "../../api/data-company";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
 import {
   Button,
@@ -14,19 +14,21 @@ import {
   Tooltip,
   styled,
   tooltipClasses,
+  Box
 } from "@mui/material";
 import { FaRegEdit } from "react-icons/fa";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./TableTheme";
+import { toast } from "react-toastify";
 
 const CACHE_KEY = "dataJobPositions";
 
-export function EditJobPositionButton({ job_position_id, job_position_name}) {
+export function EditJobPositionButton({ job_position_id, job_position_name }) {
   // Fetch the token from the authentication store
   const { token } = useAuthStore((state) => ({ token: state.token }));
 
-  // Fetch the company data from the data company store
-  const { rowsPosition, setRowsPosition } = useDataCompanyStore((state) => ({
+  // Fetch the job position data from the data company store
+  const { rowsPosition, setRowsPosition, setSelected } = useDataCompanyStore((state) => ({
     rowsPosition: state.rowsPosition,
     setRowsPosition: state.setRowsPosition,
     setSelected: state.setSelected,
@@ -38,6 +40,17 @@ export function EditJobPositionButton({ job_position_id, job_position_name}) {
     job_position_id: job_position_id,
     job_position_name: job_position_name,
   });
+  const [loading, setLoading] = useState(false);
+
+  // Update formData when modal opens or job position data changes
+  useEffect(() => {
+    if (openModal) {
+      setFormData({
+        job_position_id: job_position_id,
+        job_position_name: job_position_name,
+      });
+    }
+  }, [openModal, job_position_id, job_position_name]);
 
   // Function to close the modal and reset the form data
   function onCloseModal() {
@@ -57,26 +70,45 @@ export function EditJobPositionButton({ job_position_id, job_position_name}) {
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     try {
-      // Call the API to update the company with the provided form data
+      // Call the API to update the job position with the provided form data
       const updatedPosition = await updatePosition(token, formData);
 
-      // Update the company data in the store
+      // Update the job position data in the store
       const updatedRows = rowsPosition.map((row) =>
         row.job_position_id === updatedPosition.job_position_id ? updatedPosition : row
       );
-      setSelected([])
+      setSelected([]);
       setRowsPosition(updatedRows);
 
-      // Cache the updated company data in local storage
+      // Cache the updated job position data in local storage
       localStorage.setItem(CACHE_KEY, JSON.stringify(updatedRows));
+      localStorage.setItem(`${CACHE_KEY}_timestamp`, new Date().getTime());
+
+      // Show success toast
+      toast.success("Job Position Updated.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
 
       // Close the modal after successful submission
       onCloseModal();
     } catch (error) {
-      console.error("Failed to update company:", error);
-      // Handle error state or display error message
+      console.error("Failed to update job position:", error);
+
+      // Show error toast
+      toast.error("Failed to update job position.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,27 +127,41 @@ export function EditJobPositionButton({ job_position_id, job_position_name}) {
     <ThemeProvider theme={theme}>
       {/* Button */}
       <BootstrapTooltip title="Edit" placement="top">
-        <IconButton
-          onClick={() => setOpenModal(true)}
-          className="hover:text-purple-700"
-        >
+        <IconButton onClick={() => setOpenModal(true)} className="hover:text-purple-700">
           <FaRegEdit className="text-[1rem] hover:text-purple-700" />
         </IconButton>
       </BootstrapTooltip>
 
       {/* Modal */}
       <Dialog open={openModal} onClose={onCloseModal} maxWidth="xs" fullWidth>
-        <DialogTitle style={{ fontSize: "20px", marginBottom: '20px' }}>Edit Perusahaan</DialogTitle>
+        {loading && (
+          <Box
+            sx={{
+              position: "fixed",
+              width: "100%",
+              height: "100%",
+              zIndex: 999,
+              top: 0,
+              left: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(243, 244, 246, 0.7)",
+            }}
+          >
+            <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
+          </Box>
+        )}
+        <DialogTitle style={{ fontSize: "20px", marginBottom: '20px' }}>Edit Posisi</DialogTitle>
         <DialogContent>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <DialogContentText style={{ fontSize: "14px", color: 'black' }}>
               Nama Posisi
-              {/* nama perusahaan */}
               <TextField
                 id="job_position_name"
                 name="job_position_name"
                 hiddenLabel
-                placeholder="Enter a department name"
+                placeholder="Enter a job position name"
                 value={formData.job_position_name}
                 onChange={handleChange}
                 fullWidth
@@ -150,7 +196,7 @@ export function EditJobPositionButton({ job_position_id, job_position_name}) {
                   }
                 }}
               >
-                <p className="text-[12px]">Update Job Position</p>
+                <p className="text-[12px]">Update Posisi</p>
               </Button>
               <Button
                 color="error"

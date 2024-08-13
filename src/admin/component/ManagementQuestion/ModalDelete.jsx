@@ -5,7 +5,7 @@ import { Box } from "@mui/material";
 
 const ModalDelete = ({ show, onClose, onConfirm, loading }) => {
   return (
-    <Modal show={show} size="md" onClose={onClose} popup>
+    <Modal className="z-[999]" show={show} size="md" onClose={onClose} popup>
       {loading && (
         <Box
           sx={{

@@ -123,7 +123,7 @@ export default function FilterButton() {
   return (
     <>
       <Button
-        className="h-[2.5rem] text-gray-700 bg-transparent"
+        className="border-0 md:border h-[2.5rem] text-gray-700 bg-transparent"
         color="light"
         onClick={() => setOpenModal(true)}
       >
@@ -135,12 +135,13 @@ export default function FilterButton() {
         dismissible
         show={openModal}
         onClose={() => setOpenModal(false)}
+        className="z-[999]"
       >
         <Modal.Header>Filter</Modal.Header>
         <Modal.Body className="h-[50vh]">
           <div className="mb-4">
             <p className="text-[14px] font-semibold">Filter Date</p>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label
                   htmlFor="startDate"
@@ -181,7 +182,7 @@ export default function FilterButton() {
           {/* FDM Result */}
           <div className="mb-4">
             <p className="mb-2 text-[14px] font-semibold">Status FDM</p>
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-2 md:flex-row md:gap-4">
               {[
                 { id: 1, value: "FIT", name: "FIT" },
                 { id: 2, value: "FIT_FOLLOW_UP", name: "FIT FOLLOW UP" },
@@ -216,7 +217,7 @@ export default function FilterButton() {
           {/* Nama Perusahaan */}
           <div className="mb-4">
             <p className="mb-2 text-[14px] font-semibold">Nama Perusahaan</p>
-            <div className="grid grid-cols-3 grid-flow-row gap-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-row gap-1">
               {companies.map((company) => (
                 <div
                   key={company.company_id}
@@ -250,7 +251,7 @@ export default function FilterButton() {
           {/* Filter Departemen */}
           <div className="mb-4">
             <p className="mb-2 text-[14px] font-semibold">Departemen</p>
-            <div className="grid grid-cols-3 grid-flow-row gap-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-row gap-1">
               {departments.map((department) => (
                 <div
                   key={department.department_id}
@@ -284,7 +285,7 @@ export default function FilterButton() {
           {/* Filter Posisi */}
           <div className="mb-4">
             <p className="mb-2 text-[14px] font-semibold">Posisi</p>
-            <div className="grid grid-cols-3 grid-flow-row gap-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-row gap-1">
               {jobPositions.map((position) => (
                 <div
                   key={position.job_position_id}
@@ -318,7 +319,7 @@ export default function FilterButton() {
           {/* Status Pekerjaan */}
           <div className="mb-4">
             <p className="mb-2 text-[14px] font-semibold">Status Pekerjaan</p>
-            <div className="grid grid-rows-3 grid-flow-col gap-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-row gap-1">
               {employmentStatuses.map((status) => (
                 <div
                   key={status.employment_status_id}

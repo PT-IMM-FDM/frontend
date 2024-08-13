@@ -84,7 +84,7 @@ export function AddQuestionButton({ onAddQuestion }) {
         <p className="ml-1 text-[12px]">Tambah Pertanyaan</p>
       </Button>
 
-      <Modal dismissible show={openModal} size="lg" onClose={onCloseModal}>
+      <Modal className="z-[999]" dismissible show={openModal} size="lg" onClose={onCloseModal}>
         <Modal.Header style={{ fontSize: "12px" }}>
           Tambah Pertanyaan
         </Modal.Header>

@@ -7,12 +7,15 @@ import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import useAuthStore from "../../stores/useAuthStore";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
 import { deleteCompany, deleteDepartment } from "../../api/data-company";
+import { Box } from "@mui/material";
+import { toast } from "react-toastify";
 
 const CACHE_KEY = "dataDepartments";
 
 export function DeleteButton({ numSelected, selected }) {
   // State variable to control the visibility of the modal
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Retrieve the user token from the authentication store
   const { token } = useAuthStore((state) => ({ token: state.token }));
@@ -35,6 +38,7 @@ export function DeleteButton({ numSelected, selected }) {
 
   // Function to handle the confirmation of the delete action
   const handleConfimDeleteClick = async (token) => {
+    setLoading(true);
     try {
       // Call the API to delete the selected user data
       await deleteDepartment(token, selected);
@@ -52,9 +56,23 @@ export function DeleteButton({ numSelected, selected }) {
 
       // Close the modal
       setOpenModal(false);
+      toast.success("Department Deleted Successfully.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored"
+      });
     } catch (error) {
-      console.error('Failed to delete users:', error);
+      console.error('Failed to delete Department:', error);
+      toast.error("Failed to Delete Department.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored"
+      });
       // Handle error state or display error message
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,14 +85,32 @@ export function DeleteButton({ numSelected, selected }) {
         disabled={selected?.length <= 0} // Check length of selected array
       >
         <DeleteRoundedIcon sx={{ fontSize: "large" }} />
-        <p className="ml-2 text-[12px]">Delete</p>
+        <p className="hidden md:block ml-2 text-[12px]">Delete</p>
       </Button>
       <Modal
         show={openModal}
         size="md"
         onClose={() => setOpenModal(false)}
         popup
-      >
+        className="z-[999]"
+      > {loading && (
+        <Box
+          sx={{
+            position: "fixed",
+            width: "100%",
+            height: "100%",
+            zIndex: 9999,
+            top: 0,
+            left: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(243, 244, 246, 0.7)",
+          }}
+        >
+          <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
+        </Box>
+      )}
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">

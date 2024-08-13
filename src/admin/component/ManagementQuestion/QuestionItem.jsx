@@ -81,8 +81,20 @@ const QuestionItem = ({ question, onEdit, onDelete, onSave }) => {
       onEdit(updatedData);
       onSave();
       setIsEditing(false);
+      toast.success("Update Question Saved.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored"
+      });
     } catch (error) {
       console.error("Failed to update question:", error);
+      toast.error("Failed to save question.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored"
+      });
     }
   };
 
@@ -159,13 +171,13 @@ const QuestionItem = ({ question, onEdit, onDelete, onSave }) => {
                 type="text"
                 value={answer.question_answer}
                 onChange={(e) => handleAnswerChange(index, e.target.value)}
-                className="border border-gray-300 p-2 rounded-md flex-grow text-[11px] leading-4"
+                className="border w-full border-gray-300 p-2 rounded-md flex-grow text-[11px] leading-4"
                 placeholder="Enter an answer"
               />
               <select
                 value={answer.value || ""}
                 onChange={(e) => handleDropdownChange(index, e)}
-                className="border border-gray-300 p-2 rounded-md text-xs"
+                className="w-full border border-gray-300 p-2 rounded-md text-xs"
               >
                 <option value="1">Fit</option>
                 <option value="2">Fit Follow Up</option>
@@ -266,12 +278,12 @@ const QuestionItem = ({ question, onEdit, onDelete, onSave }) => {
                 <input
                   type="text"
                   value={answer.question_answer}
-                  className="border border-gray-300 p-2 rounded-md flex-grow text-[11px] leading-4"
+                  className="w-full border border-gray-300 p-2 rounded-md flex-grow text-[11px] leading-4"
                   disabled
                 />
                 <select
                   value={answer.value || ""}
-                  className="border border-gray-300 p-2 rounded-md text-xs"
+                  className="w-[50%] border border-gray-300 p-2 rounded-md text-xs"
                   disabled
                 >
                   <option value="1">Fit</option>
