@@ -11,18 +11,27 @@ import ImportButton from "./ImportButton";
 import DownloadTemplateButton from "./DownloadTemplateButton";
 import useAuthStore from "../../stores/useAuthStore";
 import { useState, useEffect } from "react";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 
 function EnhancedTableToolbar(props) {
   const { numSelected, onSearch, selected } = props;
-  const { user, token } = useAuthStore((state) => ({ user: state.user, token: state.token}));
+  const { user } = useAuthStore((state) => ({
+    user: state.user,
+  }));
   const isAdmin = user.role.name === "Admin";
   const [departments, setDepartments] = useState([]);
   const [jobPositions, setJobPositions] = useState([]);
   const [employmentStatuses, setEmploymentStatuses] = useState([]);
   const [companies, setCompanies] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElUserMenu, setAnchorElUserMenu] = useState(null);
 
   useEffect(() => {
-    // Get data from localStorage if available
     const fetchData = () => {
       const storedDepartments = localStorage.getItem("dataDepartments");
       if (storedDepartments) {
@@ -48,6 +57,22 @@ function EnhancedTableToolbar(props) {
     fetchData();
   }, []);
 
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleUserMenuOpen = (event) => {
+    setAnchorElUserMenu(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setAnchorElUserMenu(null);
+  };
+
   return (
     <Toolbar
       sx={{
@@ -66,7 +91,7 @@ function EnhancedTableToolbar(props) {
         <div className="flex">
           {numSelected > 0 ? (
             <div className="flex items-center">
-              <div className="p-2 text-[12px]">
+              <div className="p-2 text-[10px] font-medium md:text-[12px]">
                 <p>{numSelected} rows selected</p>
               </div>
               {isAdmin && (
@@ -81,18 +106,47 @@ function EnhancedTableToolbar(props) {
             <div className="flex gap-2">
               {isAdmin && (
                 <>
-                  <AddUserButton
-                    departments={departments}
-                    jobPositions={jobPositions}
-                    employmentStatuses={employmentStatuses}
-                    companies={companies}
-                  />
-                  <ImportButton />
-                  <DeleteButton
-                    className="right-0"
-                    numSelected={numSelected}
-                    selected={selected}
-                  />
+                  <div className="hidden sm:flex gap-2">
+                    <AddUserButton
+                      departments={departments}
+                      jobPositions={jobPositions}
+                      employmentStatuses={employmentStatuses}
+                      companies={companies}
+                    />
+                    <ImportButton />
+                  </div>
+                  <div className="sm:hidden">
+                    <IconButton
+                      aria-label="user-menu"
+                      aria-controls="user-menu"
+                      aria-haspopup="true"
+                      onClick={handleUserMenuOpen}
+                    >
+                      <FontAwesomeIcon
+                        icon={faUserPlus}
+                        className="text-lg text-purple-800"
+                      />
+                    </IconButton>
+                    <Menu
+                      id="user-menu"
+                      anchorEl={anchorElUserMenu}
+                      keepMounted
+                      open={Boolean(anchorElUserMenu)}
+                      onClose={handleUserMenuClose}
+                    >
+                      <MenuItem onClick={handleUserMenuClose}>
+                        <AddUserButton
+                          departments={departments}
+                          jobPositions={jobPositions}
+                          employmentStatuses={employmentStatuses}
+                          companies={companies}
+                        />
+                      </MenuItem>
+                      <MenuItem onClick={handleUserMenuClose}>
+                        <ImportButton />
+                      </MenuItem>
+                    </Menu>
+                  </div>
                 </>
               )}
             </div>
@@ -100,9 +154,40 @@ function EnhancedTableToolbar(props) {
         </div>
         <div className="flex items-center gap-2">
           <SearchBar onSearch={onSearch} />
-          <FilterButton />
-          <ExportButton />
-          {isAdmin && <DownloadTemplateButton />}
+          <div className="hidden sm:flex gap-2">
+            <FilterButton />
+            <ExportButton />
+            {isAdmin && <DownloadTemplateButton />}
+          </div>
+          <div className="sm:hidden">
+            <IconButton
+              aria-label="more"
+              aria-controls="mobile-menu"
+              aria-haspopup="true"
+              onClick={handleMenuOpen}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="mobile-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem onClick={handleMenuClose}>
+                <FilterButton />
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <ExportButton />
+              </MenuItem>
+              {isAdmin && (
+                <MenuItem onClick={handleMenuClose}>
+                  <DownloadTemplateButton />
+                </MenuItem>
+              )}
+            </Menu>
+          </div>
         </div>
       </div>
     </Toolbar>
@@ -111,6 +196,8 @@ function EnhancedTableToolbar(props) {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  onSearch: PropTypes.func.isRequired,
+  selected: PropTypes.array.isRequired,
 };
 
 export default EnhancedTableToolbar;

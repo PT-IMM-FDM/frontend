@@ -13,6 +13,7 @@ import { Box } from "@mui/material";
 import { MdDelete } from "react-icons/md";
 import { BsWhatsapp } from "react-icons/bs";
 import { formatResultFDM } from "../../utils/stringUtils";
+import useAuthStore from "../../stores/useAuthStore";
 
 const UserForm = ({
   userData = [], // Initialize as an empty array
@@ -32,6 +33,8 @@ const UserForm = ({
   );
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuthStore((state) => ({ user: state.user }));
+  const isAdmin = user.role.name === "Admin";
 
   useEffect(() => {
     if (!isFollowUpEditable) {
@@ -265,31 +268,32 @@ PT Indominco Mandiri`;
         <section className="mb-4">
           <div className="flex justify-between items-center">
             <h1 className="text-sm mb-2 text-gray-400">Data Follow Up</h1>
-            {isFollowUpEditable ? (
-              <div className="flex space-x-2">
+            {isAdmin &&
+              (isFollowUpEditable ? (
+                <div className="flex space-x-2">
+                  <button
+                    className="bg-purple-500 text-white px-2 py-1 text-[11px] md:text-sm rounded"
+                    onClick={handleFollowSubmit}
+                  >
+                    Save Changes
+                  </button>
+                  <button
+                    className="bg-gray-300 text-black px-2 py-1 text-[11px] md:text-sm rounded"
+                    onClick={handleFollowUpCancel}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
                 <button
-                  className="bg-purple-500 text-white px-2 py-1 text-sm rounded"
-                  onClick={handleFollowSubmit}
+                  className="bg-purple-900 text-white px-2 py-1 text-[11px] md:text-sm rounded"
+                  onClick={() => setIsFollowUpEditable(true)}
                 >
-                  Save Changes
+                  Edit
                 </button>
-                <button
-                  className="bg-gray-300 text-black px-2 py-1 text-sm rounded"
-                  onClick={handleFollowUpCancel}
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
-              <button
-                className="bg-purple-900 text-white px-2 py-1 text-sm rounded"
-                onClick={() => setIsFollowUpEditable(true)}
-              >
-                Edit
-              </button>
-            )}
+              ))}
           </div>
-          <div className="grid grid-cols-2 gap-x-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
             <div>
               <EditableField
                 label="Follow Up"
@@ -301,8 +305,8 @@ PT Indominco Mandiri`;
               />
             </div>
             <div>
-              <p className="text-sm mb-2">Upload Attachment</p>
-              {isFollowUpEditable ? (
+              <p className="text-xs md:text-sm mb-2">Upload Attachment</p>
+              {isAdmin && isFollowUpEditable ? (
                 <>
                   <ImportButton onChange={handleFileChange} multiple />
                   {uploadedFiles.length > 0 && (
@@ -353,7 +357,7 @@ PT Indominco Mandiri`;
           </div>
         </section>
         <h1 className="text-sm mb-2 text-gray-400">Data Responden</h1>
-        <section className="grid grid-cols-2 gap-y-2 gap-x-6 mb-5">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6 mb-5">
           <EditableField
             label="Nama Lengkap"
             name="full_name"
@@ -404,7 +408,7 @@ PT Indominco Mandiri`;
         </section>
         <section className="mb-4">
           <h1 className="text-sm mb-2 text-gray-400">Data Question & Answer</h1>
-          <div className="grid grid-cols-2 gap-y-2 gap-x-6 mb-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6 mb-5">
             <EditableField
               label="Status Kehadiran"
               name="attendance_status"

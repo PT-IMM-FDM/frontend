@@ -26,14 +26,14 @@ export default function ImportButton() {
   const { setRows } = useDataUsersStore((state) => ({
     setRows: state.setRows,
   }));
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = React.useState(false);
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     let bodydata;
     if (file) {
       try {
-        setLoading(true)
+        setLoading(true);
         await uploadFile(file, token);
         const dataUsers = await getAllUser(token, bodydata); // Fetch the latest data
         setRows(dataUsers.data);
@@ -41,7 +41,7 @@ export default function ImportButton() {
           autoClose: 3000,
           pauseOnHover: false,
           position: "bottom-right",
-          theme: "colored"
+          theme: "colored",
         });
       } catch (error) {
         console.error("Error uploading file:", error);
@@ -49,10 +49,10 @@ export default function ImportButton() {
           autoClose: 3000,
           pauseOnHover: false,
           position: "bottom-right",
-          theme: "colored"
+          theme: "colored",
         });
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     } else {
       console.log("No file selected");
@@ -66,7 +66,7 @@ export default function ImportButton() {
         role={undefined}
         variant="contained"
         tabIndex={-1}
-        startIcon={<CloudUploadIcon />}
+        // startIcon={<CloudUploadIcon />}
         sx={{
           bgcolor: "transparent",
           borderRadius: "8px",
@@ -82,7 +82,8 @@ export default function ImportButton() {
           boxShadow: "none",
         }}
       >
-        Upload Data
+        <CloudUploadIcon />
+        <p className="ml-2 md:hidden xl:block">Upload Data</p>
         <VisuallyHiddenInput
           type="file"
           accept=".xlsx"

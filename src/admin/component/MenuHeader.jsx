@@ -13,8 +13,8 @@ const MenuHeader = ({ role, title, name, email }) => {
   };
 
   return (
-    <div className="relative flex py-1 justify-between items-center">
-      <div>
+    <div className="relative flex py-0 lg:py-1 justify-between items-center">
+      <div className="ml-8 lg:ml-0">
         <div className="text-[1rem] lg:text-[1.5rem] text-purple-900 font-semibold">{title}</div>
         <p className="text-[.8rem] lg:text-[14px] text-gray-500 font-medium">{tanggalHariIni}</p>
       </div>

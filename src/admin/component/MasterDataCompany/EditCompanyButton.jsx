@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuthStore from "../../stores/useAuthStore";
 import { updateCompany } from "../../api/data-company";
 import useDataCompanyStore from "../../stores/useDataCompanyStore";
@@ -18,12 +18,15 @@ import {
 import { FaRegEdit } from "react-icons/fa";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./TableTheme";
+import { Box } from "@mui/material";
+import { toast } from "react-toastify";
 
 const CACHE_KEY = "dataCompany";
 
-export function EditCompanyButton({ company_id, company_name}) {
+export function EditCompanyButton({ company_id, company_name }) {
   // Fetch the token from the authentication store
   const { token } = useAuthStore((state) => ({ token: state.token }));
+  const [loading, setLoading] = useState(false);
 
   // Fetch the company data from the data company store
   const { rows, setRows, setSelected } = useDataCompanyStore((state) => ({
@@ -39,13 +42,19 @@ export function EditCompanyButton({ company_id, company_name}) {
     company_name: company_name,
   });
 
-  // Function to close the modal and reset the form data
+  // Update formData when modal opens or company data changes
+  useEffect(() => {
+    if (openModal) {
+      setFormData({
+        company_id: company_id,
+        company_name: company_name,
+      });
+    }
+  }, [openModal, company_id, company_name]);
+
+  // Function to close the modal
   function onCloseModal() {
     setOpenModal(false);
-    setFormData({
-      company_id: company_id,
-      company_name: company_name,
-    });
   }
 
   // Function to handle form input changes
@@ -57,6 +66,7 @@ export function EditCompanyButton({ company_id, company_name}) {
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     try {
       // Call the API to update the company with the provided form data
@@ -66,18 +76,35 @@ export function EditCompanyButton({ company_id, company_name}) {
       const updatedRows = rows.map((row) =>
         row.company_id === updatedCompany.company_id ? updatedCompany : row
       );
-      setSelected([])
+      setSelected([]);
       setRows(updatedRows);
 
       // Cache the updated company data in local storage
       localStorage.setItem(CACHE_KEY, JSON.stringify(updatedRows));
       localStorage.setItem(`${CACHE_KEY}_timestamp`, new Date().getTime());
 
+      // Show success toast
+      toast.success("Company Saved.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
+
       // Close the modal after successful submission
       onCloseModal();
     } catch (error) {
       console.error("Failed to update company:", error);
-      // Handle error state or display error message
+
+      // Show error toast
+      toast.error("Failed to update company.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,20 +123,37 @@ export function EditCompanyButton({ company_id, company_name}) {
     <ThemeProvider theme={theme}>
       {/* Button */}
       <BootstrapTooltip title="Edit" placement="top">
-        <IconButton
-          onClick={() => setOpenModal(true)}
-          className="hover:text-purple-700"
-        >
+        <IconButton onClick={() => setOpenModal(true)} className="hover:text-purple-700">
           <FaRegEdit className="text-[1rem] hover:text-purple-700" />
         </IconButton>
       </BootstrapTooltip>
 
       {/* Modal */}
       <Dialog open={openModal} onClose={onCloseModal} maxWidth="xs" fullWidth>
-        <DialogTitle style={{ fontSize: "20px", marginBottom: '20px' }}>Edit Perusahaan</DialogTitle>
+        {loading && (
+          <Box
+            sx={{
+              position: "fixed",
+              width: "100%",
+              height: "100%",
+              zIndex: 999,
+              top: 0,
+              left: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(243, 244, 246, 0.7)",
+            }}
+          >
+            <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
+          </Box>
+        )}
+        <DialogTitle style={{ fontSize: "20px", marginBottom: "20px" }}>
+          Edit Perusahaan
+        </DialogTitle>
         <DialogContent>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            <DialogContentText style={{ fontSize: "14px", color: 'black' }}>
+            <DialogContentText style={{ fontSize: "14px", color: "black" }}>
               Nama Perusahaan
               {/* nama perusahaan */}
               <TextField
@@ -123,14 +167,14 @@ export function EditCompanyButton({ company_id, company_name}) {
                 required
                 margin="none"
                 InputLabelProps={{ style: { fontSize: "14px" } }}
-                inputProps={{ style: { fontSize: "14px", boxShadow: "none" }}}
+                inputProps={{ style: { fontSize: "14px", boxShadow: "none" } }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "6px",
                     boxShadow: "none",
                     "& fieldset": {
                       borderRadius: "6px",
-                      boxShadow: "none"
+                      boxShadow: "none",
                     },
                   },
                 }}
@@ -145,10 +189,10 @@ export function EditCompanyButton({ company_id, company_name}) {
                   textTransform: "none",
                   borderRadius: "8px",
                   boxShadow: "none",
-                  bgcolor: '#673ab7', // Custom background color
-                  '&:hover': {
-                    bgcolor: '#5e35b1', // Darker shade on hover
-                  }
+                  bgcolor: "#673ab7", // Custom background color
+                  "&:hover": {
+                    bgcolor: "#5e35b1", // Darker shade on hover
+                  },
                 }}
               >
                 <p className="text-[12px]">Update Perusahaan</p>
@@ -158,7 +202,11 @@ export function EditCompanyButton({ company_id, company_name}) {
                 variant="contained"
                 className="h-[2.5rem] text-white border-[1px]"
                 onClick={onCloseModal}
-                sx={{ textTransform: "none", borderRadius: "8px", boxShadow: "none", }}
+                sx={{
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  boxShadow: "none",
+                }}
               >
                 <p className="text-[12px]">Batal</p>
               </Button>

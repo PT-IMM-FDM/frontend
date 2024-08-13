@@ -144,12 +144,13 @@ const LineChart = () => {
         enabled: true,
       },
     },
+    maintainAspectRatio: false, // Allow the chart to fill its container
   };
 
   return (
-    <div className="bg-white p-4 rounded-[10px] h-[18rem] shadow-md">
+    <div className="bg-white p-4 rounded-[10px] lg:h-[18rem] shadow-md">
       <h1 className="font-semibold text-left leading-none">Monthly FDM Report</h1>
-      <div className="flex h-[15rem] items-center justify-center">
+      <div className="h-[45vh] md:h-[30rem] lg:h-[15rem] flex items-center justify-center">
         <Line data={chartData} options={options} />
       </div>
     </div>

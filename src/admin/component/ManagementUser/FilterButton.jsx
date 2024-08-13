@@ -117,7 +117,7 @@ export default function FilterButton() {
   return (
     <>
       <Button
-        className="h-[2.5rem] text-gray-700 bg-transparent"
+        className="h-[2.5rem] text-gray-700 border-0 md:border bg-transparent"
         color="light"
         onClick={() => setOpenModal(true)}
       >
@@ -129,13 +129,14 @@ export default function FilterButton() {
         dismissible
         show={openModal}
         onClose={() => setOpenModal(false)}
+        className="z-[999]"
       >
         <Modal.Header>Filter</Modal.Header>
         <Modal.Body className="h-[50vh]">
           {/* Nama Perusahaan */}
           <div className="mb-4">
             <p className="mb-2 text-[14px] font-semibold">Nama Perusahaan</p>
-            <div className="grid grid-cols-3 grid-flow-row gap-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-row gap-1">
               {companies.map((company) => (
                 <div
                   key={company.company_id}
@@ -169,7 +170,7 @@ export default function FilterButton() {
           {/* Filter Departemen */}
           <div className="mb-4">
             <p className="mb-2 text-[14px] font-semibold">Departemen</p>
-            <div className="grid grid-cols-3 grid-flow-row gap-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-row gap-1">
               {departments.map((department) => (
                 <div
                   key={department.department_id}
@@ -203,7 +204,7 @@ export default function FilterButton() {
           {/* Filter Posisi */}
           <div className="mb-4">
             <p className="mb-2 text-[14px] font-semibold">Posisi</p>
-            <div className="grid grid-cols-3 grid-flow-row gap-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-row gap-1">
               {jobPositions.map((position) => (
                 <div
                   key={position.job_position_id}
@@ -236,8 +237,8 @@ export default function FilterButton() {
 
           {/* Status Pekerjaan */}
           <div className="mb-4">
-            <p className="mb-2 text-[14px] font-semibold">Status Pekerjaan</p>
-            <div className="grid grid-rows-3 grid-flow-col gap-1">
+            <p className="mb-2 text-[14px] font-semibold">Status</p>
+            <div className="grid grid-cols-1 grid-flow-row md:grid-rows-3 md:grid-flow-col gap-1">
               {employmentStatuses.map((status) => (
                 <div
                   key={status.employment_status_id}
