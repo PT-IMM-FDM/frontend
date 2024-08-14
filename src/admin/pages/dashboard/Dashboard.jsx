@@ -23,6 +23,7 @@ import useDataFDM from "../../stores/useDataFDM";
 import FilterButton from "../../component/DashboardMenu/FilterButton";
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
+import QuestionList from "../../component/DashboardMenu/QuestionList";
 
 const Dashboard = () => {
   const { user, setUser, token } = useAuthStore((state) => ({
@@ -179,6 +180,9 @@ const Dashboard = () => {
           <div className="xl:col-span-2">
             <LineChart className="min-h-full" />
           </div>
+        </div>
+        <div className="mb-4">
+          <QuestionList />
         </div>
         <DrawerUserUnfilled
           userNotFilled={userNotFilled}

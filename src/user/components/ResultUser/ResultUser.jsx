@@ -45,7 +45,7 @@ const ResultUser = () => {
 
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <Card className="max-w-[500px] mx-auto mb-5 p-4">
         <div className="flex justify-between">
           <img src="/IMM.svg" className="mr-3 h-6 sm:h-8" alt="Logo IMM" />

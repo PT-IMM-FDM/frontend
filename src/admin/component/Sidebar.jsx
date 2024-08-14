@@ -13,6 +13,7 @@ import { FaFileWaveform } from "react-icons/fa6";
 import useAuthStore from "../stores/useAuthStore";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { FaClipboardQuestion } from "react-icons/fa6";
 
 export function Component() {
   const { logout, user } = useAuthStore();
@@ -40,7 +41,7 @@ export function Component() {
     { name: "Dashboard", path: "/admin/dashboard", icon: LuLayoutDashboard },
     { name: "Data Monitoring", path: "/admin/data-monitoring", icon: MdOutlineMonitorHeart },
     { name: "Data Pengguna", path: "/admin/data-pengguna", icon: HiOutlineUser },
-    { name: "Kelola Pertanyaan", path: "/admin/manajemen-pertanyaan", icon: HiOutlineUser, adminOnly: true },
+    { name: "Kelola Pertanyaan", path: "/admin/manajemen-pertanyaan", icon: FaClipboardQuestion, adminOnly: true },
     {
       name: "Master Data", icon: BiData, subItems: [
         { name: "Perusahaan", path: "/admin/data-perusahaan", icon: DomainAddRoundedIcon },
@@ -48,7 +49,8 @@ export function Component() {
         { name: "Posisi", path: "/admin/data-posisi", icon: BadgeRoundedIcon },
         { name: "Status", path: "/admin/data-status", icon: AssignmentIndRoundedIcon }
       ]
-    }
+    },
+    { name: "Profile", path: "/admin/profile", icon: HiOutlineUser}
   ];
 
   const renderMenuItems = (isMobile = false) => (

@@ -12,6 +12,20 @@ export const getAllQuestions = async (token) => {
   return response.data.data;
 };
 
+export const getMostQuestionAnswered = async (token) => {
+  try {
+    const response = await axios.get(`${apiUrl}/fdm/mostQuestionAnswered`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching most question answered data:', error);
+    throw error;
+  }
+};
+
 export const createQuestion = async (token, questionData) => {
   const response = await axios.post(
     `${apiUrl}/fdm/question/create`,

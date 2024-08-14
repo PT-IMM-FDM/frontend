@@ -6,9 +6,7 @@ import { HiOutlineArrowRight, HiOutlineArrowLeft } from "react-icons/hi";
 const HistoryUser = () => {
   return (
     <div>
-      <Card className="mt-8 max-w-[800px] mx-auto">
         <EnhancedTable />
-      </Card>
     </div>
   );
 };
