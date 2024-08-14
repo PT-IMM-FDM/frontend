@@ -13,8 +13,9 @@ import "../../index.css";
 import DetailDataUserPage from "./detail-data-user";
 import DetailDataMonitoringPage from "./detail-data-monitoring";
 import ManagementQuestionPage from "./management-question";
+import Profile from "./profile/Profile";
 
-const LayoutPages = () => {
+const AdminRoutes = () => {
   return (
     <>
       <Layout>
@@ -39,6 +40,7 @@ const LayoutPages = () => {
             <Route path="/data-posisi" element={<MasterDataJobPositions />} />
             <Route path="/data-status" element={<MasterDataStatusEmployee />} />
             <Route path="/manajemen-pertanyaan" element={<ManagementQuestionPage/>} />
+            <Route path="/profile" element={<Profile/>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
@@ -47,4 +49,4 @@ const LayoutPages = () => {
   );
 };
 
-export default LayoutPages;
+export default AdminRoutes;
