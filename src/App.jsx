@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import LayoutPages from "./admin/pages/LayoutPages";
+import AdminRoutes from "./admin/pages/AdminRoutes";
 import "./index.css";
 import Login from "./admin/pages/login-admin";
 import useAuthStore from "./admin/stores/useAuthStore";
@@ -58,7 +58,7 @@ function App() {
             <ProtectedRoute allowedRoles={["Admin", "Full Viewer", "Viewer"]} />
           }
         >
-          <Route path="/admin/*" element={<LayoutPages />} />
+          <Route path="/admin/*" element={<AdminRoutes />} />
         </Route>
         <Route
           element={
