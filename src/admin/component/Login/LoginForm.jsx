@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { getCurrentLogin } from "../../api/auth";
-import { Button, Spinner } from "flowbite-react";
+import { Button, Spinner, Modal } from "flowbite-react";
 import Cookies from "js-cookie";
-import { Modal } from "flowbite-react";
-import { HiOutlinePhone } from "react-icons/hi";
+import { HiOutlinePhone, HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State untuk mengatur visibility password
   const [rememberMe, setRememberMe] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
@@ -72,7 +72,6 @@ const LoginForm = () => {
               id="email-address"
               name="email"
               type="text"
-              // autoComplete="email"
               size="2rem"
               required
               value={email}
@@ -81,14 +80,14 @@ const LoginForm = () => {
               placeholder="Nomor Handphone"
             />
           </div>
-          <div>
+          <div className="relative">
             <label htmlFor="password" className="sr-only">
               Password
             </label>
             <input
               id="password"
               name="password"
-              type="password"
+              type={showPassword ? "text" : "password"} // Tentukan tipe input berdasarkan state showPassword
               autoComplete="current-password"
               required
               value={password}
@@ -96,27 +95,20 @@ const LoginForm = () => {
               className="rounded-[5px] w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Password"
             />
+            <div
+              className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)} // Ubah visibility password saat ikon diklik
+            >
+              {showPassword ? (
+                <HiOutlineEyeOff className="text-gray-500" />
+              ) : (
+                <HiOutlineEye className="text-gray-500" />
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-between mb-[3rem]">
-          <div className="flex items-center">
-            {/* <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              checked={rememberMe}
-              onChange={() => setRememberMe(!rememberMe)}
-            />
-            <label
-              htmlFor="remember-me"
-              className="ml-2 block text-sm text-gray-900"
-            >
-              Remember me
-            </label> */}
-          </div>
-
+        <div className="flex items-center justify-end mb-[3rem]">
           <div className="text-sm cursor-pointer">
             <a
               onClick={() => setOpenModal(true)}
@@ -134,10 +126,8 @@ const LoginForm = () => {
             <Modal.Header />
             <Modal.Body>
               <div className="text-center">
-                {/* <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" /> */}
                 <h3 className="mb-5 text-md text-justify font-normal text-black dark:text-gray-400">
-                  Silahkan hubungi OH OnCall IMM
-                  agar kami dapat memberikan informasi lebih lanjut tentang password anda.
+                  Silahkan hubungi OH OnCall IMM agar kami dapat memberikan informasi lebih lanjut tentang password anda.
                 </h3>
                 <div className="flex flex-col text-sm">
                   <div className="flex items-center mb-2">
@@ -174,6 +164,7 @@ const LoginForm = () => {
               <Spinner
                 aria-label="Alternate spinner button example"
                 size="sm"
+                color="purple"
               />
               <span className="pl-3">Loading...</span>
             </Button>
@@ -181,7 +172,6 @@ const LoginForm = () => {
             <button
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              // disabled={loading}
             >
               Sign In
             </button>
