@@ -54,7 +54,10 @@ const UserForm = ({
     }
     setShowResetModal(false);
   };
-  
+
+
+  const formatValue = (value) =>
+    value !== null && value !== undefined ? value : "";
 
   return (
     <div className="p-4 pb-8 border rounded-md shadow-md bg-white">
@@ -63,7 +66,9 @@ const UserForm = ({
           <button onClick={() => navigate("/admin/data-pengguna")} className="">
             <IoArrowBack className="text-[20px]" />
           </button>
-          <h2 className="text-[11px] md:text-md ml-2 font-medium">Detail Data Pengguna</h2>
+          <h2 className="text-[11px] md:text-md ml-2 font-medium">
+            Detail Data Pengguna
+          </h2>
         </div>
         {isEditable ? (
           <div className="flex space-x-2">
@@ -82,7 +87,7 @@ const UserForm = ({
                 className="p-1"
                 onClick={() => setIsEditable(true)}
               >
-                <FaRegEdit className="text-lg mx-auto my-auto"/>
+                <FaRegEdit className="text-lg mx-auto my-auto" />
                 <p className="ml-2 hidden md:block text-[12px]">Edit</p>
               </Button>
               <Button
@@ -103,14 +108,14 @@ const UserForm = ({
         <EditableField
           label="Nama Lengkap"
           name="full_name"
-          value={userData?.full_name || ""}
+          value={formatValue(userData?.full_name)}
           onChange={handleChange}
           isEditable={isEditable}
         />
         <EditableField
           label="No. Telepon"
           name="phone_number"
-          value={userData?.phone_number || ""}
+          value={formatValue(userData?.phone_number)}
           onChange={handleChange}
           isEditable={isEditable}
           type="tel"
@@ -118,7 +123,7 @@ const UserForm = ({
         <EditableField
           label="Email"
           name="email"
-          value={userData?.email || ""}
+          value={formatValue(userData?.email)}
           onChange={handleChange}
           isEditable={isEditable}
           type="email"

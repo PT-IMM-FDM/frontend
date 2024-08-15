@@ -39,19 +39,24 @@ export const getUserById = async (token, user_id) => {
 };
 
 export const createUser = async (token, dataBody) => {
+  console.log(dataBody)
+  const dataToSend = {};
+
+  if (dataBody.user_id) dataToSend.user_id = dataBody.user_id;
+  if (dataBody.company_id) dataToSend.company_id = parseInt(dataBody.company_id);
+  if (dataBody.job_position_id) dataToSend.job_position_id = parseInt(dataBody.job_position_id);
+  if (dataBody.employment_status_id) dataToSend.employment_status_id = parseInt(dataBody.employment_status_id);
+  if (dataBody.department_id) dataToSend.department_id = parseInt(dataBody.department_id);
+  if (dataBody.full_name) dataToSend.full_name = dataBody.full_name;
+  if (dataBody.phone_number) dataToSend.phone_number = dataBody.phone_number;
+  if (dataBody.birth_date) dataToSend.birth_date = dataBody.birth_date;
+  if (dataBody.role_id) dataToSend.role_id = parseInt(dataBody.role_id);
+  if (dataBody.email) dataToSend.email = dataBody.email;
+  console.log(dataToSend)
+
   const response = await axios.post(
     `${apiUrl}/user/create`,
-    {
-      company_id: parseInt(dataBody.company_id),
-      job_position_id: parseInt(dataBody.job_position_id),
-      employment_status_id: parseInt(dataBody.employment_status_id),
-      department_id: parseInt(dataBody.department_id),
-      full_name: dataBody.full_name,
-      phone_number: dataBody.phone_number,
-      birth_date: dataBody.birth_date,
-      role_id: parseInt(dataBody.role_id),
-      email: dataBody.email,
-    },
+    dataToSend,
     {
       headers: { Authorization: `Bearer ${token}` },
     }
