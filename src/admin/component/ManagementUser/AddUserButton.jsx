@@ -1,4 +1,4 @@
-import { Button, Modal, Select, TextInput } from "flowbite-react";
+import { Button, Modal } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { FaUserPlus } from "react-icons/fa6";
 import { createUser } from "../../api/data-user";
@@ -12,6 +12,7 @@ import useAuthStore from "../../stores/useAuthStore";
 import useDataUsersStore from "../../stores/useDataUsersStore";
 import { Box } from "@mui/material";
 import { toast } from "react-toastify";
+import Select from "react-select";
 
 const CACHE_KEY = "usersData";
 
@@ -127,6 +128,13 @@ export function AddUserButton({ isMobile }) {
     }));
   };
 
+  const handleSelectChange = (selectedOption, fieldName) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [fieldName]: selectedOption ? selectedOption.value : "",
+    }));
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -164,6 +172,20 @@ export function AddUserButton({ isMobile }) {
     }
   };
 
+  
+  const formatOptions = (data, idField) => {
+    return data.map((item) => ({
+      value: item[idField], // Use the dynamic idField to access the correct ID property
+      label: item.name,
+    }));
+  };  
+
+  const getSelectedOption = (data, idField, formDataValue) => {
+    const selectedItem = data.find((item) => item[idField] === formDataValue);
+    return selectedItem ? { value: selectedItem[idField], label: selectedItem.name } : null;
+  };
+  
+  
   return (
     <div>
       <Button
@@ -176,7 +198,7 @@ export function AddUserButton({ isMobile }) {
       </Button>
 
       <Modal
-        className="z-[999]"
+        className="z-[999] relative"
         dismissible
         show={openModal}
         size="2xl"
@@ -278,22 +300,38 @@ export function AddUserButton({ isMobile }) {
               >
                 Nama Perusahaan <span className="text-red-500">*</span>
               </label>
-              <select
+              <Select
                 id="company_id"
                 name="company_id"
-                value={formData.company_id}
-                onChange={handleChange}
-                style={{ fontSize: "12px" }}
+                options={formatOptions(companies, "company_id")}
+                value={getSelectedOption(companies, "company_id", formData.company_id)}
+                onChange={(option) => handleSelectChange(option, "company_id")}
+                placeholder="Select Company"
+                styles={{
+                  control: (provided) => ({ ...provided, fontSize: "12px" }),
+                  input: (base) => ({
+                    ...base,
+                    "input:focus": {
+                      boxShadow: "none",
+                    },
+                  }),
+                  option: (provided) => ({
+                    ...provided,
+                    fontSize: "12px", // Adjust the font size for options here
+                  }),
+                  menu: (provided) => ({
+                    ...provided,
+                    fontSize: "12px", // Adjust the font size for options here
+                    zIndex: 1050, // Ensure dropdown appears above other elements
+                  }),
+                  menuPortal: (provided) => ({
+                    ...provided,
+                    zIndex: 1050, // Ensure menu portal appears above other elements
+                  }),
+                }}
+                menuPortalTarget={document.body}
                 required
-                className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              >
-                <option value="">Select Company</option>
-                {companies.map((company) => (
-                  <option key={company.company_id} value={company.company_id}>
-                    {company.name}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
 
             {/* Departemen */}
@@ -304,25 +342,40 @@ export function AddUserButton({ isMobile }) {
               >
                 Departemen <span className="text-red-500">*</span>
               </label>
-              <select
+              <Select
                 id="department_id"
                 name="department_id"
-                value={formData.department_id}
-                onChange={handleChange}
-                style={{ fontSize: "12px" }}
+                options={formatOptions(departments, "department_id")}
+                value={getSelectedOption(departments, "department_id", formData.department_id)}
+                onChange={(option) =>
+                  handleSelectChange(option, "department_id")
+                }
+                placeholder="Select Department"
+                styles={{
+                  control: (provided) => ({ ...provided, fontSize: "12px" }),
+                  input: (base) => ({
+                    ...base,
+                    "input:focus": {
+                      boxShadow: "none",
+                    },
+                  }),
+                  option: (provided) => ({
+                    ...provided,
+                    fontSize: "12px", // Adjust the font size for options here
+                  }),
+                  menu: (provided) => ({
+                    ...provided,
+                    fontSize: "12px", // Adjust the font size for options here
+                    zIndex: 1050, // Ensure dropdown appears above other elements
+                  }),
+                  menuPortal: (provided) => ({
+                    ...provided,
+                    zIndex: 1050, // Ensure menu portal appears above other elements
+                  }),
+                }}
+                menuPortalTarget={document.body}
                 required
-                className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              >
-                <option value="">Select Department</option>
-                {departments.map((department) => (
-                  <option
-                    key={department.department_id}
-                    value={department.department_id}
-                  >
-                    {department.name}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
 
             {/* Posisi */}
@@ -333,25 +386,40 @@ export function AddUserButton({ isMobile }) {
               >
                 Posisi <span className="text-red-500">*</span>
               </label>
-              <select
+              <Select
                 id="job_position_id"
                 name="job_position_id"
-                value={formData.job_position_id}
-                onChange={handleChange}
-                style={{ fontSize: "12px" }}
+                options={formatOptions(jobPositions, "job_position_id")}
+                value={getSelectedOption(jobPositions, "job_position_id", formData.job_position_id)}
+                onChange={(option) =>
+                  handleSelectChange(option, "job_position_id")
+                }
+                placeholder="Select Job Position"
+                styles={{
+                  control: (provided) => ({ ...provided, fontSize: "12px" }),
+                  input: (base) => ({
+                    ...base,
+                    "input:focus": {
+                      boxShadow: "none",
+                    },
+                  }),
+                  option: (provided) => ({
+                    ...provided,
+                    fontSize: "12px", // Adjust the font size for options here
+                  }),
+                  menu: (provided) => ({
+                    ...provided,
+                    fontSize: "12px", // Adjust the font size for options here
+                    zIndex: 1050, // Ensure dropdown appears above other elements
+                  }),
+                  menuPortal: (provided) => ({
+                    ...provided,
+                    zIndex: 1050, // Ensure menu portal appears above other elements
+                  }),
+                }}
+                menuPortalTarget={document.body}
                 required
-                className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              >
-                <option value="">Select Job Position</option>
-                {jobPositions.map((position) => (
-                  <option
-                    key={position.job_position_id}
-                    value={position.job_position_id}
-                  >
-                    {position.name}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
 
             {/* Status Pekerjaan */}
@@ -362,25 +430,40 @@ export function AddUserButton({ isMobile }) {
               >
                 Status Pekerjaan <span className="text-red-500">*</span>
               </label>
-              <select
+              <Select
                 id="employment_status_id"
                 name="employment_status_id"
-                value={formData.employment_status_id}
-                onChange={handleChange}
-                style={{ fontSize: "12px" }}
+                options={formatOptions(employmentStatuses, "employment_status_id")}
+                value={getSelectedOption(employmentStatuses, "employment_status_id", formData.employment_status_id)}
+                onChange={(option) =>
+                  handleSelectChange(option, "employment_status_id")
+                }
+                placeholder="Select Employment Status"
+                styles={{
+                  control: (provided) => ({ ...provided, fontSize: "12px" }),
+                  input: (base) => ({
+                    ...base,
+                    "input:focus": {
+                      boxShadow: "none",
+                    },
+                  }),
+                  option: (provided) => ({
+                    ...provided,
+                    fontSize: "12px", // Adjust the font size for options here
+                  }),
+                  menu: (provided) => ({
+                    ...provided,
+                    fontSize: "12px", // Adjust the font size for options here
+                    zIndex: 1050, // Ensure dropdown appears above other elements
+                  }),
+                  menuPortal: (provided) => ({
+                    ...provided,
+                    zIndex: 1050, // Ensure menu portal appears above other elements
+                  }),
+                }}
+                menuPortalTarget={document.body}
                 required
-                className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              >
-                <option value="">Select Employment Status</option>
-                {employmentStatuses.map((status) => (
-                  <option
-                    key={status.employment_status_id}
-                    value={status.employment_status_id}
-                  >
-                    {status.name}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
 
             {/* Birth Date */}
@@ -407,27 +490,57 @@ export function AddUserButton({ isMobile }) {
             {/* Role */}
             <div>
               <label
-                htmlFor="role"
+                htmlFor="role_id"
                 className="block text-[12px] font-medium text-gray-700"
               >
                 Role <span className="text-red-500">*</span>
               </label>
-              <select
+              <Select
                 id="role_id"
                 name="role_id"
-                value={formData.role_id}
-                onChange={handleChange}
-                style={{ fontSize: "12px" }}
+                options={[
+                  { value: "1", label: "Admin" },
+                  { value: "2", label: "Full Viewer" },
+                  { value: "3", label: "Viewer" },
+                  { value: "4", label: "User" },
+                ]}
+                value={
+                  formData.role_id
+                    ? {
+                        value: formData.role_id,
+                        label: getRoleLabel(formData.role_id),
+                      }
+                    : null
+                }
+                onChange={(option) => handleSelectChange(option, "role_id")}
+                placeholder="Select Role"
+                styles={{
+                  control: (provided) => ({ ...provided, fontSize: "12px" }),
+                  input: (base) => ({
+                    ...base,
+                    "input:focus": {
+                      boxShadow: "none",
+                    },
+                  }),
+                  option: (provided) => ({
+                    ...provided,
+                    fontSize: "12px", // Adjust the font size for options here
+                  }),
+                  menu: (provided) => ({
+                    ...provided,
+                    fontSize: "12px", // Adjust the font size for options here
+                    zIndex: 1050, // Ensure dropdown appears above other elements
+                  }),
+                  menuPortal: (provided) => ({
+                    ...provided,
+                    zIndex: 1050, // Ensure menu portal appears above other elements
+                  }),
+                }}
+                menuPortalTarget={document.body}
                 required
-                className="mt-1 block w-full text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              >
-                <option value="">Select Role</option>
-                <option value="1">Admin</option>
-                <option value="2">Full Viewer</option>
-                <option value="3">Viewer</option>
-                <option value="4">User</option>
-              </select>
+              />
             </div>
+
             <div className="mt-2 md:col-span-2 flex gap-2 justify-end">
               <Button
                 color="purple"
@@ -450,3 +563,13 @@ export function AddUserButton({ isMobile }) {
     </div>
   );
 }
+
+const getRoleLabel = (roleId) => {
+  const roleLabels = {
+    1: "Admin",
+    2: "Full Viewer",
+    3: "Viewer",
+    4: "User",
+  };
+  return roleLabels[roleId] || "";
+};
