@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import EditableField from "./EditableField";
 import SelectField from "./SelectField";
-import { Button, Modal } from "flowbite-react";
+import { Button, Modal, ToggleSwitch } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import useAuthStore from "../../stores/useAuthStore";
@@ -38,79 +38,85 @@ const UserForm = ({
   const handleResetPassword = async () => {
     try {
       await resetPasswordToDefault(token, user_id);
-      toast.success("Password has been reset to default.", {
-        autoClose: 3000, // 3 seconds
-        pauseOnHover: false, // Do not pause on hover
+      toast.success("Password telah berhasil direset ke default.", {
+        autoClose: 3000,
+        pauseOnHover: false,
         position: "bottom-right",
         theme: "colored",
       });
     } catch (error) {
-      toast.error("Failed to reset password.", {
-        autoClose: 3000, // 3 seconds
-        pauseOnHover: false, // Do not pause on hover
+      toast.error("Gagal mereset password.", {
+        autoClose: 3000,
+        pauseOnHover: false,
         position: "bottom-right",
         theme: "colored",
       });
     }
     setShowResetModal(false);
   };
-  
+
+  const formatValue = (value) =>
+    value !== null && value !== undefined ? value : "";
 
   return (
     <div className="p-4 pb-8 border rounded-md shadow-md bg-white">
+      {/* Header */}
       <div className="flex justify-between mb-4">
         <div className="flex items-center">
-          <button onClick={() => navigate("/admin/data-pengguna")} className="">
-            <IoArrowBack className="text-[20px]" />
+          <button
+            onClick={() => navigate("/admin/data-pengguna")}
+            className="text-gray-600 hover:text-gray-800"
+          >
+            <IoArrowBack className="text-2xl" />
           </button>
-          <h2 className="text-[11px] md:text-md ml-2 font-medium">Detail Data Pengguna</h2>
+          <h2 className="text-lg font-semibold ml-2">
+            Detail Data Pengguna
+          </h2>
         </div>
         {isEditable ? (
           <div className="flex space-x-2">
-            <Button className="p-0" onClick={handleSubmit} color="purple">
-              <p className="text-[12px]">Save Changes</p>
+            <Button onClick={handleSubmit} color="purple">
+              Simpan Perubahan
             </Button>
-            <Button className="p-0" onClick={handleCancel} color="light">
-              <p className="text-[12px]">Cancel</p>
+            <Button onClick={handleCancel} color="gray">
+              Batal
             </Button>
           </div>
         ) : (
           isAdmin && (
-            <div className="flex gap-2 ">
-              <Button
-                color="purple"
-                className="p-1"
-                onClick={() => setIsEditable(true)}
-              >
-                <FaRegEdit className="text-lg mx-auto my-auto"/>
-                <p className="ml-2 hidden md:block text-[12px]">Edit</p>
+            <div className="flex gap-2">
+              <Button color="purple" onClick={() => setIsEditable(true)}>
+                <FaRegEdit className="text-lg mr-2" />
+                Edit
               </Button>
               <Button
-                color="light"
-                className="p-0 border-red-500 text-red-500"
+                color="red"
                 onClick={() => setShowResetModal(true)}
               >
-                <p className="text-[11px] my-auto md:text-xs">Reset Password</p>
+                Reset Password
               </Button>
             </div>
           )
         )}
       </div>
+
+      {/* Form */}
       <form
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
         onSubmit={(e) => e.preventDefault()}
       >
+        {/* Editable Fields */}
         <EditableField
           label="Nama Lengkap"
           name="full_name"
-          value={userData?.full_name || ""}
+          value={formatValue(userData?.full_name)}
           onChange={handleChange}
           isEditable={isEditable}
         />
         <EditableField
           label="No. Telepon"
           name="phone_number"
-          value={userData?.phone_number || ""}
+          value={formatValue(userData?.phone_number)}
           onChange={handleChange}
           isEditable={isEditable}
           type="tel"
@@ -118,7 +124,7 @@ const UserForm = ({
         <EditableField
           label="Email"
           name="email"
-          value={userData?.email || ""}
+          value={formatValue(userData?.email)}
           onChange={handleChange}
           isEditable={isEditable}
           type="email"
@@ -178,7 +184,7 @@ const UserForm = ({
         <EditableField
           label="Tanggal Lahir"
           name="birth_date"
-          value={userData?.birth_date || "-"}
+          value={userData?.birth_date || ""}
           onChange={handleChange}
           isEditable={isEditable}
           type="date"
@@ -186,7 +192,9 @@ const UserForm = ({
         <SelectField
           label="Role"
           name="role_id"
-          value={userData?.role?.role_id ? String(userData?.role?.role_id) : ""}
+          value={
+            userData?.role?.role_id ? String(userData?.role?.role_id) : ""
+          }
           onChange={handleChange}
           isEditable={isEditable}
           options={[
@@ -196,6 +204,42 @@ const UserForm = ({
             { value: 4, label: "User" },
           ]}
         />
+
+        {/* Switch: Karyawan Tidak Aktif */}
+        <div className="md:col-span-2 flex items-center justify-between">
+          <label className="font-medium text-xs text-gray-700">
+            Status Karyawan Aktif
+          </label>
+          <ToggleSwitch
+            checked={userData?.is_active === true}
+            onChange={() =>
+              setUserData({
+                ...userData,
+                is_active: !userData?.is_active,
+              })
+            }
+            disabled={!isEditable}
+            color="purple"
+          />
+        </div>
+
+        {/* Switch: Penerima Notifikasi */}
+        <div className="md:col-span-2 flex items-center justify-between">
+          <label className="font-medium text-xs text-gray-700">
+            Penerima Notifikasi
+          </label>
+          <ToggleSwitch
+            checked={userData?.get_notification === true}
+            onChange={() =>
+              setUserData({
+                ...userData,
+                get_notification: !userData?.get_notification,
+              })
+            }
+            disabled={!isEditable}
+            color="purple"
+          />
+        </div>
       </form>
 
       {/* Reset Password Modal */}
@@ -203,21 +247,23 @@ const UserForm = ({
         show={showResetModal}
         onClose={() => setShowResetModal(false)}
         size="md"
-        popup={true}
+        popup
       >
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
-            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Are you sure you want to reset this user's password to the default
-              password?
+            <h3 className="mb-5 text-lg font-normal text-gray-500">
+              Apakah Anda yakin ingin mereset password pengguna ini ke default?
             </h3>
             <div className="flex justify-center gap-4">
-              <Button color="red" onClick={handleResetPassword}>
-                Yes, I'm sure
+              <Button color="failure" onClick={handleResetPassword}>
+                Ya, Saya Yakin
               </Button>
-              <Button color="gray" onClick={() => setShowResetModal(false)}>
-                No, cancel
+              <Button
+                color="gray"
+                onClick={() => setShowResetModal(false)}
+              >
+                Tidak, Batalkan
               </Button>
             </div>
           </div>

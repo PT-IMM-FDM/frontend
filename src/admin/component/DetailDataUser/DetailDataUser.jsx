@@ -6,6 +6,7 @@ import useDataUsersStore from "../../stores/useDataUsersStore";
 import UserForm from "./UserForm";
 import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
+import { toast } from "react-toastify";
 
 export default function DetailDataUser() {
   const { token } = useAuthStore((state) => ({ token: state.token }));
@@ -140,10 +141,24 @@ export default function DetailDataUser() {
       localStorage.setItem("usersData", JSON.stringify(updatedUsers));
 
       setIsEditable(false);
+      toast.success("Update User Successfully.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
     } catch (error) {
       console.error("Error updating user:", error);
+      toast.error("Failed Update User.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
     }
   };
+
+  console.log("data User", userData)
 
   return (
     <>
