@@ -2,7 +2,7 @@ import React from "react";
 
 const EditableField = ({ label, name, value, onChange, isEditable, type = "text" }) => (
   <div>
-    <label className="block text-xs md:text-sm font-medium text-gray-700">{label}</label>
+    <label className="block text-xs font-medium text-gray-700">{label}</label>
     {isEditable ? (
       <input
         id={name}
