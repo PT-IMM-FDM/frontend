@@ -20,7 +20,7 @@ const SelectField = ({ label, name, value, onChange, isEditable, options }) => {
 
   return (
     <div>
-      <label className="block text-xs md:text-sm font-medium text-gray-700">{label}</label>
+      <label className="block text-xs font-medium text-gray-700">{label}</label>
       <Select
         id={name}
         name={name}
