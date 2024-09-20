@@ -5,6 +5,7 @@ import { Card, Button, Modal, Label, TextInput, Alert } from 'flowbite-react';
 import { HiInformationCircle, HiOutlineExclamationCircle } from "react-icons/hi";
 import axios from 'axios';
 import useAuthStore from '../../../admin/stores/useAuthStore';
+import { formatDate } from '../../../admin/utils/helpers';
 
 // Modal for confirmation
 const ConfirmationModal = ({ show, onClose, onConfirm }) => (
@@ -39,6 +40,7 @@ const EditProfileModal = ({ show, onClose }) => {
   const [fullName, setFullName] = useState(user.full_name || '');
   const [phoneNumber, setPhoneNumber] = useState(user.phone_number || '');
   const [email, setEmail] = useState(user.email || '');
+  const [birthDate, setBirthDate] = useState(user.birth_date || '');
   const [error, setError] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -47,6 +49,7 @@ const EditProfileModal = ({ show, onClose }) => {
       setFullName(user.full_name || '');
       setPhoneNumber(user.phone_number || '');
       setEmail(user.email || '');
+      setBirthDate(user.birth_date || '');
       setError(null);
     }
   }, [show, user]);
@@ -57,6 +60,7 @@ const EditProfileModal = ({ show, onClose }) => {
         full_name: fullName,
         phone_number: phoneNumber,
         email: email,
+        birth_date: birthDate ? birthDate.split('-').reverse().join('/') : '',  // Format to YYYY/MM/DD
       };
       const config = {
         headers: {
@@ -128,6 +132,17 @@ const EditProfileModal = ({ show, onClose }) => {
                 id="emailInput"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="birthDateInput" className="block mb-2">
+                Tanggal Lahir
+              </Label>
+              <TextInput
+                type="date"
+                id="birthDateInput"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
               />
             </div>
           </div>
@@ -294,6 +309,17 @@ const ManageU = () => {
                 type="text"
                 id="phoneInput"
                 placeholder={user.phone_number}
+                disabled
+              />
+            </div>
+            <div className="flex-1 md:mr-4">
+              <Label htmlFor="tglInput" className="block my-2">
+                Tanggal Lahir
+              </Label>
+              <TextInput
+                type="text"
+                id="tglInput"
+                value={formatDate(user.birth_date)}
                 disabled
               />
             </div>
