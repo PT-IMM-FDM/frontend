@@ -267,7 +267,6 @@ export default function EnhancedTable({ token }) {
                       <BootstrapTooltip
                         title={row.result || "-"}
                         placement="left"
-                        interactive
                       >
                         <TableCell sx={{ fontSize: "12px" }} align="center">
                           {formatResult(row.result) || "-"}

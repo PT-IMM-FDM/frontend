@@ -23,22 +23,6 @@ export default function ImportButton({onChange}) {
   const { token } = useAuthStore((state) => ({ token: state.token}));
   const { setRows } = useDataUsersStore((state) => ({ setRows: state.setRows}));
 
-  // const handleFileChange = async (event) => {
-  //   const file = event.target.files[0];
-  //   let bodydata
-  //   if (file) {
-  //     try {
-  //       await uploadFile(file, token);
-  //       const dataUsers = await getAllUser(token, bodydata); // Fetch the latest data
-  //       setRows(dataUsers.data);
-  //     } catch (error) {
-  //       console.error("Error uploading file:", error);
-  //     }
-  //   } else {
-  //     console.log("No file selected");
-  //   }
-  // };
-
   return (
     <Button
       component="label"
@@ -65,7 +49,6 @@ export default function ImportButton({onChange}) {
       Upload Data
       <VisuallyHiddenInput
         type="file"
-        // accept=".xlsx"
         onChange={onChange}
       />
     </Button>
