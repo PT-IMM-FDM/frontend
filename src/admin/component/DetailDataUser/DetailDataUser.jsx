@@ -147,6 +147,7 @@ export default function DetailDataUser() {
         position: "bottom-right",
         theme: "colored",
       });
+
     } catch (error) {
       console.error("Error updating user:", error);
       toast.error("Failed Update User.", {
@@ -158,7 +159,6 @@ export default function DetailDataUser() {
     }
   };
 
-  console.log("data User", userData)
 
   return (
     <>
