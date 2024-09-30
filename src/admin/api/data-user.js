@@ -39,7 +39,6 @@ export const getUserById = async (token, user_id) => {
 };
 
 export const createUser = async (token, dataBody) => {
-  console.log(dataBody)
   const dataToSend = {};
 
   if (dataBody.user_id) dataToSend.user_id = dataBody.user_id;
@@ -52,7 +51,6 @@ export const createUser = async (token, dataBody) => {
   if (dataBody.birth_date) dataToSend.birth_date = dataBody.birth_date;
   if (dataBody.role_id) dataToSend.role_id = parseInt(dataBody.role_id);
   if (dataBody.email) dataToSend.email = dataBody.email;
-  console.log(dataToSend)
 
   const response = await axios.post(
     `${apiUrl}/user/create`,
@@ -78,11 +76,8 @@ export const updateUser = async (token, dataBody) => {
   if (dataBody.birth_date) dataToSend.birth_date = dataBody.birth_date;
   if (dataBody.role?.role_id) dataToSend.role_id = parseInt(dataBody.role.role_id);
   if (dataBody.email) dataToSend.email = dataBody.email;
-  if (dataBody.is_active !== undefined ) dataToSend.is_active = dataBody.is_active
-  if (dataBody.get_notification !== undefined ) dataToSend.get_notification = dataBody.get_notification
-
-  console.log("data body", dataBody)
-  console.log("data send", dataToSend)
+  if (dataBody.is_active !== undefined ) dataToSend.is_active = dataBody.is_active.toString()
+  if (dataBody.get_notification !== undefined ) dataToSend.get_notification = dataBody.get_notification.toString()
 
   const response = await axios.put(
     `${apiUrl}/user/update`,
