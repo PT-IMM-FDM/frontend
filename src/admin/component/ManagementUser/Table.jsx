@@ -17,6 +17,7 @@ import { getAllUser } from "../../api/data-user";
 import useDataUsersStore from "../../stores/useDataUsersStore";
 import { toCamelCase } from "../../utils/stringUtils";
 import { EditUserButton } from "./EditUserButton";
+import { Badge } from "@mui/material";
 
 const CACHE_KEY = "usersData";
 
@@ -224,7 +225,18 @@ export default function EnhancedTable({ token }) {
                         {row.job_position?.name || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.employment_status?.name || "-"}
+                        <span className="flex items-center gap-2">
+                          <Badge
+                            color={row.is_active ? "success" : "error" }
+                            variant="dot"
+                            anchorOrigin={{
+                              vertical: "top",
+                              horizontal: "left",
+                            }}
+                            sx={{marginBottom: "2px"}}
+                          ></Badge>
+                          <>{row.employment_status?.name || "-"}</>
+                        </span>
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
                         {row.company?.name || "-"}
@@ -236,7 +248,9 @@ export default function EnhancedTable({ token }) {
                   );
                 })}
                 {emptyRows > 0 && (
-                  <TableRow style={{ maxHeight: (dense ? 33 : 53) * emptyRows }}>
+                  <TableRow
+                    style={{ maxHeight: (dense ? 33 : 53) * emptyRows }}
+                  >
                     <TableCell colSpan={8} />
                   </TableRow>
                 )}

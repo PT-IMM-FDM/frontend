@@ -40,7 +40,7 @@ export function Component() {
     { name: "Formulir FDM", path: "/fdm-form", icon: FaFileWaveform },
     { name: "Dashboard", path: "/admin/dashboard", icon: LuLayoutDashboard },
     { name: "Data Monitoring", path: "/admin/data-monitoring", icon: MdOutlineMonitorHeart },
-    { name: "Data Pengguna", path: "/admin/data-pengguna", icon: HiOutlineUser },
+    { name: "Data Pengguna", path: "/admin/data-pengguna", icon: HiOutlineUser, adminOnly: true },
     { name: "Kelola Pertanyaan", path: "/admin/manajemen-pertanyaan", icon: FaClipboardQuestion, adminOnly: true },
     {
       name: "Master Data", icon: BiData, subItems: [
@@ -48,7 +48,8 @@ export function Component() {
         { name: "Departemen", path: "/admin/data-departemen", icon: AccountTreeRoundedIcon },
         { name: "Posisi", path: "/admin/data-posisi", icon: BadgeRoundedIcon },
         { name: "Status", path: "/admin/data-status", icon: AssignmentIndRoundedIcon }
-      ]
+      ],
+      adminOnly: true
     },
     { name: "Profile", path: "/admin/profile", icon: HiOutlineUser}
   ];
