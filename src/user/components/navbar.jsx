@@ -9,7 +9,7 @@ export function Component() {
   const location = useLocation();
   const getLinkClass = (path) =>
     location.pathname === path
-      ? "font-normal text-purple-500 hover:text-purple-500"
+      ? "font-semibold text-purple-500 hover:text-purple-500"
       : "hover:text-purple-500";
 
   const { logout, user } = useAuthStore();
