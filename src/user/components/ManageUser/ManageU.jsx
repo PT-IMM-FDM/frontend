@@ -6,7 +6,7 @@ import { HiInformationCircle, HiOutlineExclamationCircle } from "react-icons/hi"
 import axios from 'axios';
 import useAuthStore from '../../../admin/stores/useAuthStore';
 
-// Modal for confirmation
+
 const ConfirmationModal = ({ show, onClose, onConfirm }) => (
   <Modal show={show} size="md" onClose={onClose} popup>
     <Modal.Header />
@@ -29,7 +29,6 @@ const ConfirmationModal = ({ show, onClose, onConfirm }) => (
   </Modal>
 );
 
-// Modal for editing profile
 const EditProfileModal = ({ show, onClose }) => {
   const { user, token } = useAuthStore((state) => ({
     user: state.user,
@@ -38,6 +37,7 @@ const EditProfileModal = ({ show, onClose }) => {
 
   const [fullName, setFullName] = useState(user.full_name || '');
   const [phoneNumber, setPhoneNumber] = useState(user.phone_number || '');
+  const [birthDate, setBirth] = useState(formatBirthDate(user.birth_date));
   const [email, setEmail] = useState(user.email || '');
   const [error, setError] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -47,15 +47,20 @@ const EditProfileModal = ({ show, onClose }) => {
       setFullName(user.full_name || '');
       setPhoneNumber(user.phone_number || '');
       setEmail(user.email || '');
+      setBirth(formatBirthDate(user.birth_date));
       setError(null);
     }
   }, [show, user]);
 
   const handleSave = async () => {
     try {
+      const [day, month, year] = birthDate.split('/');
+      const formattedBirthDate = `${year}-${month}-${day}`;
+
       const requestData = {
         full_name: fullName,
         phone_number: phoneNumber,
+        birth_date: formattedBirthDate,
         email: email,
       };
       const config = {
@@ -110,13 +115,24 @@ const EditProfileModal = ({ show, onClose }) => {
             </div>
             <div>
               <Label htmlFor="phoneInput" className="block mb-2">
-                Phone Number
+                Phone number
               </Label>
               <TextInput
                 type="text"
                 id="phoneInput"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="birthInput" className="block mb-2">
+                Birth date
+              </Label>
+              <TextInput
+                type="text"
+                id="birthInput"
+                value={birthDate}
+                onChange={(e) => setBirth(e.target.value)}
               />
             </div>
             <div>
@@ -147,6 +163,17 @@ const EditProfileModal = ({ show, onClose }) => {
     </>
   );
 };
+
+const formatBirthDate = (date) => {
+  if (!date) return '';
+  const d = new Date(date);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
+
 
 // Modal for changing password
 const ChangePasswordModal = ({ show, onClose }) => {
@@ -246,6 +273,14 @@ const ManageU = () => {
     user: state.user,
   }));
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const [openModal, setOpenModal] = useState(false);
   const [openChangePasswordModal, setOpenChangePasswordModal] = useState(false);
 
@@ -296,7 +331,20 @@ const ManageU = () => {
                 placeholder={user.phone_number}
                 disabled
               />
+              
             </div>
+            <div className="flex-1 mt-4 md:mt-0 mr-3">
+              <Label htmlFor="birthInput" className="block my-2">
+                Birth Date
+              </Label>
+              <TextInput
+                type="text"
+                id="birthInput"
+                placeholder={formatDate(user.birth_date)}
+                disabled
+              />
+            </div>
+            
             <div className="flex-1 mt-4 md:mt-0">
               <Label htmlFor="companyInput" className="block my-2">
                 Company
