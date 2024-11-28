@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAllUser } from "./data-user";
+// import { getAllUser } from "./data-user";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -30,7 +30,7 @@ const buildParams = (filters) => {
     if (employmentStatus && employmentStatus.length > 0)
       params.esid = employmentStatus.map((e) => e.id);
     if (fdm_result && fdm_result.length > 0)
-      params.fdm_result = fdm_result.map((e) => e.id);
+      params.fdm_result = fdm_result[0].name;
     if (is_active !== undefined) params.is_active = is_active;
     if (user_id) params.uid = user_id;
     if (attendance_health_result_id) params.ahrid = attendance_health_result_id;
@@ -42,19 +42,20 @@ const buildParams = (filters) => {
 };
 
 export const exportDataUser = async (token, filters) => {
+  // TODO : wait for response from server changed
   try {
-    let params = buildParams(filters)
+    let params = buildParams(filters);
     const response = await axios.get(`${apiUrl}/document/list-users`, {
       params: params,
       headers: { Authorization: `Bearer ${token}` },
-    })
-    
+    });
+
     return response.data.data;
   } catch (error) {
-    console.error("failed to export data", error)
+    console.error("failed to export data", error);
     throw new Error("Failed to export data");
   }
-}
+};
 
 export const downloadTemplate = async (token) => {
   const response = axios.get(`${apiUrl}/document/template-users`, {
@@ -105,7 +106,7 @@ export const exportDocumentFDM = async (token, data) => {
       endDate,
       user_id,
       is_active,
-      attendance_health_result_id,
+      // attendance_health_result_id,
     } = data;
 
     // if (name) params.name = name;
@@ -117,11 +118,9 @@ export const exportDocumentFDM = async (token, data) => {
       body.department_name = department.map((e) => e.name);
     if (employmentStatus && employmentStatus.length > 0)
       body.employment_status_name = employmentStatus.map((e) => e.name);
-    if (fdm_result && fdm_result.length > 0)
-      body.result = fdm_result.map((e) => e.name);
+    if (fdm_result && fdm_result.length > 0) body.result = fdm_result[0].name;
     if (is_active !== undefined) body.is_active = is_active;
-    if (user_id && fdm_result.length > 0)
-      body.user_id = user_id.map((e) => e.id);
+    if (user_id && user_id.length > 0) body.user_id = user_id.map((e) => e.id);
     // if (attendance_health_result_id) body.ahrid = attendance_health_result_id;
     if (startDate) body.startDate = startDate;
     if (endDate) body.endDate = endDate;
@@ -200,4 +199,3 @@ export const addNoteFollowUp = async (
     console.error("Error adding Note", error);
   }
 };
-

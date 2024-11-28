@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import { Button, Modal, Checkbox, Label } from "flowbite-react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import {
   getAllCompany,
   getAllDepartments,
@@ -85,6 +85,24 @@ export default function FilterButton() {
     }
   }, [token]);
 
+  const handleCheckboxFdmResult = (event, filterKey, id, name) => {
+    const isChecked = event.target.checked;
+
+    let updatedFilters = { ...filters };
+
+    if (isChecked) {
+      // Hanya simpan satu elemen dalam array
+      updatedFilters[filterKey] = [{ id, name }];
+    } else {
+      // Kosongkan array jika checkbox di-uncheck
+      updatedFilters[filterKey] = [];
+    }
+
+    setFilters(updatedFilters);
+    // updateRoute(updatedFilters); // Aktifkan jika diperlukan
+  };
+
+
   const handleCheckboxChange = (event, filterKey, id, name) => {
     const isChecked = event.target.checked;
     let updatedFilters = { ...filters };
@@ -120,13 +138,13 @@ export default function FilterButton() {
     // updateRoute(newFilters);
   };
 
+
   return (
     <>
       <Button
         className="border-0 md:border h-[2.5rem] text-gray-700 bg-transparent"
         color="light"
-        onClick={() => setOpenModal(true)}
-      >
+        onClick={() => setOpenModal(true)}>
         <FilterListRoundedIcon sx={{ fontSize: "large" }} />
         <p className="ml-2 text-[12px]">Filters</p>
       </Button>
@@ -135,8 +153,7 @@ export default function FilterButton() {
         dismissible
         show={openModal}
         onClose={() => setOpenModal(false)}
-        className="z-[999]"
-      >
+        className="z-[999]">
         <Modal.Header>Filter</Modal.Header>
         <Modal.Body className="h-[50vh]">
           <div className="mb-4">
@@ -145,8 +162,7 @@ export default function FilterButton() {
               <div>
                 <label
                   htmlFor="startDate"
-                  className="text-[12px] leading-none text-gray-500"
-                >
+                  className="text-[12px] leading-none text-gray-500">
                   Start Date
                 </label>
                 <input
@@ -162,8 +178,7 @@ export default function FilterButton() {
               <div>
                 <label
                   htmlFor="endDate"
-                  className="text-[12px] leading-none text-gray-500"
-                >
+                  className="text-[12px] leading-none text-gray-500">
                   End Date
                 </label>
                 <input
@@ -176,7 +191,6 @@ export default function FilterButton() {
                   }
                 />
               </div>
-              
             </div>
           </div>
           {/* FDM Result */}
@@ -195,7 +209,7 @@ export default function FilterButton() {
                       (item) => item.id === result.id
                     )}
                     onChange={(event) =>
-                      handleCheckboxChange(
+                      handleCheckboxFdmResult(
                         event,
                         "fdm_result",
                         result.id,
@@ -205,8 +219,7 @@ export default function FilterButton() {
                   />
                   <Label
                     htmlFor={`status_${result.id}`}
-                    className="flex text-[12px]"
-                  >
+                    className="flex text-[12px]">
                     {result.name}
                   </Label>
                 </div>
@@ -221,8 +234,7 @@ export default function FilterButton() {
               {companies.map((company) => (
                 <div
                   key={company.company_id}
-                  className="flex items-center gap-2"
-                >
+                  className="flex items-center gap-2">
                   <Checkbox
                     id={`company_${company.company_id}`}
                     checked={filters.company.some(
@@ -239,8 +251,7 @@ export default function FilterButton() {
                   />
                   <Label
                     htmlFor={`company_${company.company_id}`}
-                    className="flex text-[12px]"
-                  >
+                    className="flex text-[12px]">
                     {company.name}
                   </Label>
                 </div>
@@ -255,8 +266,7 @@ export default function FilterButton() {
               {departments.map((department) => (
                 <div
                   key={department.department_id}
-                  className="flex items-center gap-2"
-                >
+                  className="flex items-center gap-2">
                   <Checkbox
                     id={`department_${department.department_id}`}
                     checked={filters.department.some(
@@ -273,8 +283,7 @@ export default function FilterButton() {
                   />
                   <Label
                     htmlFor={`department_${department.department_id}`}
-                    className="flex text-[12px]"
-                  >
+                    className="flex text-[12px]">
                     {department.name}
                   </Label>
                 </div>
@@ -289,8 +298,7 @@ export default function FilterButton() {
               {jobPositions.map((position) => (
                 <div
                   key={position.job_position_id}
-                  className="flex items-center gap-2"
-                >
+                  className="flex items-center gap-2">
                   <Checkbox
                     id={`position_${position.job_position_id}`}
                     checked={filters.jobPosition.some(
@@ -307,8 +315,7 @@ export default function FilterButton() {
                   />
                   <Label
                     htmlFor={`position_${position.job_position_id}`}
-                    className="flex text-[12px]"
-                  >
+                    className="flex text-[12px]">
                     {position.name}
                   </Label>
                 </div>
@@ -323,8 +330,7 @@ export default function FilterButton() {
               {employmentStatuses.map((status) => (
                 <div
                   key={status.employment_status_id}
-                  className="flex items-center gap-2"
-                >
+                  className="flex items-center gap-2">
                   <Checkbox
                     id={`status_${status.employment_status_id}`}
                     checked={filters.employmentStatus.some(
@@ -341,8 +347,7 @@ export default function FilterButton() {
                   />
                   <Label
                     htmlFor={`status_${status.employment_status_id}`}
-                    className="flex text-[12px]"
-                  >
+                    className="flex text-[12px]">
                     {status.name}
                   </Label>
                 </div>
