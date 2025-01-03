@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, Button } from 'flowbite-react';
 import useAuthStore from '../../../admin/stores/useAuthStore';
 import UserDetailsCard from './UserDetailsCard';

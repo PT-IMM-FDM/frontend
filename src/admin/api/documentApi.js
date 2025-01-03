@@ -57,6 +57,51 @@ export const exportDataUser = async (token, filters) => {
   }
 };
 
+// export const exportDataUser = async (token, filters) => {
+//   try {
+//     const params = buildParams(filters);
+
+//     // Request API untuk mendapatkan file sebagai blob
+//     const response = await axios.get(`${apiUrl}/document/list-users`, {
+//       params,
+//       headers: { Authorization: `Bearer ${token}` },
+//       responseType: "blob", // Tambahkan responseType 'blob'
+//     });
+
+//     // Buat URL dari blob respons
+//     const blob = new Blob([response.data], {
+//       type: response.headers["content-type"],
+//     });
+//     const fileUrl = window.URL.createObjectURL(blob);
+
+//     // Buat elemen <a> untuk memulai unduhan
+//     const link = document.createElement("a");
+//     link.href = fileUrl;
+
+//     // Tetapkan nama file (bisa dari header atau default)
+//     const contentDisposition = response.headers["content-disposition"];
+//     let fileName = "Exported_Data.xlsx"; // Nama default
+//     if (contentDisposition) {
+//       const fileNameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+//       if (fileNameMatch && fileNameMatch[1]) {
+//         fileName = fileNameMatch[1];
+//       }
+//     }
+//     link.setAttribute("download", fileName);
+
+//     // Tambahkan elemen ke DOM dan klik untuk memulai unduhan
+//     document.body.appendChild(link);
+//     link.click();
+
+//     // Bersihkan elemen dan blob URL
+//     link.remove();
+//     window.URL.revokeObjectURL(fileUrl);
+//   } catch (error) {
+//     console.error("Failed to export data", error);
+//     throw new Error("Failed to export data");
+//   }
+// };
+
 export const downloadTemplate = async (token) => {
   const response = axios.get(`${apiUrl}/document/template-users`, {
     headers: { Authorization: `Bearer ${token}` },

@@ -16,6 +16,7 @@ import Select from "react-select";
 
 const CACHE_KEY = "usersData";
 
+// eslint-disable-next-line react/prop-types
 export function AddUserButton({ isMobile }) {
   const { token } = useAuthStore((state) => ({ token: state.token }));
   const { rows, setRows } = useDataUsersStore((state) => ({

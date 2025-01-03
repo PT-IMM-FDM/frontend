@@ -19,14 +19,18 @@
   src: url("/font/Gotham-Bold.ttf") format("opentype");
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
   font-size: 16px;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -49,4 +53,12 @@ body {
 .bold {
   font-family: "GothamBold";
   /* font-weight: 900; */
+}
+
+input[type="password"]::-ms-clear {
+  display: none; /* Sembunyikan ikon bawaan browser */
+}
+
+input[type="password"]::-ms-reveal {
+  display: none; /* Sembunyikan ikon bawaan browser */
 }

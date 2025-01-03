@@ -1,7 +1,16 @@
-import React from 'react';
-import { Label, TextInput } from 'flowbite-react';
+import { Label, TextInput } from "flowbite-react";
 
 const UserDetailsCard = ({ user }) => {
+  // Function to format the date to DD/MM/YYYY
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth() returns month from 0 (January) to 11 (December), so we add 1 and pad with 0
+    const day = date.getDate().toString().padStart(2, "0"); // getDate() returns the day of the month
+    const year = date.getFullYear(); // getFullYear() returns the full 4-digit year
+
+    return `${month}/${day}/${year}`;
+  };
+
   return (
     <div className="flex flex-col space-y-4 md:space-y-0">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center">
@@ -41,6 +50,19 @@ const UserDetailsCard = ({ user }) => {
           />
         </div>
         <div className="flex-1 mt-4 md:mt-0">
+          <Label htmlFor="birthDateInput" className="block pb-2">
+            Birth Date
+          </Label>
+          <TextInput
+            type="text"
+            id="birthDateInput"
+            placeholder={formatDate(user.birth_date)} // Apply the formatDate function
+            disabled
+          />
+        </div>
+      </div>
+      <div className="flex flex-col space-y-4">
+        <div>
           <Label htmlFor="companyInput" className="block my-2">
             Company
           </Label>
@@ -51,10 +73,8 @@ const UserDetailsCard = ({ user }) => {
             disabled
           />
         </div>
-      </div>
-      <div className="flex flex-col space-y-4">
         <div>
-          <Label htmlFor="departmentInput" className="block my-2">
+          <Label htmlFor="departmentInput" className="block mb-2">
             Department
           </Label>
           <TextInput

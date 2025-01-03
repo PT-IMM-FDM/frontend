@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Label, TextInput, Alert, Button } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import axios from "axios";
 import useAuthStore from "../../../admin/stores/useAuthStore";
-import ConfirmationModal from "./ConfirmationModal"
+import ConfirmationModal from "./ConfirmationModal";
+import { toast } from "react-toastify";
+
+const formatDate = (date) => {
+  if (!date) return "";
+  const parsedDate = new Date(date);
+  return parsedDate.toISOString().split("T")[0]; // Convert to 'yyyy-mm-dd' format
+};
 
 const EditProfileModal = ({ show, onClose }) => {
   const { user, token } = useAuthStore((state) => ({
@@ -14,6 +21,7 @@ const EditProfileModal = ({ show, onClose }) => {
   const [fullName, setFullName] = useState(user.full_name || "");
   const [phoneNumber, setPhoneNumber] = useState(user.phone_number || "");
   const [email, setEmail] = useState(user.email || "");
+  const [birthDate, setBirthDate] = useState(formatDate(user.birth_date) || "");
   const [error, setError] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -22,6 +30,7 @@ const EditProfileModal = ({ show, onClose }) => {
       setFullName(user.full_name || "");
       setPhoneNumber(user.phone_number || "");
       setEmail(user.email || "");
+      setBirthDate(formatDate(user.birth_date) || "");
       setError(null);
     }
   }, [show, user]);
@@ -32,6 +41,7 @@ const EditProfileModal = ({ show, onClose }) => {
         full_name: fullName,
         phone_number: phoneNumber,
         email: email,
+        birth_date: birthDate,
       };
       const config = {
         headers: {
@@ -45,8 +55,15 @@ const EditProfileModal = ({ show, onClose }) => {
         config
       );
       console.log("Update success", response.data);
+      setShowConfirmation(false);
       onClose();
       window.location.reload();
+      toast.success("Profile changed successfully.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
     } catch (error) {
       if (error.response && error.response.data) {
         const { code, message, status } = error.response.data;
@@ -57,13 +74,19 @@ const EditProfileModal = ({ show, onClose }) => {
         }
       } else {
         console.error("Update failed", error);
+        toast.error("Update profile failed.", {
+          autoClose: 3000,
+          pauseOnHover: false,
+          position: "bottom-right",
+          theme: "colored",
+        });
       }
     }
   };
 
   return (
     <>
-      <Modal className="z-[999]" show={show} onClose={onClose}>
+      <Modal className="z-[20]" show={show} onClose={onClose}>
         <Modal.Header>Edit Profile</Modal.Header>
         <Modal.Body>
           {error && (
@@ -105,14 +128,24 @@ const EditProfileModal = ({ show, onClose }) => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            <div>
+              <Label htmlFor="birthDateInput" className="block mb-2">
+                Date of Birth
+              </Label>
+              <TextInput
+                type="date"
+                id="birthDateInput"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+              />
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
           <Button
             color="purple"
             className="text-white"
-            onClick={() => setShowConfirmation(true)}
-          >
+            onClick={() => setShowConfirmation(true)}>
             Save
           </Button>
           <Button color="gray" className="text-gray" onClick={onClose}>

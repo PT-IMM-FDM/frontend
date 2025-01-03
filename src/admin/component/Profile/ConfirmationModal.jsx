@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, Button } from 'flowbite-react';
 
 const ConfirmationModal = ({ show, onClose, onConfirm, message = "Are you sure you want to proceed?" }) => {

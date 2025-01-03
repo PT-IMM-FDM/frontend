@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { getCurrentLogin } from "../../api/auth";
@@ -10,7 +10,7 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State untuk mengatur visibility password
-  const [rememberMe, setRememberMe] = useState(false);
+  // const [rememberMe, setRememberMe] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
@@ -90,7 +90,7 @@ const LoginForm = () => {
               type={showPassword ? "text" : "password"} // Tentukan tipe input berdasarkan state showPassword
               autoComplete="current-password"
               required
-              value={password}
+              // value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="rounded-[5px] w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Password"
@@ -112,8 +112,7 @@ const LoginForm = () => {
           <div className="text-sm cursor-pointer">
             <a
               onClick={() => setOpenModal(true)}
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
+              className="font-medium text-indigo-600 hover:text-indigo-500">
               Forgot your password?
             </a>
           </div>
@@ -121,13 +120,13 @@ const LoginForm = () => {
             show={openModal}
             size="lg"
             onClose={() => setOpenModal(false)}
-            popup
-          >
+            popup>
             <Modal.Header />
             <Modal.Body>
               <div className="text-center">
                 <h3 className="mb-5 text-md text-justify font-normal text-black dark:text-gray-400">
-                  Silahkan hubungi OH OnCall IMM agar kami dapat memberikan informasi lebih lanjut tentang password anda.
+                  Silahkan hubungi OH OnCall IMM agar kami dapat memberikan
+                  informasi lebih lanjut tentang password anda.
                 </h3>
                 <div className="flex flex-col text-sm">
                   <div className="flex items-center mb-2">
@@ -171,8 +170,7 @@ const LoginForm = () => {
           ) : (
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               Sign In
             </button>
           )}

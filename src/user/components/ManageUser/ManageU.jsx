@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Card, Button, Modal, Label, TextInput, Alert } from 'flowbite-react';
-import { HiInformationCircle, HiOutlineExclamationCircle } from "react-icons/hi";
-import axios from 'axios';
-import useAuthStore from '../../../admin/stores/useAuthStore';
-
+import { useState, useEffect } from "react";
+import { Card, Button, Modal, Label, TextInput, Alert } from "flowbite-react";
+import {
+  HiInformationCircle,
+  HiOutlineExclamationCircle,
+  HiOutlineEye,
+  HiOutlineEyeOff,
+} from "react-icons/hi";
+import { toast } from "react-toastify";
+import axios from "axios";
+import useAuthStore from "../../../admin/stores/useAuthStore";
 
 const ConfirmationModal = ({ show, onClose, onConfirm }) => (
   <Modal show={show} size="md" onClose={onClose} popup>
@@ -17,7 +22,12 @@ const ConfirmationModal = ({ show, onClose, onConfirm }) => (
           Apakah Anda yakin dengan perubahan?
         </h3>
         <div className="flex justify-center gap-4">
-          <Button color="failure" onClick={() => { onConfirm(); onClose(); }}>
+          <Button
+            color="failure"
+            onClick={() => {
+              onConfirm();
+              onClose();
+            }}>
             Ya
           </Button>
           <Button color="gray" onClick={onClose}>
@@ -35,18 +45,18 @@ const EditProfileModal = ({ show, onClose }) => {
     token: state.token,
   }));
 
-  const [fullName, setFullName] = useState(user.full_name || '');
-  const [phoneNumber, setPhoneNumber] = useState(user.phone_number || '');
+  const [fullName, setFullName] = useState(user.full_name || "");
+  const [phoneNumber, setPhoneNumber] = useState(user.phone_number || "");
   const [birthDate, setBirth] = useState(formatBirthDate(user.birth_date));
-  const [email, setEmail] = useState(user.email || '');
+  const [email, setEmail] = useState(user.email || "");
   const [error, setError] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
     if (show) {
-      setFullName(user.full_name || '');
-      setPhoneNumber(user.phone_number || '');
-      setEmail(user.email || '');
+      setFullName(user.full_name || "");
+      setPhoneNumber(user.phone_number || "");
+      setEmail(user.email || "");
       setBirth(formatBirthDate(user.birth_date));
       setError(null);
     }
@@ -54,7 +64,7 @@ const EditProfileModal = ({ show, onClose }) => {
 
   const handleSave = async () => {
     try {
-      const [day, month, year] = birthDate.split('/');
+      const [day, month, year] = birthDate.split("/");
       const formattedBirthDate = `${year}-${month}-${day}`;
 
       const requestData = {
@@ -74,9 +84,15 @@ const EditProfileModal = ({ show, onClose }) => {
         requestData,
         config
       );
-      console.log('Update success', response.data);
+      console.log("Update success", response.data);
       onClose();
       window.location.reload();
+      toast.success("Profile changed successfully.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
     } catch (error) {
       if (error.response && error.response.data) {
         const { code, message, status } = error.response.data;
@@ -86,7 +102,13 @@ const EditProfileModal = ({ show, onClose }) => {
           }
         }
       } else {
-        console.error('Update failed', error);
+        console.error("Update failed", error);
+        toast.error("Update profile failed.", {
+          autoClose: 3000,
+          pauseOnHover: false,
+          position: "bottom-right",
+          theme: "colored",
+        });
       }
     }
   };
@@ -97,7 +119,7 @@ const EditProfileModal = ({ show, onClose }) => {
         <Modal.Header>Edit Profile</Modal.Header>
         <Modal.Body>
           {error && (
-            <Alert color="failure" icon={HiInformationCircle} className='mb-2'>
+            <Alert color="failure" icon={HiInformationCircle} className="mb-2">
               <span className="font-medium"></span> {error}
             </Alert>
           )}
@@ -129,7 +151,7 @@ const EditProfileModal = ({ show, onClose }) => {
                 Birth date
               </Label>
               <TextInput
-                type="text"
+                type="date"
                 id="birthInput"
                 value={birthDate}
                 onChange={(e) => setBirth(e.target.value)}
@@ -149,31 +171,31 @@ const EditProfileModal = ({ show, onClose }) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button color="purple" className="text-white" onClick={() => setShowConfirmation(true)}>Save</Button>
+          <Button
+            color="purple"
+            className="text-white"
+            onClick={() => setShowConfirmation(true)}>
+            Save
+          </Button>
           <Button color="gray" className="text-gray" onClick={onClose}>
             Cancel
           </Button>
         </Modal.Footer>
       </Modal>
-      <ConfirmationModal 
-        show={showConfirmation} 
-        onClose={() => setShowConfirmation(false)} 
-        onConfirm={handleSave} 
+      <ConfirmationModal
+        show={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        onConfirm={handleSave}
       />
     </>
   );
 };
 
 const formatBirthDate = (date) => {
-  if (!date) return '';
-  const d = new Date(date);
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const year = d.getFullYear();
-  return `${day}/${month}/${year}`;
+  if (!date) return "";
+  const parsedDate = new Date(date);
+  return parsedDate.toISOString().split("T")[0]; // Convert to 'yyyy-mm-dd' format
 };
-
-
 
 // Modal for changing password
 const ChangePasswordModal = ({ show, onClose }) => {
@@ -181,14 +203,18 @@ const ChangePasswordModal = ({ show, onClose }) => {
     token: state.token,
   }));
 
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState(null);
+
+  // State untuk show/hide password
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   useEffect(() => {
     if (show) {
-      setOldPassword('');
-      setNewPassword('');
+      setOldPassword("");
+      setNewPassword("");
       setError(null);
     }
   }, [show]);
@@ -210,7 +236,13 @@ const ChangePasswordModal = ({ show, onClose }) => {
         requestData,
         config
       );
-      console.log('Password change success', response.data);
+      console.log("Password change success", response.data);
+      toast.success("Password changed successfully.", {
+        autoClose: 3000,
+        pauseOnHover: false,
+        position: "bottom-right",
+        theme: "colored",
+      });
       onClose();
       window.location.reload();
     } catch (error) {
@@ -218,7 +250,13 @@ const ChangePasswordModal = ({ show, onClose }) => {
         const { message } = error.response.data;
         setError(message);
       } else {
-        console.error('Password change failed', error);
+        console.error("Password change failed", error);
+        toast.error("Change password failed.", {
+          autoClose: 3000,
+          pauseOnHover: false,
+          position: "bottom-right",
+          theme: "colored",
+        });
       }
     }
   };
@@ -228,37 +266,60 @@ const ChangePasswordModal = ({ show, onClose }) => {
       <Modal.Header>Change Password</Modal.Header>
       <Modal.Body>
         {error && (
-          <Alert color="failure" icon={HiInformationCircle} className='mb-2'>
+          <Alert color="failure" icon={HiInformationCircle} className="mb-2">
             <span className="font-medium"></span> {error}
           </Alert>
         )}
         <div className="space-y-6">
-          <div>
+          <div className="relative">
             <Label htmlFor="oldPasswordInput" className="block mb-2">
               Old Password
             </Label>
             <TextInput
-              type="password"
+              type={showOldPassword ? "text" : "password"}
               id="oldPasswordInput"
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
             />
+            <div
+              className="absolute inset-y-0 right-0 pr-3 pt-7 text-xl flex items-center cursor-pointer"
+              onClick={() => setShowOldPassword(!showOldPassword)}>
+              {showOldPassword ? (
+                <HiOutlineEyeOff className="text-gray-500" />
+              ) : (
+                <HiOutlineEye className="text-gray-500" />
+              )}
+            </div>
           </div>
-          <div>
+          <div className="relative">
             <Label htmlFor="newPasswordInput" className="block mb-2">
               New Password
             </Label>
             <TextInput
-              type="password"
+              type={showNewPassword ? "text" : "password"}
               id="newPasswordInput"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
             />
+            <div
+              className="absolute inset-y-0 right-0 pr-3 pt-7 text-xl flex items-center cursor-pointer"
+              onClick={() => setShowNewPassword(!showNewPassword)}>
+              {showNewPassword ? (
+                <HiOutlineEyeOff className="text-gray-500" />
+              ) : (
+                <HiOutlineEye className="text-gray-500" />
+              )}
+            </div>
           </div>
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button color="purple" className="text-white" onClick={handleChangePassword}>Change Password</Button>
+        <Button
+          color="purple"
+          className="text-white"
+          onClick={handleChangePassword}>
+          Change Password
+        </Button>
         <Button color="gray" className="text-gray" onClick={onClose}>
           Cancel
         </Button>
@@ -275,10 +336,10 @@ const ManageU = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return `${month}/${day}/${year}`;
   };
 
   const [openModal, setOpenModal] = useState(false);
@@ -291,9 +352,21 @@ const ManageU = () => {
   return (
     <div className="mt-8 max-w-[800px] mx-auto">
       <Card>
-        <div className='flex ml-auto gap-2'>
-          <Button gradientMonochrome="purple" className="text-white w-fit" size="xs" onClick={() => setOpenModal(true)}>Edit</Button>
-          <Button gradientMonochrome="failure" className="text-white w-fit" size="xs" onClick={() => setOpenChangePasswordModal(true)}>Change Password</Button>
+        <div className="flex ml-auto gap-2">
+          <Button
+            gradientMonochrome="purple"
+            className="text-white w-fit"
+            size="xs"
+            onClick={() => setOpenModal(true)}>
+            Edit
+          </Button>
+          <Button
+            gradientMonochrome="failure"
+            className="text-white w-fit"
+            size="xs"
+            onClick={() => setOpenChangePasswordModal(true)}>
+            Change Password
+          </Button>
         </div>
         <div className="flex flex-col space-y-4 md:space-y-0">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center">
@@ -331,7 +404,6 @@ const ManageU = () => {
                 placeholder={user.phone_number}
                 disabled
               />
-              
             </div>
             <div className="flex-1 mt-4 md:mt-0 mr-3">
               <Label htmlFor="birthInput" className="block my-2">
@@ -344,7 +416,7 @@ const ManageU = () => {
                 disabled
               />
             </div>
-            
+
             <div className="flex-1 mt-4 md:mt-0">
               <Label htmlFor="companyInput" className="block my-2">
                 Company
@@ -395,7 +467,10 @@ const ManageU = () => {
         </div>
       </Card>
       <EditProfileModal show={openModal} onClose={() => setOpenModal(false)} />
-      <ChangePasswordModal show={openChangePasswordModal} onClose={() => setOpenChangePasswordModal(false)} />
+      <ChangePasswordModal
+        show={openChangePasswordModal}
+        onClose={() => setOpenChangePasswordModal(false)}
+      />
     </div>
   );
 };
