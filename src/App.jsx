@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -28,6 +28,7 @@ function App() {
     // Fetch user data if token exists
     const fetchUser = async () => {
       if (token) {
+        console.log("test");
         try {
           const dataUser = await getCurrentLogin(token);
           setUser(dataUser.data);
@@ -51,10 +52,10 @@ function App() {
         if (lastHiddenTime) {
           const now = new Date();
           const timeAway = (now - lastHiddenTime) / 1000; // dalam detik
-          console.log(`Tab diakses kembali setelah ${timeAway} detik.`);
+          // console.log(`Tab diakses kembali setelah ${timeAway} detik.`);
           if (timeAway > 600) {
-            console.log("Reloading page...");
-            window.location.reload(); // Reload halaman
+            // console.log("Reloading page...");
+            window.location.reload(); // Reload halaman ketika sudah 10 menit tab tertutup
           }
         }
       }

@@ -19,7 +19,7 @@ import useDataFDM from "../../stores/useDataFDM";
 import { getFdm } from "../../api/fdm";
 import { formatResult } from "../../utils/formatResult";
 import { Tooltip, tooltipClasses } from "@mui/material";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 
 const CACHE_KEY = "dataMonitoring";
 
@@ -28,7 +28,7 @@ export default function EnhancedTable({ token }) {
   const [orderBy, setOrderBy] = React.useState("timestamp");
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [searchQuery, setSearchQuery] = React.useState("");
   const { rows, selected, setRows, setSelected, filters } = useDataFDM();
 
@@ -65,7 +65,7 @@ export default function EnhancedTable({ token }) {
   // Function to handle selecting all rows
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      setSelected(rows.map((row) => row.user_id));
+      setSelected(rows.map((row) => row.attendance_health_result_id));
     } else {
       setSelected([]);
     }
@@ -177,22 +177,18 @@ export default function EnhancedTable({ token }) {
             mb: 2,
             boxShadow: "none",
             borderRadius: "10px",
-          }}
-        >
+          }}>
           <EnhancedTableToolbar
             numSelected={selected?.length}
             onSearch={handleSearch}
             selected={selected}
           />
-          <TableContainer
-            sx={{ maxHeight: 450,  overflowX: "scroll" }}
-          >
+          <TableContainer sx={{ maxHeight: 650, overflowX: "scroll" }}>
             <Table
               stickyHeader
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
-            >
+              size={dense ? "small" : "medium"}>
               <EnhancedTableHead
                 numSelected={selected?.length}
                 order={order}
@@ -217,8 +213,9 @@ export default function EnhancedTable({ token }) {
                       tabIndex={-1}
                       key={row.attendance_health_result_id}
                       selected={isItemSelected}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}>
                       <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
@@ -234,8 +231,7 @@ export default function EnhancedTable({ token }) {
                         id={labelId}
                         scope="row"
                         padding="none"
-                        sx={{ fontSize: "12px" }}
-                      >
+                        sx={{ fontSize: "12px" }}>
                         {row.created_at ? formatDate(row.created_at) : "-"}
                       </TableCell>
                       <TableCell
@@ -246,8 +242,7 @@ export default function EnhancedTable({ token }) {
                           textOverflow: "ellipsis",
                           width: "20px",
                           maxWidth: "20px",
-                        }}
-                      >
+                        }}>
                         {row.user.full_name
                           ? toCamelCase(row.user.full_name)
                           : "-"}
@@ -266,8 +261,7 @@ export default function EnhancedTable({ token }) {
                       </TableCell>
                       <BootstrapTooltip
                         title={row.result || "-"}
-                        placement="left"
-                      >
+                        placement="left">
                         <TableCell sx={{ fontSize: "12px" }} align="center">
                           {formatResult(row.result) || "-"}
                         </TableCell>
@@ -289,8 +283,7 @@ export default function EnhancedTable({ token }) {
                           width: "20px",
                           maxWidth: "20px",
                         }}
-                        align="left"
-                      >
+                        align="left">
                         {row.note || "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
@@ -303,8 +296,7 @@ export default function EnhancedTable({ token }) {
                 })}
                 {emptyRows > 0 && (
                   <TableRow
-                    style={{ maxHeight: (dense ? 33 : 53) * emptyRows }}
-                  >
+                    style={{ maxHeight: (dense ? 33 : 53) * emptyRows }}>
                     <TableCell colSpan={12} />
                   </TableRow>
                 )}
@@ -312,7 +304,7 @@ export default function EnhancedTable({ token }) {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[25, 50, 100]}
             component="div"
             count={filterRows.length}
             rowsPerPage={rowsPerPage}

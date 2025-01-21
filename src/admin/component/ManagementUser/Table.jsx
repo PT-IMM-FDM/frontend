@@ -26,7 +26,7 @@ export default function EnhancedTable({ token }) {
   const [orderBy, setOrderBy] = React.useState("full_name");
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [searchQuery, setSearchQuery] = React.useState("");
   const { rows, selected, setRows, setSelected, filters } = useDataUsersStore();
 
@@ -160,20 +160,18 @@ export default function EnhancedTable({ token }) {
             mb: 2,
             boxShadow: "none",
             borderRadius: "10px",
-          }}
-        >
+          }}>
           <EnhancedTableToolbar
             numSelected={selected?.length}
             onSearch={handleSearch}
             selected={selected}
           />
-          <TableContainer sx={{ maxHeight: 450 }}>
+          <TableContainer sx={{ maxHeight: 600 }}>
             <Table
               stickyHeader
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
-            >
+              size={dense ? "small" : "medium"}>
               <EnhancedTableHead
                 numSelected={selected?.length}
                 order={order}
@@ -196,8 +194,9 @@ export default function EnhancedTable({ token }) {
                       tabIndex={-1}
                       key={row.user_id}
                       selected={isItemSelected}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}>
                       <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
@@ -211,8 +210,7 @@ export default function EnhancedTable({ token }) {
                         id={labelId}
                         scope="row"
                         padding="none"
-                        sx={{ fontSize: "12px" }}
-                      >
+                        sx={{ fontSize: "12px" }}>
                         {row.full_name ? toCamelCase(row.full_name) : "-"}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }} align="left">
@@ -227,14 +225,13 @@ export default function EnhancedTable({ token }) {
                       <TableCell sx={{ fontSize: "12px" }} align="left">
                         <span className="flex items-center gap-2">
                           <Badge
-                            color={row.is_active ? "success" : "error" }
+                            color={row.is_active ? "success" : "error"}
                             variant="dot"
                             anchorOrigin={{
                               vertical: "top",
                               horizontal: "left",
                             }}
-                            sx={{marginBottom: "2px"}}
-                          ></Badge>
+                            sx={{ marginBottom: "2px" }}></Badge>
                           <>{row.employment_status?.name || "-"}</>
                         </span>
                       </TableCell>
@@ -249,8 +246,7 @@ export default function EnhancedTable({ token }) {
                 })}
                 {emptyRows > 0 && (
                   <TableRow
-                    style={{ maxHeight: (dense ? 33 : 53) * emptyRows }}
-                  >
+                    style={{ maxHeight: (dense ? 33 : 53) * emptyRows }}>
                     <TableCell colSpan={8} />
                   </TableRow>
                 )}
@@ -258,7 +254,7 @@ export default function EnhancedTable({ token }) {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[25, 50, 100]}
             component="div"
             count={filterRows.length}
             rowsPerPage={rowsPerPage}
