@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   Progress,
+  Spinner,
 } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import axios from "axios";
@@ -32,6 +33,7 @@ export function Component() {
   const [isDriver, setIsDriver] = useState("");
   const [licensePlate, setLicensePlate] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,7 +50,9 @@ export function Component() {
           }, 3000);
         } else {
           // Sort questions by question_id
-          const sortedQuestions = result.data.sort((a, b) => a.question_id - b.question_id);
+          const sortedQuestions = result.data.sort(
+            (a, b) => a.question_id - b.question_id
+          );
           setQuestions(sortedQuestions);
 
           const initialAnswers = {};
@@ -97,13 +101,20 @@ export function Component() {
       };
 
       try {
+        setLoading(true); // Set loading saat pengiriman dimulai
         const response = await axios.post(apiCreateResponseURL, requestBody, {
           headers: { Authorization: `Bearer ${token}` },
         });
         navigate("/fdm-form/hasil", { state: response.data });
       } catch (error) {
+        if (error.code === "ERR_NETWORK") {
+          alert('Error Network please try again later.');
+          return
+        }
         console.error("Error submitting answers:", error);
         alert("Mohon mengisi seluruh pertanyaan.");
+      } finally {
+        setLoading(false); // Set loading ke false setelah selesai
       }
     }
   };
@@ -138,8 +149,7 @@ export function Component() {
           id="attendanceStatus"
           required
           value={attendanceStatus}
-          onChange={(e) => setAttendanceStatus(e.target.value)}
-        >
+          onChange={(e) => setAttendanceStatus(e.target.value)}>
           <option value="" disabled>
             Pilih status kehadiran
           </option>
@@ -162,8 +172,7 @@ export function Component() {
           required
           value={workDurationPlan}
           onChange={(e) => setWorkDurationPlan(e.target.value)}
-          className="focus:ring-purple-500"
-        >
+          className="focus:ring-purple-500">
           <option value="" disabled>
             Pilih rencana durasi kerja
           </option>
@@ -201,8 +210,7 @@ export function Component() {
           id="driverStatus"
           required
           value={isDriver}
-          onChange={handleDriverStatusChange}
-        >
+          onChange={handleDriverStatusChange}>
           <option value="" disabled>
             Pilih jawaban anda
           </option>
@@ -235,8 +243,7 @@ export function Component() {
             {question.question_answer.map((answer) => (
               <div
                 className="flex items-center gap-2 mb-4"
-                key={answer.question_answer_id}
-              >
+                key={answer.question_answer_id}>
                 <Radio
                   id={`answer-${answer.question_answer_id}`}
                   name={question.question_id}
@@ -252,13 +259,31 @@ export function Component() {
             <HR />
           </div>
         ))}
-        <Button
+        {/* <Button
           gradientMonochrome="purple"
           className="mb-8 w-full"
-          type="submit"
-        >
+          type="submit">
           Submit
-        </Button>
+        </Button> */}
+
+        <div>
+          {loading ? (
+            <Button color="gray" className="w-full">
+              <Spinner
+                aria-label="Alternate spinner button example"
+                size="sm"
+                color="purple"
+              />
+              <span className="pl-3">Loading...</span>
+            </Button>
+          ) : (
+            <button
+              type="submit"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-700 hover:to-purple-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              Submit
+            </button>
+          )}
+        </div>
       </form>
     </>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import FDMFormU from "../../components/FDMUser/FDMFormU";
 import { Component as Navbar } from "../../components/navbar";
 
-const FDM = () => {
+const FDMForm = () => {
   return (
     <div className="bg-fixed bg-cover bg-top bg-[url('/bg-form.jpg')] bg-no-repeat max-w-full min-h-screen">
       <div className="min-h-screen">
@@ -15,4 +15,4 @@ const FDM = () => {
   );
 };
 
-export default FDM;
+export default FDMForm;
