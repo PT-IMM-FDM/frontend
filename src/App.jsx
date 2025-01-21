@@ -28,7 +28,6 @@ function App() {
     // Fetch user data if token exists
     const fetchUser = async () => {
       if (token) {
-        console.log("test");
         try {
           const dataUser = await getCurrentLogin(token);
           setUser(dataUser.data);
