@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -24,9 +24,8 @@ function App() {
     setUser: state.setUser,
   }));
 
-  // const [redirectToLogin, setRedirectToLogin] = useState(false);
-
   useEffect(() => {
+    // Fetch user data if token exists
     const fetchUser = async () => {
       if (token) {
         try {
@@ -39,6 +38,35 @@ function App() {
     };
 
     fetchUser();
+
+    // Visibility change logic for auto-reload
+    let lastHiddenTime = null;
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        // Simpan waktu terakhir tab menjadi tidak aktif
+        lastHiddenTime = new Date();
+      } else if (document.visibilityState === "visible") {
+        // Hitung waktu tab tidak aktif
+        if (lastHiddenTime) {
+          const now = new Date();
+          const timeAway = (now - lastHiddenTime) / 1000; // dalam detik
+          console.log(`Tab diakses kembali setelah ${timeAway} detik.`);
+          if (timeAway > 600) {
+            console.log("Reloading page...");
+            window.location.reload(); // Reload halaman
+          }
+        }
+      }
+    };
+
+    // Tambahkan event listener untuk visibilitychange
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Cleanup on component unmount
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [token, setUser]);
 
   return (
@@ -56,8 +84,7 @@ function App() {
         <Route
           element={
             <ProtectedRoute allowedRoles={["Admin", "Full Viewer", "Viewer"]} />
-          }
-        >
+          }>
           <Route path="/admin/*" element={<AdminRoutes />} />
         </Route>
         <Route
@@ -65,8 +92,7 @@ function App() {
             <ProtectedRoute
               allowedRoles={["User", "Admin", "Viewer", "Full Viewer"]}
             />
-          }
-        >
+          }>
           <Route path="/fdm-form" element={<FDM />} />
           <Route path="/fdm-form/hasil" element={<ResultU />} />
           <Route path="/riwayat-user" element={<HistoryU />} />
