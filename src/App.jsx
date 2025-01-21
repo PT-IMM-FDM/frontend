@@ -12,11 +12,11 @@ import useAuthStore from "./admin/stores/useAuthStore";
 import { getCurrentLogin } from "./admin/api/auth";
 import ProtectedRoute from "./admin/pages/ProtectedRoute";
 import NotFound from "./admin/pages/NotFound";
-import FDM from "./user/pages/FDM-user/FDMForm";
 import PublicRoute from "./admin/pages/PublicRoute";
 import HistoryU from "./user/pages/History-user/HistoryU";
 import ResultU from "./user/pages/Result-user/ResultU";
 import ManageUser from "./user/pages/Manage-user/Manage-user";
+import FDMForm from "./user/pages/FDM-user/FDMForm";
 
 function App() {
   const { token, setUser } = useAuthStore((state) => ({
@@ -94,7 +94,7 @@ function App() {
               allowedRoles={["User", "Admin", "Viewer", "Full Viewer"]}
             />
           }>
-          <Route path="/fdm-form" element={<FDM />} />
+          <Route path="/fdm-form" element={<FDMForm />} />
           <Route path="/fdm-form/hasil" element={<ResultU />} />
           <Route path="/riwayat-user" element={<HistoryU />} />
           <Route path="/profile" element={<ManageUser />} />
