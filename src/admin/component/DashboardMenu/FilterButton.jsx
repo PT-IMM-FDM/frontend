@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "flowbite-react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 import { getAllDepartments } from "../../api/data-company";
 import useAuthStore from "../../stores/useAuthStore";
@@ -66,7 +65,7 @@ export default function FilterButton() {
           }))}
           className="basic-multi-select text-[12px]"
           classNamePrefix="select"
-          placeholder="Select Departments..."
+          placeholder="Filter Departments"
           // styles={customStyles}
           styles={{
             input: (base) => ({

@@ -1,7 +1,4 @@
-import axios from "axios";
-// import { getAllUser } from "./data-user";
-
-const apiUrl = import.meta.env.VITE_API_URL;
+import { apiClient } from "./auth";
 
 const buildParams = (filters) => {
   const params = {};
@@ -45,7 +42,7 @@ export const exportDataUser = async (token, filters) => {
   // TODO : wait for response from server changed
   try {
     let params = buildParams(filters);
-    const response = await axios.get(`${apiUrl}/document/list-users`, {
+    const response = await apiClient.get(`/document/list-users`, {
       params: params,
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -62,7 +59,7 @@ export const exportDataUser = async (token, filters) => {
 //     const params = buildParams(filters);
 
 //     // Request API untuk mendapatkan file sebagai blob
-//     const response = await axios.get(`${apiUrl}/document/list-users`, {
+//     const response = await apiClient.get(`/document/list-users`, {
 //       params,
 //       headers: { Authorization: `Bearer ${token}` },
 //       responseType: "blob", // Tambahkan responseType 'blob'
@@ -103,7 +100,7 @@ export const exportDataUser = async (token, filters) => {
 // };
 
 export const downloadTemplate = async (token) => {
-  const response = axios.get(`${apiUrl}/document/template-users`, {
+  const response = apiClient.get(`/document/template-users`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -115,8 +112,8 @@ export const uploadFile = async (file, token) => {
   formData.append("file_of_users", file);
 
   try {
-    const response = await axios.post(
-      `${apiUrl}/document/import-users`,
+    const response = await apiClient.post(
+      `/document/import-users`,
       formData,
       {
         headers: {
@@ -172,7 +169,7 @@ export const exportDocumentFDM = async (token, data) => {
   }
 
   try {
-    const response = await axios.post(`${apiUrl}/document/export-fdm`, body, {
+    const response = await apiClient.post(`/document/export-fdm`, body, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data.data;
@@ -183,12 +180,12 @@ export const exportDocumentFDM = async (token, data) => {
 };
 
 export const addAttachment = async (token, attendanceHealthResultId, file) => {
-  const url = `${apiUrl}/fdm/addAttachment/${attendanceHealthResultId}`;
+  const url = `/fdm/addAttachment/${attendanceHealthResultId}`;
   const formData = new FormData();
   formData.append("fdm_attachment_file", file);
 
   try {
-    const response = await axios.post(url, formData, {
+    const response = await apiClient.post(url, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
@@ -207,8 +204,8 @@ export const deleteAttachment = async (
   attachmentId
 ) => {
   try {
-    const response = await axios.delete(
-      `${apiUrl}/fdm/${attendanceHealthResultId}/deleteAttachment/${attachmentId}`,
+    const response = await apiClient.delete(
+      `/fdm/${attendanceHealthResultId}/deleteAttachment/${attachmentId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -229,8 +226,8 @@ export const addNoteFollowUp = async (
   note
 ) => {
   try {
-    const response = await axios.put(
-      `${apiUrl}/fdm/${attendance_health_result_id}/addNote`,
+    const response = await apiClient.put(
+      `/fdm/${attendance_health_result_id}/addNote`,
       { note: note }, // Data to be sent in the request body
       {
         headers: {

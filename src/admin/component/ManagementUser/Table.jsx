@@ -25,7 +25,7 @@ export default function EnhancedTable({ token }) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("full_name");
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(true);
+  const dense = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [searchQuery, setSearchQuery] = React.useState("");
   const { rows, selected, setRows, setSelected, filters } = useDataUsersStore();

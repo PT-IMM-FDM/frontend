@@ -1,4 +1,3 @@
-import React from "react";
 import useDataFDM from "../../stores/useDataFDM";
 
 const DateRangePicker = () => {
@@ -7,8 +6,8 @@ const DateRangePicker = () => {
   const handleReset = () => {
     setFiltersDashboard({
       ...filtersDashboard,
-      startDate: "",
-      endDate: "",
+      startDate: new Date().toLocaleDateString(),
+      endDate: new Date().toLocaleDateString(),
     });
   };
 
@@ -20,8 +19,7 @@ const DateRangePicker = () => {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="startDate"
-              className="text-[12px] leading-none text-gray-500"
-            >
+              className="text-[12px] leading-none text-gray-500">
               Start Date
             </label>
             <input
@@ -31,15 +29,17 @@ const DateRangePicker = () => {
               value={filtersDashboard.startDate || ""}
               placeholder="YYYY-MM-DD"
               onChange={(event) =>
-                setFiltersDashboard({ ...filtersDashboard, startDate: event.target.value })
+                setFiltersDashboard({
+                  ...filtersDashboard,
+                  startDate: event.target.value,
+                })
               }
             />
           </div>
           <div className="flex flex-col gap-2">
             <label
               htmlFor="endDate"
-              className="text-[12px] leading-none text-gray-500"
-            >
+              className="text-[12px] leading-none text-gray-500">
               End Date
             </label>
             <input
@@ -49,15 +49,17 @@ const DateRangePicker = () => {
               placeholder="YYYY-MM-DD"
               value={filtersDashboard.endDate || ""}
               onChange={(event) =>
-                setFiltersDashboard({ ...filtersDashboard, endDate: event.target.value })
+                setFiltersDashboard({
+                  ...filtersDashboard,
+                  endDate: event.target.value,
+                })
               }
             />
           </div>
         </div>
         <button
           onClick={handleReset}
-          className="mt-2 bg-white border rounded-[5px] w-full py-1 px-4 text-[12px]"
-        >
+          className="mt-2 bg-white border rounded-[5px] w-full py-1 px-4 text-[12px]">
           Reset Filter
         </button>
       </div>

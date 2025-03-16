@@ -1,9 +1,7 @@
-import axios from "axios";
-
-const apiUrl = import.meta.env.VITE_API_URL;
+import { apiClient } from "./auth";
 
 export const getAllQuestions = async (token) => {
-  const response = await axios.get(`${apiUrl}/fdm/question/getAll`, {
+  const response = await apiClient.get(`/fdm/question/getAll`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -14,21 +12,21 @@ export const getAllQuestions = async (token) => {
 
 export const getMostQuestionAnswered = async (token) => {
   try {
-    const response = await axios.get(`${apiUrl}/fdm/mostQuestionAnswered`, {
+    const response = await apiClient.get(`/fdm/mostQuestionAnswered`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching most question answered data:', error);
+    console.error("Error fetching most question answered data:", error);
     throw error;
   }
 };
 
 export const createQuestion = async (token, questionData) => {
-  const response = await axios.post(
-    `${apiUrl}/fdm/question/create`,
+  const response = await apiClient.post(
+    `/fdm/question/create`,
     questionData,
     {
       headers: {
@@ -41,22 +39,26 @@ export const createQuestion = async (token, questionData) => {
 };
 
 export const updateQuestion = async (token, questionData) => {
-    try {
-      const response = await axios.put(`${apiUrl}/fdm/question/update`, questionData, {
+  try {
+    const response = await apiClient.put(
+      `/fdm/question/update`,
+      questionData,
+      {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error updating question:', error);
-      throw error;
-    }
-  };
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating question:", error);
+    throw error;
+  }
+};
 
 export const deleteQuestion = async (token, questionId) => {
-  const response = await axios.delete(`${apiUrl}/fdm/question/delete`, {
+  const response = await apiClient.delete(`/fdm/question/delete`, {
     headers: { Authorization: `Bearer ${token}` },
     data: { question_id: questionId },
   });

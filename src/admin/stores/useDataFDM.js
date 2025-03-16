@@ -16,6 +16,7 @@ const useDataFDM = create((set) => ({
     user_id: [],
     attendance_health_result_id: null,
     is_active: null,
+    page: null,
   },
   filtersUserNotFilled: {
     name: null,
@@ -34,8 +35,8 @@ const useDataFDM = create((set) => ({
     jobPosition: [],
     employmentStatus: [],
     fdm_result: [],
-    startDate: "",
-    endDate: "",
+    startDate: new Date().toLocaleDateString(),
+    endDate: new Date().toLocaleDateString(),
     user_id: [],
     attendance_health_result_id: null,
     is_active: null,

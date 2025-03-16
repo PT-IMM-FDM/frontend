@@ -105,11 +105,21 @@ export function Component() {
         const response = await axios.post(apiCreateResponseURL, requestBody, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        navigate("/fdm-form/hasil", { state: response.data });
+        const created_at = new Date().toISOString();
+        navigate("/fdm-form/hasil", {
+          state: {
+            success: true,
+            data: {
+              ...response.data.data, // Spread semua properti dari response.data
+              created_at, // Tambahkan createdAt ke dalam data
+            },
+            message: "Response User created successfully",
+          },
+        });
       } catch (error) {
         if (error.code === "ERR_NETWORK") {
-          alert('Error Network please try again later.');
-          return
+          alert("Error Network please try again later.");
+          return;
         }
         console.error("Error submitting answers:", error);
         alert("Mohon mengisi seluruh pertanyaan.");
@@ -259,13 +269,6 @@ export function Component() {
             <HR />
           </div>
         ))}
-        {/* <Button
-          gradientMonochrome="purple"
-          className="mb-8 w-full"
-          type="submit">
-          Submit
-        </Button> */}
-
         <div>
           {loading ? (
             <Button color="gray" className="w-full">

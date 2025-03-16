@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card } from "flowbite-react";
 import useAuthStore from "../../../admin/stores/useAuthStore";
 import { Modal, Button } from "flowbite-react";

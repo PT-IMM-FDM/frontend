@@ -33,6 +33,12 @@ function App() {
           setUser(dataUser.data);
         } catch (error) {
           console.error("Error fetching current user:", error);
+
+          // Hapus token dari Zustand (atau Redux) saat gagal mengambil user
+          useAuthStore.setState({ token: null, user: null });
+
+          // Redirect ke login
+          window.location.replace("/login");
         }
       }
     };
@@ -52,7 +58,7 @@ function App() {
           const now = new Date();
           const timeAway = (now - lastHiddenTime) / 1000; // dalam detik
           // console.log(`Tab diakses kembali setelah ${timeAway} detik.`);
-          if (timeAway > 600) {
+          if (timeAway > 900) {
             // console.log("Reloading page...");
             window.location.reload(); // Reload halaman ketika sudah 10 menit tab tertutup
           }

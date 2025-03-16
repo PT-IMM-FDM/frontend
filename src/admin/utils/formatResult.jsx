@@ -6,32 +6,29 @@ import { Badge } from "flowbite-react";
 export function formatResult(result) {
   if (result === "UNFIT") {
     return (
-      <span>
+      <span className="h-full flex items-center">
         <Badge
           color="failure"
           className="w-fit mx-auto"
-          icon={FaRegCircleXmark}
-        ></Badge>
+          icon={FaRegCircleXmark}></Badge>
       </span>
     );
   } else if (result === "FIT_FOLLOW_UP") {
     return (
-      <span>
+      <span className="h-full flex items-center">
         <Badge
           color="warning"
           className="w-fit mx-auto"
-          icon={PiWarningCircleBold}
-        ></Badge>
+          icon={PiWarningCircleBold}></Badge>
       </span>
     );
   } else {
     return (
-      <span>
+      <span className="h-full flex items-center">
         <Badge
           color="success"
           className="w-fit mx-auto"
-          icon={FaRegCircleCheck}
-        ></Badge>
+          icon={FaRegCircleCheck}></Badge>
       </span>
     );
   }
