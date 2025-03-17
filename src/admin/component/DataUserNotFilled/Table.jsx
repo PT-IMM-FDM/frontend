@@ -13,8 +13,6 @@ import EnhancedTableHead from "./TableHead";
 import EnhancedTableToolbar from "./TableToolbar";
 import { theme } from "./TableTheme";
 import { stableSort, getComparator } from "../../utils/sorting";
-import { getAllUser } from "../../api/data-user";
-import useDataUsersStore from "../../stores/useDataUsersStore";
 import { toCamelCase } from "../../utils/stringUtils";
 import useDataFDM from "../../stores/useDataFDM";
 import { getUserNotFilled } from "../../api/fdm";
@@ -26,7 +24,7 @@ export default function EnhancedTable({ token }) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("full_name");
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(true);
+  const dense = true;
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searchQuery, setSearchQuery] = React.useState("");
   const { rowsNotFilled, selected, setRowsNotFilled, setSelected, filtersUserNotFilled } = useDataFDM();
@@ -173,7 +171,7 @@ export default function EnhancedTable({ token }) {
               stickyHeader
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
+              size={"small"}
             >
               <EnhancedTableHead
                 numSelected={selected?.length}
@@ -216,9 +214,6 @@ export default function EnhancedTable({ token }) {
                       >
                         {row.full_name ? toCamelCase(row.full_name) : "-"}
                       </TableCell>
-                      {/* <TableCell sx={{ fontSize: "12px" }} align="left">
-                        {row.phone_number || "-"}
-                      </TableCell> */}
                       <TableCell sx={{ fontSize: "12px" }} align="left">
                         {row.department?.name || "-"}
                       </TableCell>
@@ -231,9 +226,6 @@ export default function EnhancedTable({ token }) {
                       <TableCell sx={{ fontSize: "12px" }} align="left">
                         {row.company?.name || "-"}
                       </TableCell>
-                      {/* <TableCell sx={{ fontSize: "12px" }} align="left">
-                        <EditUserButton user_id={row.user_id} />
-                      </TableCell> */}
                     </TableRow>
                   );
                 })}

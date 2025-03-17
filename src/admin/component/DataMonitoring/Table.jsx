@@ -30,6 +30,7 @@ export default function EnhancedTable({ token }) {
     page: 0,
   });
   const { rows, setRows, selected, setSelected, filters } = useDataFDM();
+  console.log('tabel', selected)
   const searchQuery = useSearchStore((state) => state.searchQuery);
 
   // Memoize slots untuk mencegah re-render tidak perlu
@@ -92,11 +93,11 @@ export default function EnhancedTable({ token }) {
           />
           <Box sx={{ height: 650, width: "100%" }}>
             <DataGrid
+              getRowId={(row) => row.attendance_health_result_id}
               rows={rows}
               pageSizeOptions={[100]}
               paginationModel={paginationModel}
               onPaginationModelChange={setPaginationModel}
-              getRowId={(row) => row.attendance_health_result_id}
               columns={tableMonitoringColumns}
               rowCount={totalRows}
               loading={loading}
@@ -108,9 +109,9 @@ export default function EnhancedTable({ token }) {
               disableColumnMenu={true}
               disableColumnResize={true}
               disableColumnReorder={true}
-              onSelectionModelChange={(newSelection) =>
-                setSelected(newSelection)
-              }
+              onRowSelectionModelChange={(rowSelectionModel) => {
+                setSelected(rowSelectionModel)
+              }}
               slots={slots} // Tambahkan slots di sini
               sx={{
                 fontSize: "12px",

@@ -10,7 +10,7 @@ import { deletePosition } from "../../api/data-company";
 import { Box } from "@mui/material";
 import { toast } from "react-toastify";
 
-const CACHE_KEY = "dataJobPositions";
+const CACHE_KEY = "d_jobPosition";
 
 export function DeleteButton({ numSelected, selected }) {
   // State variable to control the visibility of the modal
@@ -21,11 +21,13 @@ export function DeleteButton({ numSelected, selected }) {
   const { token } = useAuthStore((state) => ({ token: state.token }));
 
   // Retrieve the user data rows and the setter function from the data users store
-  const { rowsPosition, setRowsPosition, setSelected } = useDataCompanyStore((state) => ({
-    rowsPosition: state.rowsPosition,
-    setRowsPosition: state.setRowsPosition,
-    setSelected: state.setSelected,
-  }));
+  const { rowsPosition, setRowsPosition, setSelected } = useDataCompanyStore(
+    (state) => ({
+      rowsPosition: state.rowsPosition,
+      setRowsPosition: state.setRowsPosition,
+      setSelected: state.setSelected,
+    })
+  );
 
   // Function to handle the delete button click event
   const handleDeleteClick = () => {
@@ -44,11 +46,13 @@ export function DeleteButton({ numSelected, selected }) {
       await deletePosition(token, selected);
 
       // Filter out the deleted user data from the rows
-      const updatedRows = rowsPosition.filter((row) => !selected.includes(row.job_position_id));
+      const updatedRows = rowsPosition.filter(
+        (row) => !selected.includes(row.job_position_id)
+      );
 
       // Update the rows in the data users store
       setRowsPosition(updatedRows);
-      setSelected([])
+      setSelected([]);
 
       // Update the local storage with the updated rows
       localStorage.setItem(CACHE_KEY, JSON.stringify(updatedRows));
@@ -60,15 +64,15 @@ export function DeleteButton({ numSelected, selected }) {
         autoClose: 3000,
         pauseOnHover: false,
         position: "bottom-right",
-        theme: "colored"
+        theme: "colored",
       });
     } catch (error) {
-      console.error('Failed to delete job position:', error);
+      console.error("Failed to delete job position:", error);
       toast.error("Failed to Delete Job Position .", {
         autoClose: 3000,
         pauseOnHover: false,
         position: "bottom-right",
-        theme: "colored"
+        theme: "colored",
       });
       // Handle error state or display error message
     } finally {
@@ -92,26 +96,24 @@ export function DeleteButton({ numSelected, selected }) {
         size="md"
         onClose={() => setOpenModal(false)}
         popup
-        className="z-[999]"
-      >
-         {loading && (
-        <Box
-          sx={{
-            position: "fixed",
-            width: "100%",
-            height: "100%",
-            zIndex: 9999,
-            top: 0,
-            left: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(243, 244, 246, 0.7)",
-          }}
-        >
-          <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
-        </Box>
-      )}
+        className="z-[999]">
+        {loading && (
+          <Box
+            sx={{
+              position: "fixed",
+              width: "100%",
+              height: "100%",
+              zIndex: 9999,
+              top: 0,
+              left: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(243, 244, 246, 0.7)",
+            }}>
+            <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
+          </Box>
+        )}
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
@@ -122,8 +124,7 @@ export function DeleteButton({ numSelected, selected }) {
             <div className="flex justify-center gap-4">
               <Button
                 color="failure"
-                onClick={() => handleConfimDeleteClick(token)}
-              >
+                onClick={() => handleConfimDeleteClick(token)}>
                 {"Yes, I'm sure"}
               </Button>
               <Button color="gray" onClick={() => setOpenModal(false)}>

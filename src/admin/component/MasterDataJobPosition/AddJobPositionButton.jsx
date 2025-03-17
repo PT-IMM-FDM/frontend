@@ -7,12 +7,12 @@ import useDataCompanyStore from "../../stores/useDataCompanyStore";
 import { Box } from "@mui/material";
 import { toast } from "react-toastify";
 
-const CACHE_KEY = "dataJobPositions";
+const CACHE_KEY = "d_jobPosition";
 
 export function AddJobPositionButton() {
   // Fetch the token from the authentication store
   const { token } = useAuthStore((state) => ({ token: state.token }));
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   // Fetch the user data from the data users store
   const { rowsPosition, setRowsPosition } = useDataCompanyStore((state) => ({
@@ -64,15 +64,15 @@ export function AddJobPositionButton() {
         autoClose: 3000,
         pauseOnHover: false,
         position: "bottom-right",
-        theme: "colored"
+        theme: "colored",
       });
     } catch (error) {
-      console.error("failed to create job position",error)
+      console.error("failed to create job position", error);
       toast.error("Failed to Create Job Position.", {
         autoClose: 3000,
         pauseOnHover: false,
         position: "bottom-right",
-        theme: "colored"
+        theme: "colored",
       });
     } finally {
       setLoading(false);
@@ -85,32 +85,35 @@ export function AddJobPositionButton() {
       <Button
         color="purple"
         className="h-[2.5rem] bg-purple-700 text-white border-[1px]"
-        onClick={() => setOpenModal(true)}
-      >
+        onClick={() => setOpenModal(true)}>
         <FaPlus className="text-md mt-[2px]" />
         <p className="hidden md:block ml-1 text-[12px]">Tambah Posisi</p>
       </Button>
 
       {/* Modal */}
-      <Modal className="z-[999]" dismissible show={openModal} size="lg" onClose={onCloseModal}>
-      {loading && (
-        <Box
-          sx={{
-            position: "fixed",
-            width: "100%",
-            height: "100%",
-            zIndex: 9999,
-            top: 0,
-            left: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(243, 244, 246, 0.7)",
-          }}
-        >
-          <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
-        </Box>
-      )}
+      <Modal
+        className="z-[999]"
+        dismissible
+        show={openModal}
+        size="lg"
+        onClose={onCloseModal}>
+        {loading && (
+          <Box
+            sx={{
+              position: "fixed",
+              width: "100%",
+              height: "100%",
+              zIndex: 9999,
+              top: 0,
+              left: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(243, 244, 246, 0.7)",
+            }}>
+            <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
+          </Box>
+        )}
         <Modal.Header style={{ fontSize: "12px" }}>Tambah Posisi</Modal.Header>
         <Modal.Body>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -118,8 +121,7 @@ export function AddJobPositionButton() {
             <div>
               <label
                 htmlFor="job_position_name"
-                className="block text-[12px] font-medium text-gray-700"
-              >
+                className="block text-[12px] font-medium text-gray-700">
                 Nama Posisi
               </label>
               <TextInput
@@ -137,15 +139,13 @@ export function AddJobPositionButton() {
               <Button
                 color="purple"
                 className="h-[2.5rem] bg-purple-700 text-white border-[1px]"
-                type="submit"
-              >
+                type="submit">
                 <p className="text-[12px]">Tambah Posisi</p>
               </Button>
               <Button
                 color="failure"
                 className="h-[2.5rem] text-white border-[1px]"
-                onClick={onCloseModal}
-              >
+                onClick={onCloseModal}>
                 <p className="text-[12px]">Batal</p>
               </Button>
             </div>

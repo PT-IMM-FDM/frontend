@@ -11,7 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, selected } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
   // const isMobile = window.innerWidth <= 600;
 
@@ -50,7 +50,7 @@ function EnhancedTableToolbar(props) {
           <SearchBar />
           <div className="hidden md:flex gap-2">
             <FilterButton />
-            <ExportButton />
+            <ExportButton selected={selected} />
           </div>
 
           <div className="md:hidden">

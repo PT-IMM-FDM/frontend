@@ -22,7 +22,7 @@ import { tooltipClasses } from "@mui/material";
 import { EditCompanyButton } from "./EditCompanyButton";
 import useAuthStore from "../../stores/useAuthStore";
 
-const CACHE_KEY = "dataCompany";
+const CACHE_KEY = "d_company";
 
 export default function EnhancedTable({ token }) {
   const [order, setOrder] = React.useState("asc");

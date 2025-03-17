@@ -10,7 +10,7 @@ import { deleteCompany } from "../../api/data-company";
 import { Box } from "@mui/material";
 import { toast } from "react-toastify";
 
-const CACHE_KEY = "dataCompany";
+const CACHE_KEY = "d_company";
 export function DeleteButton({ numSelected, selected }) {
   // State variable to control the visibility of the modal
   const [openModal, setOpenModal] = useState(false);

@@ -7,7 +7,7 @@ import useDataCompanyStore from "../../stores/useDataCompanyStore";
 import { toast } from "react-toastify";
 import { Box } from "@mui/material";
 
-const CACHE_KEY = "dataStatus";
+const CACHE_KEY = "d_employmentStatus";
 
 export function AddStatusButton() {
   // Fetch the token from the authentication store

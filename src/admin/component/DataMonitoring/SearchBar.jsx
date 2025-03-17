@@ -7,7 +7,8 @@ import useDebounce from "../../hooks/useDebounce";
 
 export default function SearchBar() {
   const setSearchQuery = useSearchStore((state) => state.setSearchQuery);
-  const [inputValue, setInputValue] = useState(""); // State untuk menangkap input langsung
+  const searchQuery = useSearchStore((state) => state.searchQuery);
+  const [inputValue, setInputValue] = useState(searchQuery || ""); // State untuk menangkap input langsung
 
   const debouncedSearch = useDebounce(inputValue, 500); // Delay 500ms
 

@@ -46,7 +46,7 @@ export function AddUserButton({ isMobile }) {
       try {
         const fetchedCompanies = await getAllCompany(token);
         setCompanies(fetchedCompanies);
-        localStorage.setItem("dataCompany", JSON.stringify(fetchedCompanies));
+        localStorage.setItem("d_company", JSON.stringify(fetchedCompanies));
       } catch (error) {
         console.error("Error fetching companies:", error);
         setCompanies([]);
@@ -56,7 +56,7 @@ export function AddUserButton({ isMobile }) {
         const fetchedDepartments = await getAllDepartments(token);
         setDepartments(fetchedDepartments);
         localStorage.setItem(
-          "dataDepartments",
+          "d_department",
           JSON.stringify(fetchedDepartments)
         );
       } catch (error) {
@@ -67,10 +67,7 @@ export function AddUserButton({ isMobile }) {
       try {
         const fetchedPositions = await getAllPositions(token);
         setJobPositions(fetchedPositions);
-        localStorage.setItem(
-          "dataJobPositions",
-          JSON.stringify(fetchedPositions)
-        );
+        localStorage.setItem("d_jobPosition", JSON.stringify(fetchedPositions));
       } catch (error) {
         console.error("Error fetching job positions:", error);
         setJobPositions([]);
@@ -79,17 +76,20 @@ export function AddUserButton({ isMobile }) {
       try {
         const fetchedStatuses = await getAllStatusEmployment(token);
         setEmploymentStatuses(fetchedStatuses);
-        localStorage.setItem("dataStatus", JSON.stringify(fetchedStatuses));
+        localStorage.setItem(
+          "d_employmentStatus",
+          JSON.stringify(fetchedStatuses)
+        );
       } catch (error) {
         console.error("Error fetching employment statuses:", error);
         setEmploymentStatuses([]);
       }
     };
 
-    const storedDepartments = localStorage.getItem("dataDepartments");
-    const storedJobPositions = localStorage.getItem("dataJobPositions");
-    const storedStatuses = localStorage.getItem("dataStatus");
-    const storedCompanies = localStorage.getItem("dataCompany");
+    const storedDepartments = localStorage.getItem("d_department");
+    const storedJobPositions = localStorage.getItem("d_jobPosition");
+    const storedStatuses = localStorage.getItem("d_employmentStatus");
+    const storedCompanies = localStorage.getItem("d_company");
 
     if (
       !storedDepartments ||
@@ -173,27 +173,26 @@ export function AddUserButton({ isMobile }) {
     }
   };
 
-  
   const formatOptions = (data, idField) => {
     return data.map((item) => ({
       value: item[idField], // Use the dynamic idField to access the correct ID property
       label: item.name,
     }));
-  };  
+  };
 
   const getSelectedOption = (data, idField, formDataValue) => {
     const selectedItem = data.find((item) => item[idField] === formDataValue);
-    return selectedItem ? { value: selectedItem[idField], label: selectedItem.name } : null;
+    return selectedItem
+      ? { value: selectedItem[idField], label: selectedItem.name }
+      : null;
   };
-  
-  
+
   return (
     <div>
       <Button
         color={isMobile ? "light" : "purple"}
         className="h-[2.5rem] border-[1px] flex items-center justify-center space-x-2 px-2"
-        onClick={() => setOpenModal(true)}
-      >
+        onClick={() => setOpenModal(true)}>
         <FaUserPlus className="text-lg mr-2" />
         <div className="text-[10px] whitespace-nowrap">Tambah Pengguna</div>
       </Button>
@@ -203,8 +202,7 @@ export function AddUserButton({ isMobile }) {
         dismissible
         show={openModal}
         size="2xl"
-        onClose={onCloseModal}
-      >
+        onClose={onCloseModal}>
         {loading && (
           <Box
             sx={{
@@ -218,8 +216,7 @@ export function AddUserButton({ isMobile }) {
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: "rgba(240, 240, 240, 0.7)",
-            }}
-          >
+            }}>
             <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
           </Box>
         )}
@@ -229,14 +226,12 @@ export function AddUserButton({ isMobile }) {
         <Modal.Body>
           <form
             className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6"
-            onSubmit={handleSubmit}
-          >
+            onSubmit={handleSubmit}>
             {/* Nama Lengkap */}
             <div>
               <label
                 htmlFor="full_name"
-                className="block w-full text-[12px] font-medium text-gray-700"
-              >
+                className="block w-full text-[12px] font-medium text-gray-700">
                 Nama Lengkap <span className="text-red-500">*</span>
               </label>
               <input
@@ -256,8 +251,7 @@ export function AddUserButton({ isMobile }) {
             <div className="min-w-full">
               <label
                 htmlFor="phone_number"
-                className="block w-full text-[12px] font-medium text-gray-700"
-              >
+                className="block w-full text-[12px] font-medium text-gray-700">
                 No. Telepon <span className="text-red-500">*</span>
               </label>
               <input
@@ -277,8 +271,7 @@ export function AddUserButton({ isMobile }) {
             <div>
               <label
                 htmlFor="email"
-                className="block text-[12px] font-medium text-gray-700"
-              >
+                className="block text-[12px] font-medium text-gray-700">
                 Email
               </label>
               <input
@@ -297,15 +290,18 @@ export function AddUserButton({ isMobile }) {
             <div>
               <label
                 htmlFor="company_id"
-                className="block text-[12px] font-medium text-gray-700"
-              >
+                className="block text-[12px] font-medium text-gray-700">
                 Nama Perusahaan <span className="text-red-500">*</span>
               </label>
               <Select
                 id="company_id"
                 name="company_id"
                 options={formatOptions(companies, "company_id")}
-                value={getSelectedOption(companies, "company_id", formData.company_id)}
+                value={getSelectedOption(
+                  companies,
+                  "company_id",
+                  formData.company_id
+                )}
                 onChange={(option) => handleSelectChange(option, "company_id")}
                 placeholder="Select Company"
                 styles={{
@@ -339,15 +335,18 @@ export function AddUserButton({ isMobile }) {
             <div>
               <label
                 htmlFor="department_id"
-                className="block text-[12px] font-medium text-gray-700"
-              >
+                className="block text-[12px] font-medium text-gray-700">
                 Departemen <span className="text-red-500">*</span>
               </label>
               <Select
                 id="department_id"
                 name="department_id"
                 options={formatOptions(departments, "department_id")}
-                value={getSelectedOption(departments, "department_id", formData.department_id)}
+                value={getSelectedOption(
+                  departments,
+                  "department_id",
+                  formData.department_id
+                )}
                 onChange={(option) =>
                   handleSelectChange(option, "department_id")
                 }
@@ -383,15 +382,18 @@ export function AddUserButton({ isMobile }) {
             <div>
               <label
                 htmlFor="job_position_id"
-                className="block text-[12px] font-medium text-gray-700"
-              >
+                className="block text-[12px] font-medium text-gray-700">
                 Posisi <span className="text-red-500">*</span>
               </label>
               <Select
                 id="job_position_id"
                 name="job_position_id"
                 options={formatOptions(jobPositions, "job_position_id")}
-                value={getSelectedOption(jobPositions, "job_position_id", formData.job_position_id)}
+                value={getSelectedOption(
+                  jobPositions,
+                  "job_position_id",
+                  formData.job_position_id
+                )}
                 onChange={(option) =>
                   handleSelectChange(option, "job_position_id")
                 }
@@ -427,15 +429,21 @@ export function AddUserButton({ isMobile }) {
             <div>
               <label
                 htmlFor="employment_status_id"
-                className="block text-[12px] font-medium text-gray-700"
-              >
+                className="block text-[12px] font-medium text-gray-700">
                 Status Pekerjaan <span className="text-red-500">*</span>
               </label>
               <Select
                 id="employment_status_id"
                 name="employment_status_id"
-                options={formatOptions(employmentStatuses, "employment_status_id")}
-                value={getSelectedOption(employmentStatuses, "employment_status_id", formData.employment_status_id)}
+                options={formatOptions(
+                  employmentStatuses,
+                  "employment_status_id"
+                )}
+                value={getSelectedOption(
+                  employmentStatuses,
+                  "employment_status_id",
+                  formData.employment_status_id
+                )}
                 onChange={(option) =>
                   handleSelectChange(option, "employment_status_id")
                 }
@@ -471,8 +479,7 @@ export function AddUserButton({ isMobile }) {
             <div>
               <label
                 htmlFor="birth_date"
-                className="block text-[12px] font-medium text-gray-700"
-              >
+                className="block text-[12px] font-medium text-gray-700">
                 Tanggal Lahir <span className="text-red-500">*</span>
               </label>
               <input
@@ -492,8 +499,7 @@ export function AddUserButton({ isMobile }) {
             <div>
               <label
                 htmlFor="role_id"
-                className="block text-[12px] font-medium text-gray-700"
-              >
+                className="block text-[12px] font-medium text-gray-700">
                 Role <span className="text-red-500">*</span>
               </label>
               <Select
@@ -546,15 +552,13 @@ export function AddUserButton({ isMobile }) {
               <Button
                 color="purple"
                 className="h-[2.5rem] bg-purple-700 text-white border-[1px]"
-                type="submit"
-              >
+                type="submit">
                 <p className="text-[12px]">Tambah Pengguna</p>
               </Button>
               <Button
                 color="failure"
                 className="h-[2.5rem] text-white border-[1px]"
-                onClick={onCloseModal}
-              >
+                onClick={onCloseModal}>
                 <p className="text-[12px]">Batal</p>
               </Button>
             </div>

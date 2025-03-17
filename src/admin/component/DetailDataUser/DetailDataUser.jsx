@@ -52,22 +52,22 @@ export default function DetailDataUser() {
   }, [token, user_id]);
 
   useEffect(() => {
-    const storedDepartments = localStorage.getItem("dataDepartments");
+    const storedDepartments = localStorage.getItem("d_department");
     if (storedDepartments) {
       setDepartments(JSON.parse(storedDepartments));
     }
 
-    const storedJobPositions = localStorage.getItem("dataJobPositions");
+    const storedJobPositions = localStorage.getItem("d_jobPosition");
     if (storedJobPositions) {
       setJobPositions(JSON.parse(storedJobPositions));
     }
 
-    const storedStatuses = localStorage.getItem("dataStatus");
+    const storedStatuses = localStorage.getItem("d_employmentStatus");
     if (storedStatuses) {
       setEmploymentStatuses(JSON.parse(storedStatuses));
     }
 
-    const storedCompanies = localStorage.getItem("dataCompany");
+    const storedCompanies = localStorage.getItem("d_company");
     if (storedCompanies) {
       setCompanies(JSON.parse(storedCompanies));
     }
@@ -147,7 +147,6 @@ export default function DetailDataUser() {
         position: "bottom-right",
         theme: "colored",
       });
-
     } catch (error) {
       console.error("Error updating user:", error);
       toast.error("Failed Update User.", {
@@ -158,7 +157,6 @@ export default function DetailDataUser() {
       });
     }
   };
-
 
   return (
     <>

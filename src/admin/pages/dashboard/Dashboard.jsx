@@ -165,7 +165,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
           <div className="flex flex-col col-span-2 gap-3">
             <DateRangePicker />
-            <FilterButton /> {/* Kirim isFocused ke Select */}
+            <FilterButton />
             <div className="flex flex-col lg:flex-row gap-2">
               <DoughnutChart
                 name={"Departemen"}

@@ -14,7 +14,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      alert("Session Expired! Please relogin");
+      alert("Your session has expired. Please log in again.");
       logoutApi();
       window.location.href = "/login";
     }
