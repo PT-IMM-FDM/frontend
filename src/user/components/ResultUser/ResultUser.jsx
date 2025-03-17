@@ -1,13 +1,14 @@
-import React from "react";
-import { Component as Navbar } from "../navbar";
+// import React from "react";
+// import { Component as Navbar } from "../navbar";
 import { useLocation } from "react-router-dom";
 import { Card, Blockquote, Alert, HR } from "flowbite-react";
 import { HiInformationCircle, HiOutlinePhone } from "react-icons/hi";
+import { formatDate } from "../../../admin/utils/stringUtils";
 
 const ResultUser = () => {
   const location = useLocation();
   const { state } = location;
-  const { success, message, data } = state || {};
+  const { success, data } = state || {};
 
   // Determine the alert color based on health status
   const getAlertColor = (healthStatus) => {
@@ -32,16 +33,14 @@ const ResultUser = () => {
   const formatRecommendations = (recommendationText) => {
     // Replace newline characters with HTML line breaks and bullet points with list items
     return recommendationText
-      .split('\n')
-      .filter(line => line.trim() !== '') // Remove empty lines
-      .map(line => `<li>${line.trim().replace(/^•\t?/, '')}</li>`)
-      .join('');
+      .split("\n")
+      .filter((line) => line.trim() !== "") // Remove empty lines
+      .map((line) => `<li>${line.trim().replace(/^•\t?/, "")}</li>`)
+      .join("");
   };
 
   const currentDate = new Date();
-  const formattedDate = `${
-    currentDate.getMonth() + 1
-  }/${currentDate.getDate()}/${currentDate.getFullYear()}`;
+  const formattedDate2 = formatDate(currentDate);
 
   return (
     <div>
@@ -49,23 +48,29 @@ const ResultUser = () => {
       <Card className="max-w-[500px] mx-auto mb-5 p-4">
         <div className="flex justify-between">
           <img src="/IMM.svg" className="mr-3 h-6 sm:h-8" alt="Logo IMM" />
-          <p className="font-bold mt-2">{formattedDate} </p>
+          <p className="font-bold mt-2">{formattedDate2.split(",")[0]} </p>
         </div>
         <HR className="my-1" />
         <h1 className="font-bold text-[16px]">Hasil Fit Daily Monitoring</h1>
         {success ? (
           <div>
+            <div className="mb-2">
+              <i className="text-[14px] block">
+                You have submitted the form at {formatDate(data.created_at)}
+              </i>
+            </div>
             <Alert
               color={getAlertColor(data.result)}
-              icon={HiInformationCircle}
-            >
+              icon={HiInformationCircle}>
               <span className="font-medium">Kondisi Anda</span>{" "}
               {formatHealthStatus(data.result)}
             </Alert>
             <Blockquote className="my-4 border-l-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800 text-[16px]">
               <ul
                 className="list-disc pl-5"
-                dangerouslySetInnerHTML={{ __html: formatRecommendations(data.recomendation) }}
+                dangerouslySetInnerHTML={{
+                  __html: formatRecommendations(data.recomendation),
+                }}
               />
             </Blockquote>
             <HR className="my-2" />

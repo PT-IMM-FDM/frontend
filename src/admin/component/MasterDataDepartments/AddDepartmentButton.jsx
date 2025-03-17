@@ -1,4 +1,4 @@
-import { Button, Modal, Select, TextInput } from "flowbite-react";
+import { Button, Modal, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import useAuthStore from "../../stores/useAuthStore";
@@ -7,7 +7,7 @@ import useDataCompanyStore from "../../stores/useDataCompanyStore";
 import { Box } from "@mui/material";
 import { toast } from "react-toastify";
 
-const CACHE_KEY = "dataDepartments";
+const CACHE_KEY = "d_department";
 
 export function AddDepartmentButton() {
   // Fetch the token from the authentication store

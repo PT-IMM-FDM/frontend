@@ -19,7 +19,7 @@ import useDataCompanyStore from "../../stores/useDataCompanyStore";
 import { EditJobPositionButton } from "./EditJobPositionButton";
 import useAuthStore from "../../stores/useAuthStore";
 
-const CACHE_KEY = "dataJobPositions";
+const CACHE_KEY = "d_jobPosition";
 
 export default function EnhancedTable({ token }) {
   const [order, setOrder] = React.useState("asc");
@@ -137,8 +137,7 @@ export default function EnhancedTable({ token }) {
             mb: 2,
             boxShadow: "none",
             borderRadius: "10px",
-          }}
-        >
+          }}>
           <EnhancedTableToolbar
             numSelected={selected?.length}
             onSearch={handleSearch}
@@ -149,8 +148,7 @@ export default function EnhancedTable({ token }) {
               stickyHeader
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
-            >
+              size={dense ? "small" : "medium"}>
               <EnhancedTableHead
                 numSelected={selected?.length}
                 order={order}
@@ -171,8 +169,7 @@ export default function EnhancedTable({ token }) {
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.job_position_id}
-                      selected={isItemSelected}
-                    >
+                      selected={isItemSelected}>
                       {isAdmin && (
                         <TableCell padding="checkbox">
                           <Checkbox
@@ -192,18 +189,18 @@ export default function EnhancedTable({ token }) {
                         id={labelId}
                         scope="row"
                         padding={isAdmin === true ? "none" : "normal"}
-                        sx={{ fontSize: "12px", width: "10px" }}
-                      >
+                        sx={{ fontSize: "12px", width: "10px" }}>
                         {index + 1}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "12px", paddingY: "10px" }} align="left">
+                      <TableCell
+                        sx={{ fontSize: "12px", paddingY: "10px" }}
+                        align="left">
                         {row.name}
                       </TableCell>
                       {isAdmin && (
                         <TableCell
                           sx={{ fontSize: "12px", pl: "1.5rem" }}
-                          align="left"
-                        >
+                          align="left">
                           <EditJobPositionButton
                             job_position_id={row.job_position_id}
                             job_position_name={row.name}
@@ -217,8 +214,7 @@ export default function EnhancedTable({ token }) {
                   <TableRow
                     style={{
                       maxHeight: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
+                    }}>
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}

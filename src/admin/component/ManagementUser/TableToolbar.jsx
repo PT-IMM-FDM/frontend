@@ -38,17 +38,17 @@ function EnhancedTableToolbar(props) {
         setDepartments(JSON.parse(storedDepartments));
       }
 
-      const storedJobPositions = localStorage.getItem("dataJobPositions");
+      const storedJobPositions = localStorage.getItem("d_jobPosition");
       if (storedJobPositions) {
         setJobPositions(JSON.parse(storedJobPositions));
       }
 
-      const storedStatuses = localStorage.getItem("dataStatus");
+      const storedStatuses = localStorage.getItem("d_employmentStatus");
       if (storedStatuses) {
         setEmploymentStatuses(JSON.parse(storedStatuses));
       }
 
-      const storedCompanies = localStorage.getItem("dataCompany");
+      const storedCompanies = localStorage.getItem("d_company");
       if (storedCompanies) {
         setCompanies(JSON.parse(storedCompanies));
       }
@@ -85,8 +85,7 @@ function EnhancedTableToolbar(props) {
               theme.palette.action.activatedOpacity
             ),
         }),
-      }}
-    >
+      }}>
       <div className="flex justify-between items-center w-full">
         <div className="flex">
           {numSelected > 0 ? (
@@ -120,8 +119,7 @@ function EnhancedTableToolbar(props) {
                       aria-label="user-menu"
                       aria-controls="user-menu"
                       aria-haspopup="true"
-                      onClick={handleUserMenuOpen}
-                    >
+                      onClick={handleUserMenuOpen}>
                       <FontAwesomeIcon
                         icon={faUserPlus}
                         className="text-lg text-purple-800"
@@ -132,8 +130,7 @@ function EnhancedTableToolbar(props) {
                       anchorEl={anchorElUserMenu}
                       keepMounted
                       open={Boolean(anchorElUserMenu)}
-                      onClose={handleUserMenuClose}
-                    >
+                      onClose={handleUserMenuClose}>
                       <MenuItem onClick={handleUserMenuClose}>
                         <AddUserButton
                           departments={departments}
@@ -164,8 +161,7 @@ function EnhancedTableToolbar(props) {
               aria-label="more"
               aria-controls="mobile-menu"
               aria-haspopup="true"
-              onClick={handleMenuOpen}
-            >
+              onClick={handleMenuOpen}>
               <MoreVertIcon />
             </IconButton>
             <Menu
@@ -173,8 +169,7 @@ function EnhancedTableToolbar(props) {
               anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-            >
+              onClose={handleMenuClose}>
               <MenuItem onClick={handleMenuClose}>
                 <FilterButton />
               </MenuItem>

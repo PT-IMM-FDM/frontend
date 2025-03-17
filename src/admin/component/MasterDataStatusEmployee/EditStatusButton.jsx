@@ -21,7 +21,7 @@ import { ThemeProvider } from "@emotion/react";
 import { theme } from "./TableTheme";
 import { toast } from "react-toastify";
 
-const CACHE_KEY = "dataStatus";
+const CACHE_KEY = "d_employmentStatus";
 
 export function EditStatusButton({ employment_status_id, employment_status_name }) {
   // Fetch the token from the authentication store

@@ -2,23 +2,24 @@
 
 import { Button } from "flowbite-react";
 import { useState } from "react";
-// import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { PiExportBold } from "react-icons/pi";
 import { exportDocumentFDM } from "../../api/documentApi";
 import useAuthStore from "../../stores/useAuthStore";
 import useDataFDM from "../../stores/useDataFDM";
 import { Box } from "@mui/material";
 
-export function ExportButton() {
+export function ExportButton({selected}) {
   // const [openModal, setOpenModal] = useState(false);
   const { token } = useAuthStore((state) => ({ token: state.token }));
   const { filters } = useDataFDM(); // Get filters from store
   const [loading, setLoading] = useState(false);
 
+  console.log(selected)
+
   const handleClick = async () => {
     setLoading(true);
     try {
-      const urlFile = await exportDocumentFDM(token, filters);
+      const urlFile = await exportDocumentFDM(token, {...filters, user_id: selected});
       if (urlFile) {
         window.open(urlFile, "_blank");
       }

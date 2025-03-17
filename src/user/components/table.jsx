@@ -15,12 +15,7 @@ import Paper from "@mui/material/Paper";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
 import useAuthStore from "../../admin/stores/useAuthStore";
-
-// Function to format the date
-function formatDate(dateString) {
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  return new Date(dateString).toLocaleDateString('en-GB', options);
-}
+import { formatDate } from "../../admin/utils/stringUtils";
 
 function createData(createdAt, result) {
   return {
@@ -30,8 +25,20 @@ function createData(createdAt, result) {
 }
 
 const headCells = [
-  { id: "createdAt", numeric: false, disablePadding: false, label: "Tanggal", sortable: true },
-  { id: "result", numeric: true, disablePadding: false, label: "Hasil", sortable: false },
+  {
+    id: "createdAt",
+    numeric: false,
+    disablePadding: false,
+    label: "Tanggal",
+    sortable: true,
+  },
+  {
+    id: "result",
+    numeric: true,
+    disablePadding: false,
+    label: "Hasil",
+    sortable: false,
+  },
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -77,18 +84,18 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ fontWeight: "bold" }}
-          >
+            sx={{ fontWeight: "bold" }}>
             {headCell.sortable ? (
               <TableSortLabel
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
-              >
+                onClick={createSortHandler(headCell.id)}>
                 {headCell.label}
                 {orderBy === headCell.id ? (
                   <Box component="span" sx={visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
                   </Box>
                 ) : null}
               </TableSortLabel>
@@ -111,7 +118,11 @@ EnhancedTableHead.propTypes = {
 function EnhancedTableToolbar() {
   return (
     <Toolbar sx={{ pl: { sm: 2 }, pr: { xs: 1, sm: 1 } }}>
-      <Typography sx={{ flex: "1 1 100%" }} variant="h6" id="tableTitle" component="div">
+      <Typography
+        sx={{ flex: "1 1 100%" }}
+        variant="h6"
+        id="tableTitle"
+        component="div">
         Riwayat
       </Typography>
     </Toolbar>
@@ -134,7 +145,7 @@ export default function EnhancedTable() {
       startDate.setDate(endDate.getDate() - 7);
 
       // Format dates as 'yyyy-mm-dd'
-      const formatDateParam = (date) => date.toISOString().split('T')[0];
+      const formatDateParam = (date) => date.toISOString();
       const formattedStartDate = formatDateParam(startDate);
       const formattedEndDate = formatDateParam(endDate);
 
@@ -142,7 +153,10 @@ export default function EnhancedTable() {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/fdm/me`,
           {
-            params: { startDate: formattedStartDate, endDate: formattedEndDate },
+            params: {
+              startDate: formattedStartDate,
+              endDate: formattedEndDate,
+            },
             headers: { Authorization: `Bearer ${token}` },
           }
         );
@@ -174,7 +188,8 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const visibleRows = React.useMemo(
     () =>
@@ -190,7 +205,10 @@ export default function EnhancedTable() {
       <Paper sx={{ width: "100%", mb: 2, borderRadius: "10px" }}>
         <EnhancedTableToolbar />
         <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size="medium">
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size="medium">
             <EnhancedTableHead
               order={order}
               orderBy={orderBy}
@@ -199,7 +217,11 @@ export default function EnhancedTable() {
             <TableBody>
               {visibleRows.map((row, index) => (
                 <TableRow hover tabIndex={-1} key={index}>
-                  <TableCell component="th" scope="row" padding="none" sx={{ paddingLeft: 2 }}>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    padding="none"
+                    sx={{ paddingLeft: 2 }}>
                     {row.createdAt}
                   </TableCell>
                   <TableCell align="right">{row.result}</TableCell>

@@ -7,7 +7,7 @@ import useDataCompanyStore from "../../stores/useDataCompanyStore";
 import { toast } from "react-toastify";
 import { Box } from "@mui/material";
 
-const CACHE_KEY = "dataCompany";
+const CACHE_KEY = "d_company";
 // const CACHE_EXPIRATION = 60 * 60 * 1000;
 
 export function AddCompanyButton() {

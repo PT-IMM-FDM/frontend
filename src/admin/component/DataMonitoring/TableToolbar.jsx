@@ -11,9 +11,9 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, onSearch } = props;
+  const { numSelected, selected } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const isMobile = window.innerWidth <= 600;
+  // const isMobile = window.innerWidth <= 600;
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -35,8 +35,7 @@ function EnhancedTableToolbar(props) {
               theme.palette.action.activatedOpacity
             ),
         }),
-      }}
-    >
+      }}>
       <div className="flex justify-between items-center w-full">
         <div className="flex">
           {numSelected > 0 ? (
@@ -48,10 +47,10 @@ function EnhancedTableToolbar(props) {
           ) : null}
         </div>
         <div className="flex items-center gap-2">
-          <SearchBar onSearch={onSearch} />
+          <SearchBar />
           <div className="hidden md:flex gap-2">
             <FilterButton />
-            <ExportButton />
+            <ExportButton selected={selected} />
           </div>
 
           <div className="md:hidden">
@@ -59,8 +58,7 @@ function EnhancedTableToolbar(props) {
               aria-label="more"
               aria-controls="long-menu"
               aria-haspopup="true"
-              onClick={handleMenuOpen}
-            >
+              onClick={handleMenuOpen}>
               <MoreVertIcon />
             </IconButton>
             <Menu
@@ -69,8 +67,7 @@ function EnhancedTableToolbar(props) {
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
-              sx={{ padding: 0 }}
-            >
+              sx={{ padding: 0 }}>
               <MenuItem onClick={handleMenuClose}>
                 <FilterButton />
               </MenuItem>

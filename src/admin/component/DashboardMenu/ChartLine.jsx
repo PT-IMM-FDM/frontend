@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import axios from "axios";
 import {
@@ -171,39 +171,39 @@ const LineChart = () => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-[10px] lg:h-[18rem] shadow-md">
+    <div className="bg-white p-4 rounded-[10px] xl:h-full lg:h-[20rem] shadow-md">
       <h1 className="font-semibold text-sm text-left leading-none">
         Laporan FDM Bulanan
       </h1>
       <div className="flex gap-2 mt-2 mb-2">
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            selectsStart
-            startDate={startDate}
-            endDate={endDate}
-            dateFormat="MMMM yyyy"
-            showMonthYearPicker
-            locale={id}
-            className="w-full text-xs rounded-[5px] border-gray-300"
-            wrapperClassName="w-full"
-          />
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            selectsEnd
-            startDate={startDate}
-            endDate={endDate}
-            minDate={startDate}
-            dateFormat="MMMM yyyy"
-            showMonthYearPicker
-            locale={id}
-            className="w-full text-xs rounded-[5px] border-gray-300"
-            wrapperClassName="w-full"
-          />
+        <DatePicker
+          selected={startDate}
+          onChange={(date) => setStartDate(date)}
+          selectsStart
+          startDate={startDate}
+          endDate={endDate}
+          dateFormat="MMMM yyyy"
+          showMonthYearPicker
+          locale={id}
+          className="w-full text-xs rounded-[5px] border-gray-300"
+          wrapperClassName="w-full"
+        />
+        <DatePicker
+          selected={endDate}
+          onChange={(date) => setEndDate(date)}
+          selectsEnd
+          startDate={startDate}
+          endDate={endDate}
+          minDate={startDate}
+          dateFormat="MMMM yyyy"
+          showMonthYearPicker
+          locale={id}
+          className="w-full text-xs rounded-[5px] border-gray-300"
+          wrapperClassName="w-full"
+        />
       </div>
 
-      <div className="h-[45vh] md:h-[30rem] lg:h-[12rem] flex items-center justify-center">
+      <div className="h-[45vh] md:h-[30rem] lg:h-[14rem] xl:h-[85%] flex items-center justify-center">
         <Line data={chartData} options={options} />
       </div>
     </div>

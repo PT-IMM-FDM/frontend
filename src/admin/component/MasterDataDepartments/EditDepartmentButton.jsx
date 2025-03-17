@@ -21,7 +21,7 @@ import { ThemeProvider } from "@emotion/react";
 import { theme } from "./TableTheme";
 import { toast } from "react-toastify";
 
-const CACHE_KEY = "dataDepartments";
+const CACHE_KEY = "d_department";
 
 export function EditDepartmentButton({ department_id, department_name }) {
   // Fetch the token from the authentication store

@@ -14,25 +14,27 @@ import {
   Tooltip,
   styled,
   tooltipClasses,
-  Box
+  Box,
 } from "@mui/material";
 import { FaRegEdit } from "react-icons/fa";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./TableTheme";
 import { toast } from "react-toastify";
 
-const CACHE_KEY = "dataJobPositions";
+const CACHE_KEY = "d_jobPosition";
 
 export function EditJobPositionButton({ job_position_id, job_position_name }) {
   // Fetch the token from the authentication store
   const { token } = useAuthStore((state) => ({ token: state.token }));
 
   // Fetch the job position data from the data company store
-  const { rowsPosition, setRowsPosition, setSelected } = useDataCompanyStore((state) => ({
-    rowsPosition: state.rowsPosition,
-    setRowsPosition: state.setRowsPosition,
-    setSelected: state.setSelected,
-  }));
+  const { rowsPosition, setRowsPosition, setSelected } = useDataCompanyStore(
+    (state) => ({
+      rowsPosition: state.rowsPosition,
+      setRowsPosition: state.setRowsPosition,
+      setSelected: state.setSelected,
+    })
+  );
 
   // State variables for managing the modal visibility and form data
   const [openModal, setOpenModal] = useState(false);
@@ -78,7 +80,9 @@ export function EditJobPositionButton({ job_position_id, job_position_name }) {
 
       // Update the job position data in the store
       const updatedRows = rowsPosition.map((row) =>
-        row.job_position_id === updatedPosition.job_position_id ? updatedPosition : row
+        row.job_position_id === updatedPosition.job_position_id
+          ? updatedPosition
+          : row
       );
       setSelected([]);
       setRowsPosition(updatedRows);
@@ -127,7 +131,9 @@ export function EditJobPositionButton({ job_position_id, job_position_name }) {
     <ThemeProvider theme={theme}>
       {/* Button */}
       <BootstrapTooltip title="Edit" placement="top">
-        <IconButton onClick={() => setOpenModal(true)} className="hover:text-purple-700">
+        <IconButton
+          onClick={() => setOpenModal(true)}
+          className="hover:text-purple-700">
           <FaRegEdit className="text-[1rem] hover:text-purple-700" />
         </IconButton>
       </BootstrapTooltip>
@@ -147,15 +153,16 @@ export function EditJobPositionButton({ job_position_id, job_position_name }) {
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: "rgba(243, 244, 246, 0.7)",
-            }}
-          >
+            }}>
             <img src="/Loader-1.gif" alt="loader" className="h-[5rem] z-10" />
           </Box>
         )}
-        <DialogTitle style={{ fontSize: "20px", marginBottom: '20px' }}>Edit Posisi</DialogTitle>
+        <DialogTitle style={{ fontSize: "20px", marginBottom: "20px" }}>
+          Edit Posisi
+        </DialogTitle>
         <DialogContent>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            <DialogContentText style={{ fontSize: "14px", color: 'black' }}>
+            <DialogContentText style={{ fontSize: "14px", color: "black" }}>
               Nama Posisi
               <TextField
                 id="job_position_name"
@@ -168,14 +175,14 @@ export function EditJobPositionButton({ job_position_id, job_position_name }) {
                 required
                 margin="none"
                 InputLabelProps={{ style: { fontSize: "14px" } }}
-                inputProps={{ style: { fontSize: "14px", boxShadow: "none" }}}
+                inputProps={{ style: { fontSize: "14px", boxShadow: "none" } }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "6px",
                     boxShadow: "none",
                     "& fieldset": {
                       borderRadius: "6px",
-                      boxShadow: "none"
+                      boxShadow: "none",
                     },
                   },
                 }}
@@ -190,12 +197,11 @@ export function EditJobPositionButton({ job_position_id, job_position_name }) {
                   textTransform: "none",
                   borderRadius: "8px",
                   boxShadow: "none",
-                  bgcolor: '#673ab7', // Custom background color
-                  '&:hover': {
-                    bgcolor: '#5e35b1', // Darker shade on hover
-                  }
-                }}
-              >
+                  bgcolor: "#673ab7", // Custom background color
+                  "&:hover": {
+                    bgcolor: "#5e35b1", // Darker shade on hover
+                  },
+                }}>
                 <p className="text-[12px]">Update Posisi</p>
               </Button>
               <Button
@@ -203,8 +209,11 @@ export function EditJobPositionButton({ job_position_id, job_position_name }) {
                 variant="contained"
                 className="h-[2.5rem] text-white border-[1px]"
                 onClick={onCloseModal}
-                sx={{ textTransform: "none", borderRadius: "8px", boxShadow: "none", }}
-              >
+                sx={{
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  boxShadow: "none",
+                }}>
                 <p className="text-[12px]">Batal</p>
               </Button>
             </DialogActions>

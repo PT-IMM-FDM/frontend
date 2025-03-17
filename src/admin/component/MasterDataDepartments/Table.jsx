@@ -18,7 +18,7 @@ import useDataCompanyStore from "../../stores/useDataCompanyStore";
 import { EditDepartmentButton } from "./EditDepartmentButton";
 import useAuthStore from "../../stores/useAuthStore";
 
-const CACHE_KEY = "dataDepartments";
+const CACHE_KEY = "d_department";
 
 export default function EnhancedTable({ token }) {
   const [order, setOrder] = React.useState("asc");

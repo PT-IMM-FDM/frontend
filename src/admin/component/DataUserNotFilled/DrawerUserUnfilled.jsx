@@ -1,7 +1,6 @@
 "use client";
 
 import { Drawer } from "flowbite-react";
-import React from "react";
 import DataUserNotFilled from "./DataUserNotFilled";
 
 export function DrawerUserUnfilled({ isOpen, setIsOpen, userNotFilled }) {

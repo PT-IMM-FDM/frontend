@@ -21,7 +21,7 @@ import { theme } from "./TableTheme";
 import { Box } from "@mui/material";
 import { toast } from "react-toastify";
 
-const CACHE_KEY = "dataCompany";
+const CACHE_KEY = "d_company";
 
 export function EditCompanyButton({ company_id, company_name }) {
   // Fetch the token from the authentication store

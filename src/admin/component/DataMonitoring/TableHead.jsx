@@ -1,4 +1,3 @@
-import * as React from "react";
 import PropTypes from "prop-types";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -9,20 +8,106 @@ import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
 
 const headCells = [
-  { id: "timestamp", numeric: false, disablePadding: true, label: "Timestamp", width: 100, align: "left", sortable: true },
-  { id: "full_name", numeric: false, disablePadding: false, label: "Nama Lengkap", width: 200, align: "left", sortable: true },
-  { id: "department.name", numeric: false, disablePadding: false, label: "Departemen", width: 200, align: "left", sortable: true },
-  { id: "job_position.name", numeric: false, disablePadding: false, label: "Posisi", width: 200, align: "left", sortable: true },
-  { id: "employment_status.name", numeric: false, disablePadding: false, label: "Status", width: 100, align: "left", sortable: true },
-  { id: "company.name", numeric: false, disablePadding: false, label: "Nama Perusahaan", width: 170, align: "left", sortable: true },
-  { id: "hasil", numeric: false, disablePadding: false, label: "Hasil", width: 50, align: "center", sortable: false },
-  { id: "action", numeric: false, disablePadding: false, label: "Detail", width: 50, align: "center", sortable: false },
-  { id: "follow_up", numeric: false, disablePadding: false, label: "Follow Up", width: 200, align: "left", sortable: false },
-  { id: "attachment", numeric: false, disablePadding: false, label: "Attachment", width: 50, align: "center", sortable: false },
+  {
+    id: "timestamp",
+    numeric: false,
+    disablePadding: true,
+    label: "Timestamp",
+    width: 100,
+    align: "left",
+    sortable: true,
+  },
+  {
+    id: "full_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Nama Lengkap",
+    width: 200,
+    align: "left",
+    sortable: false,
+  },
+  {
+    id: "department.name",
+    numeric: false,
+    disablePadding: false,
+    label: "Departemen",
+    width: 200,
+    align: "left",
+    sortable: false,
+  },
+  {
+    id: "job_position.name",
+    numeric: false,
+    disablePadding: false,
+    label: "Posisi",
+    width: 200,
+    align: "left",
+    sortable: false,
+  },
+  {
+    id: "employment_status.name",
+    numeric: false,
+    disablePadding: false,
+    label: "Status",
+    width: 100,
+    align: "left",
+    sortable: false,
+  },
+  {
+    id: "company.name",
+    numeric: false,
+    disablePadding: false,
+    label: "Nama Perusahaan",
+    width: 170,
+    align: "left",
+    sortable: false,
+  },
+  {
+    id: "hasil",
+    numeric: false,
+    disablePadding: false,
+    label: "Hasil",
+    width: 50,
+    align: "center",
+    sortable: false,
+  },
+  {
+    id: "action",
+    numeric: false,
+    disablePadding: false,
+    label: "Detail",
+    width: 50,
+    align: "center",
+    sortable: false,
+  },
+  {
+    id: "follow_up",
+    numeric: false,
+    disablePadding: false,
+    label: "Follow Up",
+    width: 200,
+    align: "left",
+    sortable: false,
+  },
+  {
+    id: "attachment",
+    numeric: false,
+    disablePadding: false,
+    label: "Attachment",
+    width: 50,
+    align: "center",
+    sortable: false,
+  },
 ];
 
-function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+function EnhancedTableHead({
+  onSelectAllClick,
+  order,
+  orderBy,
+  numSelected,
+  rowCount,
+  onRequestSort,
+}) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -45,23 +130,23 @@ function EnhancedTableHead(props) {
             key={headCell.id}
             align={headCell.align} // Use the align property from headCells
             padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            {headCell.sortable ? (
+            sortDirection={orderBy === headCell.id ? order : false}>
+            {headCell.sortable == true ? (
               <TableSortLabel
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
-              >
+                onClick={createSortHandler(headCell.id)}>
                 {headCell.label}
                 {orderBy === headCell.id ? (
                   <Box component="span" sx={visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
                   </Box>
                 ) : null}
               </TableSortLabel>
             ) : (
-              headCell.label
+              <p className="cursor-default">{headCell.label}</p>
             )}
           </TableCell>
         ))}

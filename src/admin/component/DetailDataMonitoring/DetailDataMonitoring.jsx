@@ -7,7 +7,10 @@ import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 import { getFDMResponseDetails } from "../../api/fdm";
 
-export default function DetailDataMonitoring({ user_id, attendance_health_result_id }) {
+export default function DetailDataMonitoring({
+  user_id,
+  attendance_health_result_id,
+}) {
   const { token } = useAuthStore((state) => ({ token: state.token }));
   const { rows, setRows } = useDataUsersStore((state) => ({
     rows: state.rows,
@@ -24,7 +27,11 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
 
   const fetchData = async () => {
     try {
-      const dataUser = await getFDMResponseDetails(token, user_id, attendance_health_result_id);
+      const dataUser = await getFDMResponseDetails(
+        token,
+        user_id,
+        attendance_health_result_id
+      );
       setUserData(dataUser);
       setOriginalUserData(dataUser);
       setLoading(false);
@@ -43,22 +50,22 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
   }, [token, user_id]);
 
   useEffect(() => {
-    const storedDepartments = localStorage.getItem("dataDepartments");
+    const storedDepartments = localStorage.getItem("d_department");
     if (storedDepartments) {
       setDepartments(JSON.parse(storedDepartments));
     }
 
-    const storedJobPositions = localStorage.getItem("dataJobPositions");
+    const storedJobPositions = localStorage.getItem("d_jobPosition");
     if (storedJobPositions) {
       setJobPositions(JSON.parse(storedJobPositions));
     }
 
-    const storedStatuses = localStorage.getItem("dataStatus");
+    const storedStatuses = localStorage.getItem("d_employmentStatus");
     if (storedStatuses) {
       setEmploymentStatuses(JSON.parse(storedStatuses));
     }
 
-    const storedCompanies = localStorage.getItem("dataCompany");
+    const storedCompanies = localStorage.getItem("d_company");
     if (storedCompanies) {
       setCompanies(JSON.parse(storedCompanies));
     }
@@ -67,10 +74,12 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      setRows(rows.map(row => row.user_id === userData.user_id ? userData : row));
-      const updatedUsers = JSON.parse(localStorage.getItem("usersData") || "[]").map(user => 
-        user.user_id === userData.user_id ? userData : user
+      setRows(
+        rows.map((row) => (row.user_id === userData.user_id ? userData : row))
       );
+      const updatedUsers = JSON.parse(
+        localStorage.getItem("usersData") || "[]"
+      ).map((user) => (user.user_id === userData.user_id ? userData : user));
       localStorage.setItem("usersData", JSON.stringify(updatedUsers));
       setIsEditable(false);
     } catch (error) {
@@ -81,9 +90,18 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
   return (
     <>
       {loading ? (
-        <Box sx={{position: 'relative', width: '100%' }}>
-          <img src="/Loader-1.gif" alt="loader" className="h-[5rem] absolute top-[40%] left-[45%] z-10" />
-          <Skeleton sx={{borderRadius: '5px', bgcolor: 'grey.300'}} variant="rectangular" width="100%" height={550} />
+        <Box sx={{ position: "relative", width: "100%" }}>
+          <img
+            src="/Loader-1.gif"
+            alt="loader"
+            className="h-[5rem] absolute top-[40%] left-[45%] z-10"
+          />
+          <Skeleton
+            sx={{ borderRadius: "5px", bgcolor: "grey.300" }}
+            variant="rectangular"
+            width="100%"
+            height={550}
+          />
         </Box>
       ) : (
         <UserForm
@@ -105,4 +123,3 @@ export default function DetailDataMonitoring({ user_id, attendance_health_result
     </>
   );
 }
-

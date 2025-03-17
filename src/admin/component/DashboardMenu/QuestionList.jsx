@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import QuestionItem from "./QuestionItem";
 import { getAllQuestions } from "../../api/question-fdm";
 import useAuthStore from "../../stores/useAuthStore";

@@ -1,4 +1,3 @@
-import { Badge } from "flowbite-react";
 
 export const toCamelCase = (str) => {
   return str
