@@ -1,5 +1,15 @@
 import { create } from "zustand";
 
+const formatDate = (date) => {
+  return (
+    date.getFullYear() +
+    "-" +
+    String(date.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(date.getDate()).padStart(2, "0")
+  );
+};
+
 const useDataFDM = create((set) => ({
   rows: [],
   rowsNotFilled: [],
@@ -10,7 +20,7 @@ const useDataFDM = create((set) => ({
     department: [],
     jobPosition: [],
     employmentStatus: [],
-    fdm_result: [],
+    result: [],
     startDate: "",
     endDate: "",
     user_id: [],
@@ -34,9 +44,9 @@ const useDataFDM = create((set) => ({
     department: [],
     jobPosition: [],
     employmentStatus: [],
-    fdm_result: [],
-    startDate: new Date().toLocaleDateString(),
-    endDate: new Date().toLocaleDateString(),
+    result: [],
+    startDate: formatDate(new Date()),
+    endDate: formatDate(new Date()),
     user_id: [],
     attendance_health_result_id: null,
     is_active: null,

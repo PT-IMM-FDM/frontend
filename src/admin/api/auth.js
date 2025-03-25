@@ -10,10 +10,14 @@ export const apiClient = axios.create({
   },
 });
 
+let isAlertShown = false; // Flag untuk memastikan alert hanya muncul sekali
+
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+
+    if (error.response?.status === 401 && !isAlertShown) {
+      isAlertShown = true; // Pastikan alert hanya muncul sekali
       alert("Your session has expired. Please log in again.");
       logoutApi();
       window.location.href = "/login";
@@ -24,13 +28,18 @@ apiClient.interceptors.response.use(
 );
 
 export const loginApi = async (email_or_phone_number, password) => {
-  const response = await apiClient.post("/auth/login", {
-    email_or_phone_number,
-    password,
-  });
-  const { token } = response.data.data;
-  Cookies.set("token", token);
-  return response.data.data;
+  try {
+    const response = await axios.post(`${apiUrl}/auth/login`, {
+      email_or_phone_number,
+      password,
+    });
+    const { token } = response.data.data;
+    Cookies.set("token", token);
+    return response.data.data;
+  } catch (error) {
+    console.error("Login error:", error);
+    throw error;
+  }
 };
 
 export const logoutApi = () => {

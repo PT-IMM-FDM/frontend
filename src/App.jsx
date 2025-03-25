@@ -57,9 +57,7 @@ function App() {
         if (lastHiddenTime) {
           const now = new Date();
           const timeAway = (now - lastHiddenTime) / 1000; // dalam detik
-          // console.log(`Tab diakses kembali setelah ${timeAway} detik.`);
           if (timeAway > 900) {
-            // console.log("Reloading page...");
             window.location.reload(); // Reload halaman ketika sudah 10 menit tab tertutup
           }
         }

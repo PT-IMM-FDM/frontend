@@ -10,7 +10,7 @@ const buildParams = (filters) => {
       department,
       jobPosition,
       employmentStatus,
-      fdm_result,
+      result,
       startDate,
       endDate,
       user_id,
@@ -27,8 +27,7 @@ const buildParams = (filters) => {
       params.did = department.map((e) => e.id);
     if (employmentStatus && employmentStatus.length > 0)
       params.esid = employmentStatus.map((e) => e.id);
-    if (fdm_result && fdm_result.length > 0)
-      params.fdm_result = fdm_result.map((e) => e.id);
+    if (result && result.length > 0) params.result = result[0].name;
     if (is_active !== undefined) params.is_active = is_active;
     if (user_id) params.uid = user_id;
     if (attendance_health_result_id) params.ahrid = attendance_health_result_id;
@@ -43,7 +42,8 @@ const buildParams = (filters) => {
 export const getFdm = async (token, filters) => {
   try {
     const params = buildParams(filters);
-    const response = await apiClient.get('/fdm', {
+
+    const response = await apiClient.get("/fdm", {
       params: params,
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -65,7 +65,7 @@ export const countResultDepartemen = async (token, filters) => {
       did: did || undefined,
     };
 
-    const response = await apiClient.get('/fdm/countResult', {
+    const response = await apiClient.get("/fdm/countResult", {
       params: finalParams,
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -89,6 +89,21 @@ export const countResult = async (token, filters) => {
 
     const response = await apiClient.get(`/fdm/countResult`, {
       params: finalParams,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch users: ${error}`);
+  }
+};
+
+export const countResultTable = async (token, filters) => {
+  try {
+    let params = buildParams(filters);
+
+    const response = await apiClient.get(`/fdm/countResult`, {
+      params: params,
       headers: { Authorization: `Bearer ${token}` },
     });
 

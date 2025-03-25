@@ -5,7 +5,7 @@ import { ThemeProvider } from "@emotion/react";
 import EnhancedTableToolbar from "./TableToolbar";
 import { theme } from "./TableTheme";
 import useDataFDM from "../../stores/useDataFDM";
-import { countResult, getFdm } from "../../api/fdm";
+import { countResultTable, getFdm } from "../../api/fdm";
 import { tableMonitoringColumns } from "./TableColumn";
 import { useState, useEffect, useMemo } from "react";
 import useSearchStore from "../../stores/useSearchStore";
@@ -20,7 +20,6 @@ const CustomRow = ({ children, ...props }) => {
   );
 };
 
-
 export default function EnhancedTable({ token }) {
   const [page, setPage] = useState(0);
   const [totalRows, setTotalRows] = useState(0);
@@ -30,7 +29,6 @@ export default function EnhancedTable({ token }) {
     page: 0,
   });
   const { rows, setRows, selected, setSelected, filters } = useDataFDM();
-  console.log('tabel', selected)
   const searchQuery = useSearchStore((state) => state.searchQuery);
 
   // Memoize slots untuk mencegah re-render tidak perlu
@@ -61,7 +59,8 @@ export default function EnhancedTable({ token }) {
           ...filters,
           page: paginationModel.page + 1,
         });
-        const dataMonitoring = await countResult(token, {...filters});
+
+        const dataMonitoring = await countResultTable(token, { ...filters });
 
         setTotalRows(dataMonitoring.totalRespondent);
         setRows(data);
@@ -110,7 +109,7 @@ export default function EnhancedTable({ token }) {
               disableColumnResize={true}
               disableColumnReorder={true}
               onRowSelectionModelChange={(rowSelectionModel) => {
-                setSelected(rowSelectionModel)
+                setSelected(rowSelectionModel);
               }}
               slots={slots} // Tambahkan slots di sini
               sx={{

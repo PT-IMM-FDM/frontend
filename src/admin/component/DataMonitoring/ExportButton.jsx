@@ -8,13 +8,11 @@ import useAuthStore from "../../stores/useAuthStore";
 import useDataFDM from "../../stores/useDataFDM";
 import { Box } from "@mui/material";
 
-export function ExportButton({selected}) {
+export function ExportButton({ selected }) {
   // const [openModal, setOpenModal] = useState(false);
   const { token } = useAuthStore((state) => ({ token: state.token }));
-  const { filters } = useDataFDM(); // Get filters from store
+  const { filters } = useDataFDM((state) => ({ filters: state.filters })); // Get filters from store
   const [loading, setLoading] = useState(false);
-
-  console.log(selected)
 
   const handleClick = async () => {
     setLoading(true);
