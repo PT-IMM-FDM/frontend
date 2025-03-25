@@ -1,3 +1,4 @@
+import { getFormattedDate } from "../utils/stringUtils";
 import { apiClient } from "./auth";
 
 const buildParams = (filters) => {
@@ -58,7 +59,7 @@ export const countResultDepartemen = async (token, filters) => {
     let params = buildParams(filters);
     const { did, startDate, endDate } = params;
 
-    const today = new Date().toISOString().split("T")[0];
+    const today = getFormattedDate(new Date());
     const finalParams = {
       startDate: startDate || today,
       endDate: endDate || today,

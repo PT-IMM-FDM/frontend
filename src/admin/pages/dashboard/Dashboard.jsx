@@ -21,6 +21,7 @@ import useDataFDM from "../../stores/useDataFDM";
 import FilterButton from "../../component/DashboardMenu/FilterButton";
 import Box from "@mui/material/Box";
 import QuestionList from "../../component/DashboardMenu/QuestionList";
+import { getFormattedDate } from "../../utils/stringUtils";
 
 const Dashboard = () => {
   const { user, setUser, token } = useAuthStore((state) => ({
@@ -65,11 +66,11 @@ const Dashboard = () => {
         const dataTotalKaryawan = await getTotalUsers(token);
         const dataResult = await countResult(token, filtersDashboard);
         const dataResultToday = await countResult(token, {
-          startDate: new Date().toISOString().split('T')[0],
-          endDate: new Date().toISOString().split('T')[0],
+          startDate: getFormattedDate(new Date()),
+          endDate: getFormattedDate(new Date()),
         });
 
-        // console.log(new Date().toISOString().split('T')[0]);
+        console.log(getFormattedDate(new Date()));
 
         const dataUserNotFilled = await getUserNotFilled(token);
         let dataDepartmentResult = null;
