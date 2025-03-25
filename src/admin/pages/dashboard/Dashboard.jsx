@@ -69,7 +69,7 @@ const Dashboard = () => {
           endDate: new Date().toISOString().split('T')[0],
         });
 
-        console.log(new Date().toISOString().split('T')[0]);
+        // console.log(new Date().toISOString().split('T')[0]);
 
         const dataUserNotFilled = await getUserNotFilled(token);
         let dataDepartmentResult = null;
