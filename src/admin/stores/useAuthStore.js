@@ -30,6 +30,7 @@ const useAuthStore = create(
           set({ token });
         } catch (error) {
           set({ error: error.message });
+          throw error;
         } finally {
           set({ loading: false });
         }

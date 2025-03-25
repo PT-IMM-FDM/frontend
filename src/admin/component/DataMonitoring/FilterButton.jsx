@@ -38,7 +38,7 @@ export default function FilterButton() {
       department: [],
       jobPosition: [],
       employmentStatus: [],
-      fdm_result: [],
+      result: [],
       startDate: "",
       endDate: "",
     };
@@ -108,26 +108,26 @@ export default function FilterButton() {
                 { id: 1, value: "FIT", name: "FIT" },
                 { id: 2, value: "FIT_FOLLOW_UP", name: "FIT FOLLOW UP" },
                 { id: 3, value: "UNFIT", name: "UNFIT" },
-              ].map((result) => (
-                <div key={result.id} className="flex items-center gap-2">
+              ].map((e) => (
+                <div key={e.id} className="flex items-center gap-2">
                   <Checkbox
-                    id={`result_${result.id}`}
-                    checked={filters.fdm_result.some(
-                      (item) => item.id === result.id
+                    id={`result_${e.id}`}
+                    checked={filters.result.some(
+                      (item) => item.id === e.id
                     )}
                     onChange={(event) =>
                       handleCheckboxFdmResult(
                         event,
-                        "fdm_result",
-                        result.id,
-                        result.value
+                        "result",
+                        e.id,
+                        e.value
                       )
                     }
                   />
                   <Label
-                    htmlFor={`status_${result.id}`}
+                    htmlFor={`status_${e.id}`}
                     className="flex text-[12px]">
-                    {result.name}
+                    {e.name}
                   </Label>
                 </div>
               ))}

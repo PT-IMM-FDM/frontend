@@ -10,20 +10,21 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State untuk mengatur visibility password
-  // const [rememberMe, setRememberMe] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
-  const { setError, setLoading, error, loading, login, token, user, setUser } =
-    useAuthStore((state) => ({
+  const { setError, setLoading, error, loading, login, setUser } = useAuthStore(
+    (state) => ({
       setError: state.setError,
       setLoading: state.setLoading,
+      setUser: state.setUser,
       error: state.error,
       loading: state.loading,
       login: state.login,
       token: state.token,
       user: state.user,
-    }));
+    })
+  );
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -33,6 +34,7 @@ const LoginForm = () => {
       await login(email, password);
       const newToken = Cookies.get("token");
       const dataUser = await getCurrentLogin(newToken);
+      setUser(dataUser.data);
 
       if (dataUser.data.role.name !== "User") {
         navigate("/admin/dashboard");
@@ -42,13 +44,20 @@ const LoginForm = () => {
       setError(null);
       setLoading(false);
     } catch (error) {
+      setLoading(false); // Pastikan loading dihentikan segera
       let errorMessage = "An error occurred";
-      if (error.response?.data?.status === "VALIDATION_ERROR") {
-        errorMessage = error.response.data.errors[0].password;
-      } else {
-        errorMessage = error.response?.data?.message || errorMessage;
+      if (error.response) {
+        if (error.response.data?.status === "VALIDATION_ERROR") {
+          errorMessage =
+            error.response.data.errors?.[0]?.password || errorMessage;
+        } else {
+          errorMessage = error.response.data?.message || errorMessage;
+        }
+      } else if (error.message) {
+        errorMessage = error.message; // Tangani error dari jaringan
       }
       setError(errorMessage);
+      return; // Pastikan eksekusi berhenti
     } finally {
       setLoading(false);
     }
