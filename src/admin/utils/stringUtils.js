@@ -27,6 +27,11 @@ export function formatDate(dateString) {
   return `${formattedDate}, ${formattedTime}`;
 }
 
+export const formatDateWithZeroPadding = (inputDate) => {
+  const [month, day, year] = inputDate.split("/");
+  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+}
+
 export const formatResultFDM = (value) => {
   if (value === "FIT") {
     return "FIT";

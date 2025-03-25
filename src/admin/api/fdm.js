@@ -1,3 +1,4 @@
+import { formatDateWithZeroPadding } from "../utils/stringUtils";
 import { apiClient } from "./auth";
 
 const buildParams = (filters) => {
@@ -58,7 +59,7 @@ export const countResultDepartemen = async (token, filters) => {
     let params = buildParams(filters);
     const { did, startDate, endDate } = params;
 
-    const today = new Date().toLocaleDateString();
+    const today = formatDateWithZeroPadding(new Date().toLocaleDateString());
     const finalParams = {
       startDate: startDate || today,
       endDate: endDate || today,
@@ -94,6 +95,7 @@ export const countResult = async (token, filters) => {
 
     return response.data.data;
   } catch (error) {
+    console.log(error)
     throw new Error(`Failed to fetch users: ${error}`);
   }
 };
